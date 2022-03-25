@@ -24,7 +24,10 @@ Partial Class Form1
     Private Sub InitializeComponent()
         Me.MainTabControl = New System.Windows.Forms.TabControl()
         Me.MapTabPage = New System.Windows.Forms.TabPage()
+        Me.MapControl1 = New DevExpress.XtraMap.MapControl()
         Me.MainTabControl.SuspendLayout()
+        Me.MapTabPage.SuspendLayout()
+        CType(Me.MapControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'MainTabControl
@@ -39,12 +42,21 @@ Partial Class Form1
         '
         'MapTabPage
         '
+        Me.MapTabPage.Controls.Add(Me.MapControl1)
         Me.MapTabPage.Location = New System.Drawing.Point(4, 22)
         Me.MapTabPage.Name = "MapTabPage"
         Me.MapTabPage.Size = New System.Drawing.Size(1161, 690)
         Me.MapTabPage.TabIndex = 0
         Me.MapTabPage.Text = "Map"
         Me.MapTabPage.UseVisualStyleBackColor = True
+        '
+        'MapControl1
+        '
+        Me.MapControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.MapControl1.Location = New System.Drawing.Point(0, 0)
+        Me.MapControl1.Name = "MapControl1"
+        Me.MapControl1.Size = New System.Drawing.Size(1161, 690)
+        Me.MapControl1.TabIndex = 0
         '
         'Form1
         '
@@ -55,10 +67,13 @@ Partial Class Form1
         Me.Name = "Form1"
         Me.Text = "Form1"
         Me.MainTabControl.ResumeLayout(False)
+        Me.MapTabPage.ResumeLayout(False)
+        CType(Me.MapControl1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
 
     Friend WithEvents MainTabControl As TabControl
     Friend WithEvents MapTabPage As TabPage
+    Friend WithEvents MapControl1 As DevExpress.XtraMap.MapControl
 End Class
