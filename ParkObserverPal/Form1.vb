@@ -24,6 +24,7 @@ Public Class Form1
         DSPropertyGrid.SelectedObject = POZDataSet
         DSTabPage.Controls.Add(DSPropertyGrid)
 
+        'Load up the various grids and map with poz data
         LoadPOZDataset(POZDataSet)
 
         Me.MapControl.ZoomToFitLayerItems()
@@ -47,42 +48,41 @@ Public Class Form1
         Try
             'Loop through each DataTable in POZDataset
             For Each CSVDataTable As DataTable In POZDataset.Tables
-#Region "GridControl"
+                '#Region "GridControl"
 
-                'Create a GridControl to display the CSVData
-                Dim CSVGridControl As New GridControl
-                Dim CSVGridView As New GridView
-                With CSVGridControl
-                    .ViewCollection.Add(CSVGridView)
-                    .DataSource = CSVDataTable
-                    .Dock = DockStyle.Fill
-                    .Name = CSVDataTable.TableName & "GridControl"
-                End With
-                SetUpGridControl(CSVGridControl)
+                '                'Create a GridControl to display the CSVData
+                '                Dim CSVGridControl As New GridControl
+                '                Dim CSVGridView As New GridView
+                '                With CSVGridControl
+                '                    .ViewCollection.Add(CSVGridView)
+                '                    .DataSource = CSVDataTable
+                '                    .Dock = DockStyle.Fill
+                '                    .Name = CSVDataTable.TableName & "GridControl"
+                '                End With
+                '                SetUpGridControl(CSVGridControl)
 
-                'Create a new tabpage to hold a grid showing the CSV datatable 
-                Dim CSVTabPage As New TabPage(CSVDataTable.TableName & " Dataset")
-                CSVTabPage.Controls.Add(CSVGridControl)
+                '                'Create a new tabpage to hold a grid showing the CSV datatable 
+                '                Dim CSVTabPage As New TabPage(CSVDataTable.TableName & " Dataset")
+                '                CSVTabPage.Controls.Add(CSVGridControl)
 
-                'Add the new data grid tab page to the main TabControl
-                Me.MainTabControl.TabPages.Add(CSVTabPage)
-#End Region
+                '                'Add the new data grid tab page to the main TabControl
+                '                Me.MainTabControl.TabPages.Add(CSVTabPage)
+                '#End Region
 
-#Region "PivotGrid"
-                'Create a PivotGridControl and add it to the main tab control
-                Dim CSVPivotGridTabPage As New TabPage(CSVDataTable.TableName & " Pivot Table")
-                Dim CSVPivotGridControl As New PivotGridControl
-                With CSVPivotGridControl
-                    .DataSource = CSVDataTable
-                    .RetrieveFields()
-                End With
-                SetUpPivotGridControl(CSVPivotGridControl)
+                '#Region "PivotGrid"
+                '                'Create a PivotGridControl and add it to the main tab control
+                '                Dim CSVPivotGridTabPage As New TabPage(CSVDataTable.TableName & " Pivot Table")
+                '                Dim CSVPivotGridControl As New PivotGridControl
+                '                With CSVPivotGridControl
+                '                    .DataSource = CSVDataTable
+                '                    .RetrieveFields()
+                '                End With
+                '                SetUpPivotGridControl(CSVPivotGridControl)
 
-                'Add the controls above to the main tab control
-                CSVPivotGridTabPage.Controls.Add(CSVPivotGridControl)
-                Me.MainTabControl.TabPages.Add(CSVPivotGridTabPage)
-
-#End Region
+                '                'Add the controls above to the main tab control
+                '                CSVPivotGridTabPage.Controls.Add(CSVPivotGridControl)
+                '                Me.MainTabControl.TabPages.Add(CSVPivotGridTabPage)
+                '#End Region
 
 
 
@@ -472,19 +472,26 @@ Public Class Form1
 
     Private Sub MapLayersCheckedListBoxControl_SelectedIndexChanged(sender As Object, e As EventArgs) Handles MapLayersCheckedListBoxControl.SelectedIndexChanged
         Try
-
+            'Get the name of the currently selected layer
             Dim LayerName As String = MapLayersCheckedListBoxControl.Text
 
-            'Load the column names into the second listbox
-            Me.LayerLabelCheckedListBoxControl.Items.Clear()
+            'Get a handle on the map layer with the name from above
+            Dim MapLayer As VectorItemsLayer = MapControl.Layers(LayerName)
 
-            'Show the data
+            'Load the map layer's properties into the map layer property grid
+            Me.MapLayerPropertyGridControl.SelectedObject = MapLayer
+
+            'Load the column names into the labeling columns listbox
+            Me.LayerLabelCheckedListBoxControl.Items.Clear()
+            For Each Col As DataColumn In POZDataSet.Tables(LayerName).Columns
+                Me.LayerLabelCheckedListBoxControl.Items.Add(Col.ColumnName, False)
+            Next
+
+            'Show the data in the map layer grid control
             Dim DT As DataTable
             Dim GV As GridView = TryCast(MapLayerGridControl.MainView, GridView)
             GV.Columns.Clear()
             Me.MapLayerGridControl.DataSource = Nothing
-
-
             If Not POZDataSet.Tables(LayerName) Is Nothing Then
                 DT = POZDataSet.Tables(LayerName)
                 With Me.MapLayerGridControl
@@ -493,15 +500,10 @@ Public Class Form1
                     .RefreshDataSource()
                 End With
                 SetUpGridControl(Me.MapLayerGridControl)
-                Debug.Print(DT.TableName & vbTab & DT.Rows.Count)
             End If
-            For Each Col As DataColumn In POZDataSet.Tables(LayerName).Columns
-                Me.LayerLabelCheckedListBoxControl.Items.Add(Col.ColumnName, False)
-            Next
 
-            'Add the map layer to the property grid
-            Dim MapLayer As VectorItemsLayer = MapControl.Layers(LayerName)
-            Me.MapLayerPropertyGridControl.SelectedObject = MapLayer
+
+
 
             If Not MapLayer Is Nothing Then
                 If Not MapLayer.Data Is Nothing Then
@@ -565,5 +567,10 @@ Public Class Form1
     Private Sub MapControl_DrawMapItem(sender As Object, e As DrawMapItemEventArgs) Handles MapControl.DrawMapItem
         'e.StrokeWidth = InputBox("Stroke", "Stroke", 10)
         'e.Layer.ShapeTitlesPattern = "{SpeciesAcronym}"
+    End Sub
+
+    Private Sub ZoomToFitAllLayersToolStripButton_Click(sender As Object, e As EventArgs) Handles ZoomToFitAllLayersToolStripButton.Click
+        'Zoom to fit all layers
+        Me.MapControl.ZoomToFitLayerItems()
     End Sub
 End Class

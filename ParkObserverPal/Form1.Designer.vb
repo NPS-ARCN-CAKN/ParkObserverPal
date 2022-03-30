@@ -40,6 +40,9 @@ Partial Class Form1
         Me.GridView1 = New DevExpress.XtraGrid.Views.Grid.GridView()
         Me.MapLayerGridControl = New DevExpress.XtraGrid.GridControl()
         Me.MapControlPropertyGridControl = New DevExpress.XtraVerticalGrid.PropertyGridControl()
+        Me.MapPropertiesTabPage = New System.Windows.Forms.TabPage()
+        Me.MapToolStrip = New System.Windows.Forms.ToolStrip()
+        Me.ZoomToFitAllLayersToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.MainTabControl.SuspendLayout()
         Me.MapTabPage.SuspendLayout()
         CType(Me.MapSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -67,6 +70,8 @@ Partial Class Form1
         CType(Me.GridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.MapLayerGridControl, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.MapControlPropertyGridControl, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.MapPropertiesTabPage.SuspendLayout()
+        Me.MapToolStrip.SuspendLayout()
         Me.SuspendLayout()
         '
         'MainTabControl
@@ -173,6 +178,7 @@ Partial Class Form1
         '
         Me.MapLayerTabControl.Controls.Add(Me.MapLayerLabelingTabPage)
         Me.MapLayerTabControl.Controls.Add(Me.MapLayerPropertiesTabPage)
+        Me.MapLayerTabControl.Controls.Add(Me.MapPropertiesTabPage)
         Me.MapLayerTabControl.Dock = System.Windows.Forms.DockStyle.Fill
         Me.MapLayerTabControl.Location = New System.Drawing.Point(0, 0)
         Me.MapLayerTabControl.Name = "MapLayerTabControl"
@@ -188,7 +194,7 @@ Partial Class Form1
         Me.MapLayerLabelingTabPage.Padding = New System.Windows.Forms.Padding(3)
         Me.MapLayerLabelingTabPage.Size = New System.Drawing.Size(234, 441)
         Me.MapLayerLabelingTabPage.TabIndex = 0
-        Me.MapLayerLabelingTabPage.Text = "Labeling"
+        Me.MapLayerLabelingTabPage.Text = "Choose map labels"
         Me.MapLayerLabelingTabPage.UseVisualStyleBackColor = True
         '
         'MapLayerPropertiesTabPage
@@ -199,11 +205,12 @@ Partial Class Form1
         Me.MapLayerPropertiesTabPage.Padding = New System.Windows.Forms.Padding(3)
         Me.MapLayerPropertiesTabPage.Size = New System.Drawing.Size(234, 441)
         Me.MapLayerPropertiesTabPage.TabIndex = 1
-        Me.MapLayerPropertiesTabPage.Text = "Properties"
+        Me.MapLayerPropertiesTabPage.Text = "Layer properties"
         Me.MapLayerPropertiesTabPage.UseVisualStyleBackColor = True
         '
         'MapLayerPropertyGridControl
         '
+        Me.MapLayerPropertyGridControl.Cursor = System.Windows.Forms.Cursors.Default
         Me.MapLayerPropertyGridControl.Dock = System.Windows.Forms.DockStyle.Fill
         Me.MapLayerPropertyGridControl.Location = New System.Drawing.Point(3, 3)
         Me.MapLayerPropertyGridControl.Name = "MapLayerPropertyGridControl"
@@ -220,11 +227,11 @@ Partial Class Form1
         '
         'MapPanelSplitContainer.Panel1
         '
+        Me.MapPanelSplitContainer.Panel1.Controls.Add(Me.MapToolStrip)
         Me.MapPanelSplitContainer.Panel1.Controls.Add(Me.MapControl)
         '
         'MapPanelSplitContainer.Panel2
         '
-        Me.MapPanelSplitContainer.Panel2.Controls.Add(Me.MapControlPropertyGridControl)
         Me.MapPanelSplitContainer.Panel2.Controls.Add(Me.MapLayerGridControl)
         Me.MapPanelSplitContainer.Size = New System.Drawing.Size(915, 665)
         Me.MapPanelSplitContainer.SplitterDistance = 444
@@ -238,11 +245,11 @@ Partial Class Form1
         '
         'MapLayerGridControl
         '
-        Me.MapLayerGridControl.Dock = System.Windows.Forms.DockStyle.Top
+        Me.MapLayerGridControl.Dock = System.Windows.Forms.DockStyle.Fill
         Me.MapLayerGridControl.Location = New System.Drawing.Point(0, 0)
         Me.MapLayerGridControl.MainView = Me.GridView1
         Me.MapLayerGridControl.Name = "MapLayerGridControl"
-        Me.MapLayerGridControl.Size = New System.Drawing.Size(915, 60)
+        Me.MapLayerGridControl.Size = New System.Drawing.Size(915, 217)
         Me.MapLayerGridControl.TabIndex = 0
         Me.MapLayerGridControl.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.GridView1})
         '
@@ -250,11 +257,41 @@ Partial Class Form1
         '
         Me.MapControlPropertyGridControl.Cursor = System.Windows.Forms.Cursors.Default
         Me.MapControlPropertyGridControl.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.MapControlPropertyGridControl.Location = New System.Drawing.Point(0, 60)
+        Me.MapControlPropertyGridControl.Location = New System.Drawing.Point(3, 3)
         Me.MapControlPropertyGridControl.Name = "MapControlPropertyGridControl"
         Me.MapControlPropertyGridControl.OptionsView.AllowReadOnlyRowAppearance = DevExpress.Utils.DefaultBoolean.[True]
-        Me.MapControlPropertyGridControl.Size = New System.Drawing.Size(915, 157)
+        Me.MapControlPropertyGridControl.Size = New System.Drawing.Size(228, 435)
         Me.MapControlPropertyGridControl.TabIndex = 1
+        '
+        'MapPropertiesTabPage
+        '
+        Me.MapPropertiesTabPage.Controls.Add(Me.MapControlPropertyGridControl)
+        Me.MapPropertiesTabPage.Location = New System.Drawing.Point(4, 22)
+        Me.MapPropertiesTabPage.Name = "MapPropertiesTabPage"
+        Me.MapPropertiesTabPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.MapPropertiesTabPage.Size = New System.Drawing.Size(234, 441)
+        Me.MapPropertiesTabPage.TabIndex = 2
+        Me.MapPropertiesTabPage.Text = "Map properties"
+        Me.MapPropertiesTabPage.UseVisualStyleBackColor = True
+        '
+        'MapToolStrip
+        '
+        Me.MapToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ZoomToFitAllLayersToolStripButton})
+        Me.MapToolStrip.Location = New System.Drawing.Point(0, 0)
+        Me.MapToolStrip.Name = "MapToolStrip"
+        Me.MapToolStrip.Size = New System.Drawing.Size(915, 25)
+        Me.MapToolStrip.TabIndex = 1
+        Me.MapToolStrip.Text = "ToolStrip1"
+        '
+        'ZoomToFitAllLayersToolStripButton
+        '
+        Me.ZoomToFitAllLayersToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.ZoomToFitAllLayersToolStripButton.Image = CType(resources.GetObject("ZoomToFitAllLayersToolStripButton.Image"), System.Drawing.Image)
+        Me.ZoomToFitAllLayersToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ZoomToFitAllLayersToolStripButton.Name = "ZoomToFitAllLayersToolStripButton"
+        Me.ZoomToFitAllLayersToolStripButton.Size = New System.Drawing.Size(23, 22)
+        Me.ZoomToFitAllLayersToolStripButton.Text = "Zoom to fit all layers"
+        Me.ZoomToFitAllLayersToolStripButton.ToolTipText = "Zoom to fit all layers"
         '
         'Form1
         '
@@ -287,12 +324,16 @@ Partial Class Form1
         Me.MapLayerPropertiesTabPage.ResumeLayout(False)
         CType(Me.MapLayerPropertyGridControl, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MapPanelSplitContainer.Panel1.ResumeLayout(False)
+        Me.MapPanelSplitContainer.Panel1.PerformLayout()
         Me.MapPanelSplitContainer.Panel2.ResumeLayout(False)
         CType(Me.MapPanelSplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MapPanelSplitContainer.ResumeLayout(False)
         CType(Me.GridView1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.MapLayerGridControl, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.MapControlPropertyGridControl, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.MapPropertiesTabPage.ResumeLayout(False)
+        Me.MapToolStrip.ResumeLayout(False)
+        Me.MapToolStrip.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -315,4 +356,7 @@ Partial Class Form1
     Friend WithEvents MapLayerGridControl As DevExpress.XtraGrid.GridControl
     Friend WithEvents GridView1 As DevExpress.XtraGrid.Views.Grid.GridView
     Friend WithEvents MapControlPropertyGridControl As DevExpress.XtraVerticalGrid.PropertyGridControl
+    Friend WithEvents MapPropertiesTabPage As TabPage
+    Friend WithEvents MapToolStrip As ToolStrip
+    Friend WithEvents ZoomToFitAllLayersToolStripButton As ToolStripButton
 End Class

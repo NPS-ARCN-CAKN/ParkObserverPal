@@ -117,10 +117,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <metadata name="MapToolStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>145, 17</value>
+  </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="ZoomToFitAllLayersToolStripButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAALaSURBVEhLpZZNaxNRFIaz8g/0Z4h7wZAKVhASazIhX0MT
+        4xdIlZJUVMjShW6LqFslGOhOaKoQu1AcXBRGk1rTJqDQYMy3TZOYpkLS8b7DnDBmrpNYD7zMdDrneeee
+        e89pLba5SMUqLig8TQcXU5YxgXd4uRDYFtzce7b6hxaXniu2YLRzKrBg1TgWj8dzzOl0Cj6f777f718R
+        BGEd1/P+cJyBesgZ5YBtMLjzaNkAd7vdxxn4ZSwWk16vrW3vFArFWr1eTGcy2UQiIV+P3t2YDkb6yNWz
+        JjLwer0hURSlVColtzudb/sHB3t6VavVjVdv3ufOhG8NTA3wS3qBSjTjuxYEPJ/Py3ut1g5Bu73ej2ar
+        VWDwTcDPXr49oBLpOUMDAkL0Iq5Y9tPEcrZer38meKvdLpbL5XSpVJKldTmrh+OKlSAP90MDKglEJtDp
+        ULQPCCvNd8A73W4ZYJLeAMI9VoQ9wcarBjhm+g0lE/YVvx4sPc5VKpUMfX2tVtvSG0BUIoLjGTYep+uv
+        x9wm3jgh+OfeSpIkNxqNbTKg0owKK4GGP7M8HGENxw+cc2zubrP5hQxY8geCmAl5yNdQ/MAX4Etq2grY
+        ydnlwXiaaAXoWNSSleUjNpmdngIPxhPykK+h+IGxgM7lAcYJecjXUPzA7GF6F4/Hh5s3idDxGCvI11D8
+        cLlc83a7fcDUTyaT6vEbJ2wuOh+zS8Pwg8FDDofjcGpqSoFgYrYSHFF0POCYXRqGH6x21ksXxX3BaVfh
+        msEA5UJtsYE4JfhaXNGM6HiMB8wuDaM2rKHRAL85f/VnefOhkludUWCClaBcvL8HaEZ0PI2K0ZGjjgoK
+        Pfzw0zll68VJxee50EW5tFcMgY6n2aWfwvRsaMCDB7yzHTxXXzAJ+loyMYxrQK6EA0eCU5AJgUmqgd87
+        +3XliU1R0tYjwRGmBoABCpP/gVOJDAYIQLGSf4UjzP9tiVR+A1N8YKQoKYcVAAAAAElFTkSuQmCC
+</value>
+  </data>
   <metadata name="MainToolStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="OpenPOZFileToolStripButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
