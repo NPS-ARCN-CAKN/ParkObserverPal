@@ -12,17 +12,20 @@ Public Class Form1
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         'Temporary holder for poz file
-        Dim POZZipFile As String = "C:\Temp\Loons 2022-03-24 1230.poz"
+        Dim POZZipFile As String = "C:\Temp\Loons 2022-03-29.poz"
 
         'Create a Dataset into which to dump the contents of all the CSV files in POZZipFile
         POZDataSet.Clear()
+
         POZDataSet = GetDatasetFromPOZFile(POZZipFile)
-        Dim DSTabPage As New TabPage("Park Observer Dataset")
-        Me.MainTabControl.TabPages.Add(DSTabPage)
-        Dim DSPropertyGrid As New PropertyGrid
-        DSPropertyGrid.Dock = DockStyle.Fill
-        DSPropertyGrid.SelectedObject = POZDataSet
-        DSTabPage.Controls.Add(DSPropertyGrid)
+        POZDataSet.DataSetName = POZZipFile
+
+        'Dim DSTabPage As New TabPage("Park Observer Dataset")
+        'Me.MainTabControl.TabPages.Add(DSTabPage)
+        'Dim DSPropertyGrid As New PropertyGrid
+        'DSPropertyGrid.Dock = DockStyle.Fill
+        'DSPropertyGrid.SelectedObject = POZDataSet
+        'DSTabPage.Controls.Add(DSPropertyGrid)
 
         'Load up the various grids and map with poz data
         LoadPOZDataset(POZDataSet)
@@ -46,7 +49,11 @@ Public Class Form1
     ''' <param name="POZDataset">Park Observer Dataset. POZDataset.</param>
     Private Sub LoadPOZDataset(POZDataset As DataSet)
         Try
+
+            Me.POZFileToolStripLabel.Text = POZDataset.DataSetName
+
             'Loop through each DataTable in POZDataset
+            Dim CSVDataTableCounter As Integer = 1
             For Each CSVDataTable As DataTable In POZDataset.Tables
                 '#Region "GridControl"
 
@@ -108,19 +115,45 @@ Public Class Form1
                 Dim LabelLayer As New VectorItemsLayer
                 Dim Color As Color = Color.Gray
                 Dim PtSize As Integer = 4
+                Dim Marker As MarkerType = MarkerType.Circle
+                'Mix up the marker symbols
+                If CSVDataTableCounter = 2 Then
+                    Marker = MarkerType.Cross
+                ElseIf CSVDataTableCounter = 2 Then
+                    Marker = MarkerType.Diamond
+                ElseIf CSVDataTableCounter = 3 Then
+                    Marker = MarkerType.Hexagon
+                ElseIf CSVDataTableCounter = 4 Then
+                    Marker = MarkerType.InvertedTriangle
+                ElseIf CSVDataTableCounter = 5 Then
+                    Marker = MarkerType.Pentagon
+                ElseIf CSVDataTableCounter = 6 Then
+                    Marker = MarkerType.Plus
+                ElseIf CSVDataTableCounter = 7 Then
+                    Marker = MarkerType.Square
+                ElseIf CSVDataTableCounter = 8 Then
+                    Marker = MarkerType.Star5
+                ElseIf CSVDataTableCounter = 9 Then
+                    Marker = MarkerType.Star6
+                ElseIf CSVDataTableCounter = 10 Then
+                    Marker = MarkerType.Star8
+                ElseIf CSVDataTableCounter = 11 Then
+                    Marker = MarkerType.Triangle
+                End If
+
 
                 'Add the tracklog to the map
                 If CSVDataTable.TableName.ToLower = "gpspoints" Then
                     'Draw a tracklog as a line vector items layer
                     Dim TrackLogVectorItemsLayer As VectorItemsLayer = GetTracklogLineVectorItemsLayer(CSVDataTable, "Latitude", "Longitude", "Timestamp", Color.Gray, 1)
+                    TrackLogVectorItemsLayer.Name = "Track"
                     Me.MapControl.Layers.Add(TrackLogVectorItemsLayer)
                     Me.MapControl.ZoomToFitLayerItems()
                 Else
                     'Draw the the layer as a points vector items layer
                     Color = Color.FromArgb(CInt(Int((255 * Rnd()) + 1)), CInt(Int((255 * Rnd()) + 1)), CInt(Int((255 * Rnd()) + 1)))
-                    PtSize = 20
-
-                    Dim CSVLayer As VectorItemsLayer = GetBubbleVectorItemsLayerFromPointsDataTable(CSVDataTable, LatColumnName, LonColumnName, PtSize, MarkerType.Circle, Color)
+                    PtSize = 8
+                    Dim CSVLayer As VectorItemsLayer = GetBubbleVectorItemsLayerFromPointsDataTable(CSVDataTable, LatColumnName, LonColumnName, PtSize, Marker, Color)
                     Me.MapControl.Layers.Add(CSVLayer)
 
                     'Dim CSVLabelLayer As VectorItemsLayer = GetLabelVectorItemsLayerFromPointsDataTable(CSVDataTable, LatColumnName, LonColumnName, CSVDataTable.Columns(0).ColumnName)
@@ -128,6 +161,7 @@ Public Class Form1
                 End If
 
 #End Region
+                CSVDataTableCounter = CSVDataTableCounter + 1
             Next
         Catch ex As Exception
             MsgBox(ex.Message & " (" & System.Reflection.MethodBase.GetCurrentMethod.Name & ").")
@@ -365,6 +399,8 @@ Public Class Form1
             If My.Computer.FileSystem.FileExists(Shapefile) = True Then
                 'Create a new shapefile VectorItemsLayer using Shapefile
                 Dim ShapefileVectorItemsLayer As VectorItemsLayer = GetShapefileVectorItemsLayer(Shapefile)
+                Dim ShapefileFileInfo As New FileInfo(Shapefile)
+                ShapefileVectorItemsLayer.Name = ShapefileFileInfo.Name
                 'Add the shapefile to the map.
                 MapControl.Layers.Add(ShapefileVectorItemsLayer)
             Else
@@ -501,35 +537,6 @@ Public Class Form1
                 End With
                 SetUpGridControl(Me.MapLayerGridControl)
             End If
-
-
-
-
-            If Not MapLayer Is Nothing Then
-                If Not MapLayer.Data Is Nothing Then
-                    Dim Sql As String = "-- Insert " & MapLayer.Name & vbNewLine
-                    Debug.Print("----------------------------------------------------")
-                    For Each MI As MapItem In MapLayer.Data.Items
-                        'Build an Sql insert query
-                        Sql = Sql & "INSERT INTO " & MapLayer.Name & "("
-                        For i As Integer = 0 To MI.Attributes.Count - 1
-                            Sql = Sql & MI.Attributes(i).Name & ","
-                        Next
-                        Sql = Sql & ") VALUES("
-                        For i As Integer = 0 To MI.Attributes.Count - 1
-                            Sql = Sql & IIf(Not IsNumeric(MI.Attributes(i).Value), "'", "") & MI.Attributes(i).Value & IIf(Not IsNumeric(MI.Attributes(i).Value), "'", "") & ","
-                        Next
-                        Sql = Sql & ");" & vbNewLine
-
-                        'Loop through the key/value pairs and output
-                        For i As Integer = 0 To MI.Attributes.Count - 1
-                            Debug.Print(MapLayer.Name & vbTab & i & vbTab & MI.Attributes(i).Name & ": " & MI.Attributes(i).Value)
-                        Next
-                    Next
-                    Debug.Print(Sql)
-                End If
-            End If
-
         Catch ex As Exception
             MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
         End Try
@@ -572,5 +579,18 @@ Public Class Form1
     Private Sub ZoomToFitAllLayersToolStripButton_Click(sender As Object, e As EventArgs) Handles ZoomToFitAllLayersToolStripButton.Click
         'Zoom to fit all layers
         Me.MapControl.ZoomToFitLayerItems()
+    End Sub
+
+    Private Sub AddLayerToolStripLabel_Click(sender As Object, e As EventArgs) Handles AddLayerToolStripLabel.Click
+        Try
+            Dim ShpFile As FileInfo = SkeeterUtilities.DirectoryAndFile.DirectoryAndFileUtilities.GetFile("Shapefile|*.shp", "Choose a shapefile.", "")
+            LoadShapefile(ShpFile.FullName, Me.MapControl)
+            For Each Layer As VectorItemsLayer In Me.MapControl.Layers
+                Debug.Print(Layer.Name)
+            Next
+            Me.MapControl.Layers(ShpFile.Name).ZIndex = Me.MapControl.Layers.Count = 1
+        Catch ex As Exception
+        MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
+        End Try
     End Sub
 End Class
