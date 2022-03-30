@@ -39,6 +39,7 @@ Partial Class Form1
         Me.MapPanelSplitContainer = New System.Windows.Forms.SplitContainer()
         Me.GridView1 = New DevExpress.XtraGrid.Views.Grid.GridView()
         Me.MapLayerGridControl = New DevExpress.XtraGrid.GridControl()
+        Me.MapControlPropertyGridControl = New DevExpress.XtraVerticalGrid.PropertyGridControl()
         Me.MainTabControl.SuspendLayout()
         Me.MapTabPage.SuspendLayout()
         CType(Me.MapSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -65,6 +66,7 @@ Partial Class Form1
         Me.MapPanelSplitContainer.SuspendLayout()
         CType(Me.GridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.MapLayerGridControl, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.MapControlPropertyGridControl, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'MainTabControl
@@ -222,6 +224,7 @@ Partial Class Form1
         '
         'MapPanelSplitContainer.Panel2
         '
+        Me.MapPanelSplitContainer.Panel2.Controls.Add(Me.MapControlPropertyGridControl)
         Me.MapPanelSplitContainer.Panel2.Controls.Add(Me.MapLayerGridControl)
         Me.MapPanelSplitContainer.Size = New System.Drawing.Size(915, 665)
         Me.MapPanelSplitContainer.SplitterDistance = 444
@@ -235,13 +238,23 @@ Partial Class Form1
         '
         'MapLayerGridControl
         '
-        Me.MapLayerGridControl.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.MapLayerGridControl.Dock = System.Windows.Forms.DockStyle.Top
         Me.MapLayerGridControl.Location = New System.Drawing.Point(0, 0)
         Me.MapLayerGridControl.MainView = Me.GridView1
         Me.MapLayerGridControl.Name = "MapLayerGridControl"
-        Me.MapLayerGridControl.Size = New System.Drawing.Size(915, 217)
+        Me.MapLayerGridControl.Size = New System.Drawing.Size(915, 60)
         Me.MapLayerGridControl.TabIndex = 0
         Me.MapLayerGridControl.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.GridView1})
+        '
+        'MapControlPropertyGridControl
+        '
+        Me.MapControlPropertyGridControl.Cursor = System.Windows.Forms.Cursors.Default
+        Me.MapControlPropertyGridControl.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.MapControlPropertyGridControl.Location = New System.Drawing.Point(0, 60)
+        Me.MapControlPropertyGridControl.Name = "MapControlPropertyGridControl"
+        Me.MapControlPropertyGridControl.OptionsView.AllowReadOnlyRowAppearance = DevExpress.Utils.DefaultBoolean.[True]
+        Me.MapControlPropertyGridControl.Size = New System.Drawing.Size(915, 157)
+        Me.MapControlPropertyGridControl.TabIndex = 1
         '
         'Form1
         '
@@ -279,6 +292,7 @@ Partial Class Form1
         Me.MapPanelSplitContainer.ResumeLayout(False)
         CType(Me.GridView1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.MapLayerGridControl, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.MapControlPropertyGridControl, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -300,4 +314,5 @@ Partial Class Form1
     Friend WithEvents MapPanelSplitContainer As SplitContainer
     Friend WithEvents MapLayerGridControl As DevExpress.XtraGrid.GridControl
     Friend WithEvents GridView1 As DevExpress.XtraGrid.Views.Grid.GridView
+    Friend WithEvents MapControlPropertyGridControl As DevExpress.XtraVerticalGrid.PropertyGridControl
 End Class

@@ -36,7 +36,7 @@ Public Class Form1
             Me.MapLayersCheckedListBoxControl.Items.Add(DT.TableName, True)
         Next
 
-
+        Me.MapControlPropertyGridControl.SelectedObject = Me.MapControl
     End Sub
 
     ''' <summary>
@@ -503,29 +503,30 @@ Public Class Form1
             Dim MapLayer As VectorItemsLayer = MapControl.Layers(LayerName)
             Me.MapLayerPropertyGridControl.SelectedObject = MapLayer
 
-            If Not MapLayer.Data Is Nothing Then
-                Dim Sql As String = "-- Insert " & MapLayer.Name & vbNewLine
-                Debug.Print("----------------------------------------------------")
-                For Each MI As MapItem In MapLayer.Data.Items
-                    'Build an Sql insert query
-                    Sql = Sql & "INSERT INTO " & MapLayer.Name & "("
-                    For i As Integer = 0 To MI.Attributes.Count - 1
-                        Sql = Sql & MI.Attributes(i).Name & ","
-                    Next
-                    Sql = Sql & ") VALUES("
-                    For i As Integer = 0 To MI.Attributes.Count - 1
-                        Sql = Sql & IIf(Not IsNumeric(MI.Attributes(i).Value), "'", "") & MI.Attributes(i).Value & IIf(Not IsNumeric(MI.Attributes(i).Value), "'", "") & ","
-                    Next
-                    Sql = Sql & ");" & vbNewLine
+            If Not MapLayer Is Nothing Then
+                If Not MapLayer.Data Is Nothing Then
+                    Dim Sql As String = "-- Insert " & MapLayer.Name & vbNewLine
+                    Debug.Print("----------------------------------------------------")
+                    For Each MI As MapItem In MapLayer.Data.Items
+                        'Build an Sql insert query
+                        Sql = Sql & "INSERT INTO " & MapLayer.Name & "("
+                        For i As Integer = 0 To MI.Attributes.Count - 1
+                            Sql = Sql & MI.Attributes(i).Name & ","
+                        Next
+                        Sql = Sql & ") VALUES("
+                        For i As Integer = 0 To MI.Attributes.Count - 1
+                            Sql = Sql & IIf(Not IsNumeric(MI.Attributes(i).Value), "'", "") & MI.Attributes(i).Value & IIf(Not IsNumeric(MI.Attributes(i).Value), "'", "") & ","
+                        Next
+                        Sql = Sql & ");" & vbNewLine
 
-                    'Loop through the key/value pairs and output
-                    For i As Integer = 0 To MI.Attributes.Count - 1
-                        Debug.Print(MapLayer.Name & vbTab & i & vbTab & MI.Attributes(i).Name & ": " & MI.Attributes(i).Value)
+                        'Loop through the key/value pairs and output
+                        For i As Integer = 0 To MI.Attributes.Count - 1
+                            Debug.Print(MapLayer.Name & vbTab & i & vbTab & MI.Attributes(i).Name & ": " & MI.Attributes(i).Value)
+                        Next
                     Next
-                Next
-                Debug.Print(Sql)
+                    Debug.Print(Sql)
+                End If
             End If
-
 
         Catch ex As Exception
             MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
