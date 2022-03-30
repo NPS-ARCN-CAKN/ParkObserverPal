@@ -35,12 +35,24 @@ Public Class Form1
             .BackColor = Color.LightSteelBlue
         End With
 
-        'Load the MapLayersCheckedListBoxControl with data table names
-        For Each DT As DataTable In POZDataSet.Tables
-            Me.MapLayersCheckedListBoxControl.Items.Add(DT.TableName, True)
-        Next
+        'Load the map layers into the list box selector
+        LoadMapLayersListBox()
 
         Me.MapControlPropertyGridControl.SelectedObject = Me.MapControl
+    End Sub
+
+    ''' <summary>
+    ''' Loads the main map control's layers into the MapLayersListBox
+    ''' </summary>
+    Private Sub LoadMapLayersListBox()
+        Me.MapLayersCheckedListBoxControl.Items.Clear()
+        'Load the MapLayersCheckedListBoxControl with data table names
+        Dim i As Integer = 1
+        For Each Layer As VectorItemsLayer In Me.MapControl.Layers
+            Layer.ZIndex = i
+            Me.MapLayersCheckedListBoxControl.Items.Add(Layer.Name, True)
+            i = i + 1
+        Next
     End Sub
 
     ''' <summary>
@@ -146,7 +158,7 @@ Public Class Form1
                 If CSVDataTable.TableName.ToLower = "gpspoints" Then
                     'Draw a tracklog as a line vector items layer
                     Dim TrackLogVectorItemsLayer As VectorItemsLayer = GetTracklogLineVectorItemsLayer(CSVDataTable, "Latitude", "Longitude", "Timestamp", Color.Gray, 1)
-                    TrackLogVectorItemsLayer.Name = "Track"
+                    TrackLogVectorItemsLayer.Name = CSVDataTable.TableName
                     Me.MapControl.Layers.Add(TrackLogVectorItemsLayer)
                     Me.MapControl.ZoomToFitLayerItems()
                 Else
@@ -154,10 +166,8 @@ Public Class Form1
                     Color = Color.FromArgb(CInt(Int((255 * Rnd()) + 1)), CInt(Int((255 * Rnd()) + 1)), CInt(Int((255 * Rnd()) + 1)))
                     PtSize = 8
                     Dim CSVLayer As VectorItemsLayer = GetBubbleVectorItemsLayerFromPointsDataTable(CSVDataTable, LatColumnName, LonColumnName, PtSize, Marker, Color)
+                    CSVLayer.Name = CSVDataTable.TableName
                     Me.MapControl.Layers.Add(CSVLayer)
-
-                    'Dim CSVLabelLayer As VectorItemsLayer = GetLabelVectorItemsLayerFromPointsDataTable(CSVDataTable, LatColumnName, LonColumnName, CSVDataTable.Columns(0).ColumnName)
-                    'Me.MapControl.Layers.Add(CSVLabelLayer)
                 End If
 
 #End Region
@@ -200,7 +210,7 @@ Public Class Form1
                     'Now cycle through the .csv files and load the contents into DataTables
                     For Each CSVFIle As String In My.Computer.FileSystem.GetFiles(POZFilesDirectory)
                         Dim CSVFileInfo As New FileInfo(CSVFIle)
-                        Dim CSVName As String = CSVFileInfo.Name.Replace(".csv", "")
+                        Dim CSVName As String = CSVFileInfo.Name.Trim.Replace(".csv", "")
 
                         'Make sure the file is a CSV file
                         If CSVFileInfo.Extension = ".csv" Then
@@ -225,54 +235,7 @@ Public Class Form1
 
 
 
-    'Private Sub AddCustomElement()
-    '    Dim VL As New VectorItemsLayer
-    '    Dim mis As New MapItemStorage
-    '    VL.Data = mis
-    '    Dim customElement = New MapCustomElement() With {.Location = New GeoPoint(61.2108, -149.905121), .Text = "Sktr"}
-    '    mis.Items.Add(customElement)
-    '    Me.MapControl.Layers.Add(VL)
-    'End Sub
 
-
-
-    ''' <summary>
-    ''' Returns a DevExpress VectorItemsLayer of MapBubble points derived a DataTable containing Lat/Lon pairs.
-    ''' </summary>
-    ''' <param name="PointsDataTable">DataTable containing points spatial data. DataTable</param>
-    ''' <param name="LatitudeColumnName">Name of the latitude column. String.</param>
-    ''' <param name="LongitudeColumnName">Name of the longitude column. String.</param>
-    ''' <returns>VectorItemLayer of points from WKT.</returns>
-    Public Function GetLabelVectorItemsLayerFromPointsDataTable(PointsDataTable As DataTable, LatitudeColumnName As String, LongitudeColumnName As String, TextColumnName As String) As DevExpress.XtraMap.VectorItemsLayer
-        Dim MyMapItemStorage As New MapItemStorage
-        Dim MyPointsVectorItemsLayer As New VectorItemsLayer()
-        If LatitudeColumnName.Trim <> "" And LongitudeColumnName.Trim <> "" Then
-            For Each MyPointDataRow As DataRow In PointsDataTable.Rows
-                If Not MyPointDataRow Is Nothing Then
-                    If Not IsDBNull(MyPointDataRow.Item(LatitudeColumnName)) And Not IsDBNull(MyPointDataRow.Item(LongitudeColumnName)) Then
-                        Dim Lat As Double = CDbl(MyPointDataRow.Item(LatitudeColumnName))
-                        Dim Lon As Double = CDbl(MyPointDataRow.Item(LongitudeColumnName))
-                        Dim Label As String = MyPointDataRow.Item(TextColumnName)
-                        Dim MyCustomElement As New MapCustomElement
-                        'Dim MyImage = New Bitmap("C:\Work\Database and Web Development\icons and images\famfamfam_silk_icons_v013\icons\stop.png")
-
-                        With MyCustomElement
-                            .Location = New GeoPoint(Lat, Lon)
-                            .Text = Label
-                            .Fill = Color.DarkGoldenrod
-                            '.Image = MyImage
-                        End With
-                        MyMapItemStorage.Items.Add(MyCustomElement)
-                    End If
-                End If
-            Next
-            With MyPointsVectorItemsLayer
-                .Data = MyMapItemStorage
-                .Name = PointsDataTable.TableName & "Labels"
-            End With
-        End If
-        Return MyPointsVectorItemsLayer
-    End Function
 
     Private Function GetTracklogLineVectorItemsLayer(PointsDataTable As DataTable, LatitudeColumnName As String, LongitudeColumnName As String, TimeColumnName As String, Color As Color, Width As Integer) As VectorItemsLayer
         'Create a VectorItemsLayer
@@ -312,7 +275,7 @@ Public Class Form1
 
             'Assign the items to the line VectorItemsLayer
             MyLineVectorItemsLayer.Data = MyMapItemStorage
-            MyLineVectorItemsLayer.Name = "GpsPoints"
+            MyLineVectorItemsLayer.Name = PointsDataTable.TableName
         Catch ex As Exception
             MsgBox(ex.Message & " (" & System.Reflection.MethodBase.GetCurrentMethod.Name & ").")
         End Try
@@ -397,10 +360,13 @@ Public Class Form1
         Try
             'Test shapefile existence.
             If My.Computer.FileSystem.FileExists(Shapefile) = True Then
+
+
                 'Create a new shapefile VectorItemsLayer using Shapefile
                 Dim ShapefileVectorItemsLayer As VectorItemsLayer = GetShapefileVectorItemsLayer(Shapefile)
                 Dim ShapefileFileInfo As New FileInfo(Shapefile)
                 ShapefileVectorItemsLayer.Name = ShapefileFileInfo.Name
+
                 'Add the shapefile to the map.
                 MapControl.Layers.Add(ShapefileVectorItemsLayer)
             Else
@@ -519,9 +485,11 @@ Public Class Form1
 
             'Load the column names into the labeling columns listbox
             Me.LayerLabelCheckedListBoxControl.Items.Clear()
-            For Each Col As DataColumn In POZDataSet.Tables(LayerName).Columns
-                Me.LayerLabelCheckedListBoxControl.Items.Add(Col.ColumnName, False)
-            Next
+            If Not POZDataSet.Tables(LayerName) Is Nothing Then
+                For Each Col As DataColumn In POZDataSet.Tables(LayerName).Columns
+                    Me.LayerLabelCheckedListBoxControl.Items.Add(Col.ColumnName, False)
+                Next
+            End If
 
             'Show the data in the map layer grid control
             Dim DT As DataTable
@@ -585,10 +553,8 @@ Public Class Form1
         Try
             Dim ShpFile As FileInfo = SkeeterUtilities.DirectoryAndFile.DirectoryAndFileUtilities.GetFile("Shapefile|*.shp", "Choose a shapefile.", "")
             LoadShapefile(ShpFile.FullName, Me.MapControl)
-            For Each Layer As VectorItemsLayer In Me.MapControl.Layers
-                Debug.Print(Layer.Name)
-            Next
-            Me.MapControl.Layers(ShpFile.Name).ZIndex = Me.MapControl.Layers.Count = 1
+            Me.MapControl.Layers(ShpFile.Name).ZIndex = Me.MapControl.Layers.Count - 1
+            LoadMapLayersListBox()
         Catch ex As Exception
         MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
         End Try
