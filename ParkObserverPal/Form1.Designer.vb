@@ -28,6 +28,11 @@ Partial Class Form1
         Me.MapSplitContainer = New System.Windows.Forms.SplitContainer()
         Me.MapLayersSplitContainerControl = New DevExpress.XtraEditors.SplitContainerControl()
         Me.MapLayersCheckedListBoxControl = New DevExpress.XtraEditors.CheckedListBoxControl()
+        Me.MapLayersToolStrip = New System.Windows.Forms.ToolStrip()
+        Me.ToolStripLabel1 = New System.Windows.Forms.ToolStripLabel()
+        Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
+        Me.PromoteLayerToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.DemoteLayerToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.MapLayerTabControl = New System.Windows.Forms.TabControl()
         Me.MapLayerLabelingTabPage = New System.Windows.Forms.TabPage()
         Me.LayerLabelCheckedListBoxControl = New DevExpress.XtraEditors.CheckedListBoxControl()
@@ -60,6 +65,7 @@ Partial Class Form1
         Me.MapLayersSplitContainerControl.Panel2.SuspendLayout()
         Me.MapLayersSplitContainerControl.SuspendLayout()
         CType(Me.MapLayersCheckedListBoxControl, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.MapLayersToolStrip.SuspendLayout()
         Me.MapLayerTabControl.SuspendLayout()
         Me.MapLayerLabelingTabPage.SuspendLayout()
         CType(Me.LayerLabelCheckedListBoxControl, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -125,6 +131,7 @@ Partial Class Form1
         'MapLayersSplitContainerControl.Panel1
         '
         Me.MapLayersSplitContainerControl.Panel1.Controls.Add(Me.MapLayersCheckedListBoxControl)
+        Me.MapLayersSplitContainerControl.Panel1.Controls.Add(Me.MapLayersToolStrip)
         Me.MapLayersSplitContainerControl.Panel1.Text = "Panel1"
         '
         'MapLayersSplitContainerControl.Panel2
@@ -138,10 +145,48 @@ Partial Class Form1
         'MapLayersCheckedListBoxControl
         '
         Me.MapLayersCheckedListBoxControl.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.MapLayersCheckedListBoxControl.Location = New System.Drawing.Point(0, 0)
+        Me.MapLayersCheckedListBoxControl.Location = New System.Drawing.Point(0, 25)
         Me.MapLayersCheckedListBoxControl.Name = "MapLayersCheckedListBoxControl"
-        Me.MapLayersCheckedListBoxControl.Size = New System.Drawing.Size(242, 188)
+        Me.MapLayersCheckedListBoxControl.Size = New System.Drawing.Size(242, 163)
         Me.MapLayersCheckedListBoxControl.TabIndex = 3
+        '
+        'MapLayersToolStrip
+        '
+        Me.MapLayersToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripLabel1, Me.ToolStripSeparator3, Me.PromoteLayerToolStripButton, Me.DemoteLayerToolStripButton})
+        Me.MapLayersToolStrip.Location = New System.Drawing.Point(0, 0)
+        Me.MapLayersToolStrip.Name = "MapLayersToolStrip"
+        Me.MapLayersToolStrip.Size = New System.Drawing.Size(242, 25)
+        Me.MapLayersToolStrip.TabIndex = 4
+        Me.MapLayersToolStrip.Text = "ToolStrip1"
+        '
+        'ToolStripLabel1
+        '
+        Me.ToolStripLabel1.Name = "ToolStripLabel1"
+        Me.ToolStripLabel1.Size = New System.Drawing.Size(64, 22)
+        Me.ToolStripLabel1.Text = "Map layers"
+        '
+        'ToolStripSeparator3
+        '
+        Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 25)
+        '
+        'PromoteLayerToolStripButton
+        '
+        Me.PromoteLayerToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.PromoteLayerToolStripButton.Image = CType(resources.GetObject("PromoteLayerToolStripButton.Image"), System.Drawing.Image)
+        Me.PromoteLayerToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.PromoteLayerToolStripButton.Name = "PromoteLayerToolStripButton"
+        Me.PromoteLayerToolStripButton.Size = New System.Drawing.Size(23, 22)
+        Me.PromoteLayerToolStripButton.Text = "Promote layer"
+        '
+        'DemoteLayerToolStripButton
+        '
+        Me.DemoteLayerToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.DemoteLayerToolStripButton.Image = CType(resources.GetObject("DemoteLayerToolStripButton.Image"), System.Drawing.Image)
+        Me.DemoteLayerToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.DemoteLayerToolStripButton.Name = "DemoteLayerToolStripButton"
+        Me.DemoteLayerToolStripButton.Size = New System.Drawing.Size(23, 22)
+        Me.DemoteLayerToolStripButton.Text = "Demote layer"
         '
         'MapLayerTabControl
         '
@@ -336,11 +381,14 @@ Partial Class Form1
         Me.MapSplitContainer.ResumeLayout(False)
         CType(Me.MapLayersSplitContainerControl.Panel1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MapLayersSplitContainerControl.Panel1.ResumeLayout(False)
+        Me.MapLayersSplitContainerControl.Panel1.PerformLayout()
         CType(Me.MapLayersSplitContainerControl.Panel2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MapLayersSplitContainerControl.Panel2.ResumeLayout(False)
         CType(Me.MapLayersSplitContainerControl, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MapLayersSplitContainerControl.ResumeLayout(False)
         CType(Me.MapLayersCheckedListBoxControl, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.MapLayersToolStrip.ResumeLayout(False)
+        Me.MapLayersToolStrip.PerformLayout()
         Me.MapLayerTabControl.ResumeLayout(False)
         Me.MapLayerLabelingTabPage.ResumeLayout(False)
         CType(Me.LayerLabelCheckedListBoxControl, System.ComponentModel.ISupportInitialize).EndInit()
@@ -389,4 +437,9 @@ Partial Class Form1
     Friend WithEvents AddLayerToolStripLabel As ToolStripLabel
     Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
     Friend WithEvents POZFileToolStripLabel As ToolStripLabel
+    Friend WithEvents MapLayersToolStrip As ToolStrip
+    Friend WithEvents ToolStripLabel1 As ToolStripLabel
+    Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
+    Friend WithEvents PromoteLayerToolStripButton As ToolStripButton
+    Friend WithEvents DemoteLayerToolStripButton As ToolStripButton
 End Class

@@ -45,14 +45,20 @@ Public Class Form1
     ''' Loads the main map control's layers into the MapLayersListBox
     ''' </summary>
     Private Sub LoadMapLayersListBox()
+        Dim CurrentItem As String = Me.MapLayersCheckedListBoxControl.Text
         Me.MapLayersCheckedListBoxControl.Items.Clear()
-        'Load the MapLayersCheckedListBoxControl with data table names
-        Dim i As Integer = 1
-        For Each Layer As VectorItemsLayer In Me.MapControl.Layers
-            Layer.ZIndex = i
-            Me.MapLayersCheckedListBoxControl.Items.Add(Layer.Name, True)
-            i = i + 1
+        'Loop through the map layers
+        For Each Layer As VectorItemsLayer In Me.MapControl.Layers ' i As Integer = 0 To Me.MapControl.Layers.Count - 1
+            Me.MapLayersCheckedListBoxControl.Items.Add(Layer.Name)
+            'This is weird but the layers in the map controls layers collection are not ordered by z index
+            'so they don't show up in z order.
+            'Add the layers to the listbox in z order 
+            'For Each L As VectorItemsLayer In Me.MapControl.Layers
+            '    If L.ZIndex = i Then Me.MapLayersCheckedListBoxControl.Items.Add(L.Name, True)
+            'Next
         Next
+
+        Me.MapLayersCheckedListBoxControl.SelectedItem = CurrentItem
     End Sub
 
     ''' <summary>
@@ -169,9 +175,15 @@ Public Class Form1
                     CSVLayer.Name = CSVDataTable.TableName
                     Me.MapControl.Layers.Add(CSVLayer)
                 End If
-
 #End Region
                 CSVDataTableCounter = CSVDataTableCounter + 1
+            Next
+
+            'DevEx assigns all new layers a Z index of 100, not so useful for promoting and demoting layers later
+            'Assign all the layers a reasonably z index to start with
+            For i As Integer = 0 To Me.MapControl.Layers.Count - 1
+                Dim VIL As VectorItemsLayer = Me.MapControl.Layers(i)
+                VIL.ZIndex = i
             Next
         Catch ex As Exception
             MsgBox(ex.Message & " (" & System.Reflection.MethodBase.GetCurrentMethod.Name & ").")
@@ -558,5 +570,39 @@ Public Class Form1
         Catch ex As Exception
         MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
         End Try
+    End Sub
+
+    Private Sub PromoteLayerToolStripButton_Click(sender As Object, e As EventArgs) Handles PromoteLayerToolStripButton.Click
+        If Me.MapLayersCheckedListBoxControl.Text.Trim <> "" Then
+            Dim LayerName As String = Me.MapLayersCheckedListBoxControl.Text.Trim
+            Dim Lyr As VectorItemsLayer = Me.MapControl.Layers(LayerName)
+
+            'Find the index of current layer
+            Dim CurrentLayerIndex As Integer = -999
+            For i As Integer = 0 To Me.MapControl.Layers.Count - 1
+                If Me.MapControl.Layers(i).Name = LayerName Then CurrentLayerIndex = i
+            Next
+            If CurrentLayerIndex - 1 >= 0 Then
+                Me.MapControl.Layers.Swap(CurrentLayerIndex, CurrentLayerIndex - 1)
+            End If
+        End If
+        LoadMapLayersListBox()
+    End Sub
+
+    Private Sub DemoteLayerToolStripButton_Click(sender As Object, e As EventArgs) Handles DemoteLayerToolStripButton.Click
+        If Me.MapLayersCheckedListBoxControl.Text.Trim <> "" Then
+            Dim LayerName As String = Me.MapLayersCheckedListBoxControl.Text.Trim
+            Dim Lyr As VectorItemsLayer = Me.MapControl.Layers(LayerName)
+
+            'Find the index of current layer
+            Dim CurrentLayerIndex As Integer = -999
+            For i As Integer = 0 To Me.MapControl.Layers.Count - 1
+                If Me.MapControl.Layers(i).Name = LayerName Then CurrentLayerIndex = i
+            Next
+            If CurrentLayerIndex + 1 >= Me.MapControl.Layers.Count - 1 Then
+                Me.MapControl.Layers.Swap(CurrentLayerIndex, CurrentLayerIndex + 1)
+            End If
+        End If
+        LoadMapLayersListBox()
     End Sub
 End Class
