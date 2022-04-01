@@ -610,18 +610,46 @@ Public Class Form1
     End Sub
 
     Private Sub ExportToKMLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExportToKMLToolStripMenuItem.Click
+        'Export the currently selected map layer to KML
         Try
+            'Make sure we have a layer selected
             If Me.MapLayersCheckedListBoxControl.Text.Trim <> "" Then
+
+                'Get the name of the currently selected layer
                 Dim LayerName As String = Me.MapLayersCheckedListBoxControl.Text.Trim
-                Dim VIL As VectorItemsLayer = Me.MapControl.Layers(LayerName)
-                Dim SaveToFilename As String = "C:\Temp\z" & LayerName & ".kml"
-                VIL.ExportToKml(SaveToFilename)
-                If My.Computer.FileSystem.FileExists(SaveToFilename) = True Then
+
+                'Get a handle on the current map layer
+                Dim CurrentMapLayer As VectorItemsLayer = Me.MapControl.Layers(LayerName)
+
+                'Prepare the file filter
+                Dim FileFilter As String = "Keyhole Markup Language (*.kml)|(*.kml)"
+                Dim FileExtension As String = ".kml"
+
+                'Open a save file dialog to allow the user to save the file someplace
+                Dim SFD As New SaveFileDialog
+                With SFD
+                    .AddExtension = True
+                    .DefaultExt = FileExtension
+                    .FileName = LayerName.Trim & "." & FileExtension
+                    .Filter = FileFilter
+                End With
+
+                'Show the dialog
+                If SFD.ShowDialog = DialogResult.OK Then
+                    CurrentMapLayer.ExportToKml(SFD.FileName)
+                End If
+
+
+                'Export the file
+                CurrentMapLayer.ExportToKml(SFD.FileName)
+
+                'Ask if user wants to open the exported file
+                If My.Computer.FileSystem.FileExists(SFD.FileName) = True Then
                     If MsgBox("Open the exported file?", MsgBoxStyle.YesNo, "Open the exported file?") = MsgBoxResult.Yes Then
-                        Process.Start(SaveToFilename)
+                        Process.Start(SFD.FileName)
                     End If
                 Else
-                    MsgBox("Cannot locate the exported file: " & SaveToFilename, MsgBoxStyle.Information, "Error")
+                    MsgBox("Cannot locate the exported file: " & SFD.FileName, MsgBoxStyle.Information, "Error")
                 End If
             End If
         Catch ex As Exception
