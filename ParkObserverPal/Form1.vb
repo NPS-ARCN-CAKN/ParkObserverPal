@@ -517,6 +517,9 @@ Public Class Form1
                 End With
                 SetUpGridControl(Me.MapLayerGridControl)
             End If
+
+
+
         Catch ex As Exception
             MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
         End Try
@@ -604,5 +607,25 @@ Public Class Form1
             End If
         End If
         LoadMapLayersListBox()
+    End Sub
+
+    Private Sub ExportToKMLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExportToKMLToolStripMenuItem.Click
+        Try
+            If Me.MapLayersCheckedListBoxControl.Text.Trim <> "" Then
+                Dim LayerName As String = Me.MapLayersCheckedListBoxControl.Text.Trim
+                Dim VIL As VectorItemsLayer = Me.MapControl.Layers(LayerName)
+                Dim SaveToFilename As String = "C:\Temp\z" & LayerName & ".kml"
+                VIL.ExportToKml(SaveToFilename)
+                If My.Computer.FileSystem.FileExists(SaveToFilename) = True Then
+                    If MsgBox("Open the exported file?", MsgBoxStyle.YesNo, "Open the exported file?") = MsgBoxResult.Yes Then
+                        Process.Start(SaveToFilename)
+                    End If
+                Else
+                    MsgBox("Cannot locate the exported file: " & SaveToFilename, MsgBoxStyle.Information, "Error")
+                End If
+            End If
+        Catch ex As Exception
+            MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
+        End Try
     End Sub
 End Class
