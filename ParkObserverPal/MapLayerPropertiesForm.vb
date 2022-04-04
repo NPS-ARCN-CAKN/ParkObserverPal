@@ -5,15 +5,6 @@ Imports DevExpress.XtraMap
 
 Public Class MapLayerPropertiesForm
 
-    'Private VectorItemsLayerValue As VectorItemsLayer
-    'Public Property VectorItemsLayer() As VectorItemsLayer
-    '    Get
-    '        Return VectorItemsLayerValue
-    '    End Get
-    '    Set(ByVal value As VectorItemsLayer)
-    '        VectorItemsLayerValue = VectorItemsLayer
-    '    End Set
-    'End Property
     Dim MapLayer As VectorItemsLayer = Nothing
 
     Public Sub New(VectorItemsLayer As VectorItemsLayer)
@@ -33,7 +24,7 @@ Public Class MapLayerPropertiesForm
         LoadMapItemAttributesIntoListBox(MapLayer)
 
         'Load the map layer into the advanced map layer property grid control
-        'Me.PropertyGridControl1.SelectedObject = MapLayer
+        Me.MapLayerPropertyGridControl.SelectedObject = MapLayer
     End Sub
 
     ''' <summary>
@@ -110,4 +101,5 @@ Public Class MapLayerPropertiesForm
             MapLayer.ItemStyle.TextGlowColor = Color.Transparent
         End If
     End Sub
+
 End Class
