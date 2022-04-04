@@ -8,11 +8,11 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("ParkObserverPal")>
-<Assembly: AssemblyDescription("")>
-<Assembly: AssemblyCompany("")>
-<Assembly: AssemblyProduct("ParkObserverPal")>
-<Assembly: AssemblyCopyright("Copyright ©  2022")>
+<Assembly: AssemblyTitle("NPS Data Ranger")>
+<Assembly: AssemblyDescription("Data tools for natural resource management")>
+<Assembly: AssemblyCompany("National Park Service")>
+<Assembly: AssemblyProduct("NPS Data Ranger")>
+<Assembly: AssemblyCopyright("Public Domain Software, 2022")>
 <Assembly: AssemblyTrademark("")>
 
 <Assembly: ComVisible(False)>

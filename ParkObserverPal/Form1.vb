@@ -656,4 +656,100 @@ Public Class Form1
             MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
         End Try
     End Sub
+
+    ''' <summary>
+    ''' Map layer export formats
+    ''' </summary>
+    Enum MapLayerExportFormat
+        KML = 0
+        Shapefile = 1
+        Excel = 2
+        CSV = 3
+    End Enum
+
+    ''' <summary>
+    ''' Exports a Park Observer Pal map layer to ExportFormat.
+    ''' </summary>
+    ''' <param name="LayerName">Name of the layer to export in MapControl's layers collection. String.</param>
+    ''' <param name="MapControl">MapControl.</param>
+    ''' <param name="ExportFormat">Export format. MapLayerExportFormat.</param>
+    Private Sub ExportMapLayer(LayerName As String, MapControl As MapControl, ExportFormat As MapLayerExportFormat)
+        'Export the currently selected map layer to KML
+        Try
+            'Make sure we have a layer selected
+            If Me.MapLayersCheckedListBoxControl.Text.Trim <> "" Then
+
+                'Get a handle on the current map layer
+                Dim CurrentMapLayer As VectorItemsLayer = Me.MapControl.Layers(LayerName)
+
+                'Prepare the file filter
+                Dim FileFilter As String = ""
+                Dim FileExtension As String = ""
+                If ExportFormat = 0 Then
+                    FileFilter = "Keyhole Markup Language (*.kml)|(*.kml)"
+                    FileExtension = ".kml"
+                ElseIf ExportFormat = 1 Then
+                    FileFilter = "Shapefile (*.shp)|(*.shp)"
+                    FileExtension = ".shp"
+                ElseIf ExportFormat = 2 Then
+                    FileFilter = "Excel (*.xlsx)|(*.xlsx)"
+                    FileExtension = ".xlsx"
+                ElseIf ExportFormat = 3 Then
+                    FileFilter = "Comma separated values text files (*.csv)|(*.csv)"
+                    FileExtension = ".csv"
+                End If
+
+                'If we have an export format, export the file
+                If FileFilter.Trim <> "" And FileExtension.Trim <> "" Then
+
+                    'Open a save file dialog to allow the user to save the file someplace
+                    Dim SFD As New SaveFileDialog
+                    With SFD
+                        .AddExtension = True
+                        .DefaultExt = FileExtension
+                        .FileName = LayerName.Trim & "." & FileExtension
+                        .Filter = FileFilter
+                    End With
+
+                    'Show the dialog
+                    If SFD.ShowDialog = DialogResult.OK Then
+
+                        If ExportFormat = 0 Then
+                            CurrentMapLayer.ExportToKml(SFD.FileName)
+                        ElseIf ExportFormat = 1 Then
+                            Dim SEO As New ShpExportOptions
+                            With SEO
+                                .ExportToDbf = True
+                                .ExportToShx = True
+                                .ShapeType = ShapeType.Point
+                            End With
+                            CurrentMapLayer.ExportToShp(SFD.FileName, SEO)
+                        ElseIf ExportFormat = 2 Then
+                            MsgBox("Export to Excel is not yet implemented")
+                        ElseIf ExportFormat = 3 Then
+                            MsgBox("Export to CSV is not yet implemented")
+                        End If
+                    End If
+
+                    'Ask if user wants to open the exported file
+                    If My.Computer.FileSystem.FileExists(SFD.FileName) = True Then
+                        If MsgBox("Open the exported file?", MsgBoxStyle.YesNo, "Open the exported file?") = MsgBoxResult.Yes Then
+                            Process.Start(SFD.FileName)
+                        End If
+                    Else
+                        MsgBox("Cannot locate the exported file: " & SFD.FileName, MsgBoxStyle.Information, "Error")
+                    End If
+                End If
+            Else
+                MsgBox("Missing file format.")
+            End If
+        Catch ex As Exception
+            MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
+        End Try
+    End Sub
+
+    Private Sub ExportToShapefileToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExportToShapefileToolStripMenuItem.Click
+        ExportMapLayer(Me.MapLayersCheckedListBoxControl.Text, Me.MapControl, MapLayerExportFormat.Shapefile)
+
+    End Sub
 End Class

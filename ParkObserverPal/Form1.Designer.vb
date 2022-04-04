@@ -31,6 +31,7 @@ Partial Class Form1
         Me.MapLayersCheckedListBoxControl = New DevExpress.XtraEditors.CheckedListBoxControl()
         Me.MapLayerContextMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.ExportToKMLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExportToShapefileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MapLayersToolStrip = New System.Windows.Forms.ToolStrip()
         Me.ToolStripLabel1 = New System.Windows.Forms.ToolStripLabel()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
@@ -55,7 +56,6 @@ Partial Class Form1
         Me.MainToolStrip = New System.Windows.Forms.ToolStrip()
         Me.OpenPOZFileToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.POZFileToolStripLabel = New System.Windows.Forms.ToolStripLabel()
-        Me.ExportToShapefileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MainTabControl.SuspendLayout()
         Me.MapTabPage.SuspendLayout()
         CType(Me.MapSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -160,13 +160,19 @@ Partial Class Form1
         '
         Me.MapLayerContextMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ExportToKMLToolStripMenuItem, Me.ExportToShapefileToolStripMenuItem})
         Me.MapLayerContextMenuStrip.Name = "MapLayerContextMenuStrip"
-        Me.MapLayerContextMenuStrip.Size = New System.Drawing.Size(182, 92)
+        Me.MapLayerContextMenuStrip.Size = New System.Drawing.Size(182, 48)
         '
         'ExportToKMLToolStripMenuItem
         '
         Me.ExportToKMLToolStripMenuItem.Name = "ExportToKMLToolStripMenuItem"
         Me.ExportToKMLToolStripMenuItem.Size = New System.Drawing.Size(181, 22)
         Me.ExportToKMLToolStripMenuItem.Text = "Export to KML..."
+        '
+        'ExportToShapefileToolStripMenuItem
+        '
+        Me.ExportToShapefileToolStripMenuItem.Name = "ExportToShapefileToolStripMenuItem"
+        Me.ExportToShapefileToolStripMenuItem.Size = New System.Drawing.Size(181, 22)
+        Me.ExportToShapefileToolStripMenuItem.Text = "Export to shapefile..."
         '
         'MapLayersToolStrip
         '
@@ -382,12 +388,6 @@ Partial Class Form1
         Me.POZFileToolStripLabel.Size = New System.Drawing.Size(48, 22)
         Me.POZFileToolStripLabel.Text = "POZFile"
         '
-        'ExportToShapefileToolStripMenuItem
-        '
-        Me.ExportToShapefileToolStripMenuItem.Name = "ExportToShapefileToolStripMenuItem"
-        Me.ExportToShapefileToolStripMenuItem.Size = New System.Drawing.Size(181, 22)
-        Me.ExportToShapefileToolStripMenuItem.Text = "Export to shapefile..."
-        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -395,8 +395,9 @@ Partial Class Form1
         Me.ClientSize = New System.Drawing.Size(1169, 716)
         Me.Controls.Add(Me.MainTabControl)
         Me.Controls.Add(Me.MainToolStrip)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "Form1"
-        Me.Text = "Park Observer Pal"
+        Me.Text = "NPS Data Ranger"
         Me.MainTabControl.ResumeLayout(False)
         Me.MapTabPage.ResumeLayout(False)
         Me.MapSplitContainer.Panel1.ResumeLayout(False)
