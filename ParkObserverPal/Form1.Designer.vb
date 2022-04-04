@@ -56,6 +56,7 @@ Partial Class Form1
         Me.MainToolStrip = New System.Windows.Forms.ToolStrip()
         Me.OpenPOZFileToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.POZFileToolStripLabel = New System.Windows.Forms.ToolStripLabel()
+        Me.LayerPropertiesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MainTabControl.SuspendLayout()
         Me.MapTabPage.SuspendLayout()
         CType(Me.MapSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -158,9 +159,9 @@ Partial Class Form1
         '
         'MapLayerContextMenuStrip
         '
-        Me.MapLayerContextMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ExportToKMLToolStripMenuItem, Me.ExportToShapefileToolStripMenuItem})
+        Me.MapLayerContextMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ExportToKMLToolStripMenuItem, Me.ExportToShapefileToolStripMenuItem, Me.LayerPropertiesToolStripMenuItem})
         Me.MapLayerContextMenuStrip.Name = "MapLayerContextMenuStrip"
-        Me.MapLayerContextMenuStrip.Size = New System.Drawing.Size(182, 48)
+        Me.MapLayerContextMenuStrip.Size = New System.Drawing.Size(182, 92)
         '
         'ExportToKMLToolStripMenuItem
         '
@@ -307,7 +308,7 @@ Partial Class Form1
         'MapControl
         '
         Me.MapControl.BackColor = System.Drawing.Color.LightSteelBlue
-        Me.MapControl.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.MapControl.Dock = System.Windows.Forms.DockStyle.Right
         Me.MapControl.Location = New System.Drawing.Point(0, 25)
         Me.MapControl.Name = "MapControl"
         Me.MapControl.Size = New System.Drawing.Size(915, 419)
@@ -387,6 +388,12 @@ Partial Class Form1
         Me.POZFileToolStripLabel.Name = "POZFileToolStripLabel"
         Me.POZFileToolStripLabel.Size = New System.Drawing.Size(48, 22)
         Me.POZFileToolStripLabel.Text = "POZFile"
+        '
+        'LayerPropertiesToolStripMenuItem
+        '
+        Me.LayerPropertiesToolStripMenuItem.Name = "LayerPropertiesToolStripMenuItem"
+        Me.LayerPropertiesToolStripMenuItem.Size = New System.Drawing.Size(181, 22)
+        Me.LayerPropertiesToolStripMenuItem.Text = "Layer properties..."
         '
         'Form1
         '
@@ -471,4 +478,5 @@ Partial Class Form1
     Friend WithEvents MapLayerContextMenuStrip As ContextMenuStrip
     Friend WithEvents ExportToKMLToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ExportToShapefileToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents LayerPropertiesToolStripMenuItem As ToolStripMenuItem
 End Class

@@ -46,16 +46,17 @@ Public Class Form1
     ''' </summary>
     Private Sub LoadMapLayersListBox()
         Dim CurrentItem As String = Me.MapLayersCheckedListBoxControl.Text
+
+        'Loop through the map layers and add them as listbox items
         Me.MapLayersCheckedListBoxControl.Items.Clear()
-        'Loop through the map layers
         For Each Layer As VectorItemsLayer In Me.MapControl.Layers ' i As Integer = 0 To Me.MapControl.Layers.Count - 1
-            Me.MapLayersCheckedListBoxControl.Items.Add(Layer.Name)
-            'This is weird but the layers in the map controls layers collection are not ordered by z index
-            'so they don't show up in z order.
-            'Add the layers to the listbox in z order 
-            'For Each L As VectorItemsLayer In Me.MapControl.Layers
-            '    If L.ZIndex = i Then Me.MapLayersCheckedListBoxControl.Items.Add(L.Name, True)
-            'Next
+            Dim MapLayerCheckedListBoxItem As New DevExpress.XtraEditors.Controls.CheckedListBoxItem()
+            With MapLayerCheckedListBoxItem
+                .CheckState = CheckState.Checked
+                .Description = Layer.Name
+                .Value = Layer.Name
+            End With
+            Me.MapLayersCheckedListBoxControl.Items.Add(MapLayerCheckedListBoxItem)
         Next
 
         Me.MapLayersCheckedListBoxControl.SelectedItem = CurrentItem
@@ -751,5 +752,23 @@ Public Class Form1
     Private Sub ExportToShapefileToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExportToShapefileToolStripMenuItem.Click
         ExportMapLayer(Me.MapLayersCheckedListBoxControl.Text, Me.MapControl, MapLayerExportFormat.Shapefile)
 
+    End Sub
+
+
+
+    Private Sub LayerPropertiesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LayerPropertiesToolStripMenuItem.Click
+        Try
+            Dim LayerName As String = Me.MapLayersCheckedListBoxControl.Text.Trim
+            If Not LayerName = "" Then
+                Dim VIL As VectorItemsLayer = Me.MapControl.Layers(LayerName)
+                If Not VIL Is Nothing Then
+                    Dim MapLayerPropertiesForm As New MapLayerPropertiesForm(VIL)
+                    MapLayerPropertiesForm.Show()
+                End If
+
+            End If
+        Catch ex As Exception
+            MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
+        End Try
     End Sub
 End Class
