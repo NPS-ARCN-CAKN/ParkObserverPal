@@ -596,14 +596,14 @@ Public Class Form1
         Me.MapControl.ZoomToFitLayerItems()
     End Sub
 
-    Private Sub AddLayerToolStripLabel_Click(sender As Object, e As EventArgs) Handles AddLayerToolStripLabel.Click
+    Private Sub AddLayerToolStripLabel_Click(sender As Object, e As EventArgs)
         Try
             Dim ShpFile As FileInfo = SkeeterUtilities.DirectoryAndFile.DirectoryAndFileUtilities.GetFile("Shapefile|*.shp", "Choose a shapefile.", "")
             If Not ShpFile Is Nothing Then LoadShapefile(ShpFile.FullName, Me.MapControl)
             Me.MapControl.Layers(ShpFile.Name).ZIndex = Me.MapControl.Layers.Count - 1
             LoadMapLayersListBox()
         Catch ex As Exception
-        MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
+            MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
         End Try
     End Sub
 
@@ -649,7 +649,7 @@ Public Class Form1
         LoadMapLayersListBox()
     End Sub
 
-    Private Sub ExportToKMLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExportToKMLToolStripMenuItem.Click
+    Private Sub ExportToKMLToolStripMenuItem_Click(sender As Object, e As EventArgs)
         'Export the currently selected map layer to KML
         Try
             'Make sure we have a layer selected
@@ -788,7 +788,7 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub ExportToShapefileToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExportToShapefileToolStripMenuItem.Click
+    Private Sub ExportToShapefileToolStripMenuItem_Click(sender As Object, e As EventArgs)
         ExportMapLayer(Me.MapLayersCheckedListBoxControl.Text, Me.MapControl, MapLayerExportFormat.Shapefile)
 
     End Sub
@@ -846,6 +846,25 @@ Public Class Form1
             If Not CurrentLayer Is Nothing Then
                 Me.MapControl.ZoomToFit(CurrentLayer.Data.Items)
             End If
+        Catch ex As Exception
+            MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
+        End Try
+    End Sub
+
+    Private Sub KMLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles KMLToolStripMenuItem.Click
+        ExportMapLayer(Me.MapLayersCheckedListBoxControl.Text, Me.MapControl, MapLayerExportFormat.KML)
+    End Sub
+
+    Private Sub ShapefileToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ShapefileToolStripMenuItem.Click
+        ExportMapLayer(Me.MapLayersCheckedListBoxControl.Text, Me.MapControl, MapLayerExportFormat.Shapefile)
+    End Sub
+
+    Private Sub ShapefileToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ShapefileToolStripMenuItem1.Click
+        Try
+            Dim ShpFile As FileInfo = SkeeterUtilities.DirectoryAndFile.DirectoryAndFileUtilities.GetFile("Shapefile|*.shp", "Choose a shapefile.", "")
+            If Not ShpFile Is Nothing Then LoadShapefile(ShpFile.FullName, Me.MapControl)
+            Me.MapControl.Layers(ShpFile.Name).ZIndex = Me.MapControl.Layers.Count - 1
+            LoadMapLayersListBox()
         Catch ex As Exception
             MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
         End Try

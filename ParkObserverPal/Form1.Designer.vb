@@ -30,11 +30,11 @@ Partial Class Form1
         Me.MapLayersSplitContainerControl = New DevExpress.XtraEditors.SplitContainerControl()
         Me.MapLayersCheckedListBoxControl = New DevExpress.XtraEditors.CheckedListBoxControl()
         Me.MapLayerContextMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.ExportToKMLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ExportToShapefileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ZoomToLayerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LayerPropertiesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AddSpatialDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CSVToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.MapLayersToolStrip = New System.Windows.Forms.ToolStrip()
         Me.ToolStripLabel1 = New System.Windows.Forms.ToolStripLabel()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
@@ -52,14 +52,14 @@ Partial Class Form1
         Me.MapToolStrip = New System.Windows.Forms.ToolStrip()
         Me.ZoomToFitAllLayersToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
-        Me.AddLayerToolStripLabel = New System.Windows.Forms.ToolStripLabel()
-        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.MapLayerGridControl = New DevExpress.XtraGrid.GridControl()
         Me.GridView1 = New DevExpress.XtraGrid.Views.Grid.GridView()
         Me.MainToolStrip = New System.Windows.Forms.ToolStrip()
         Me.OpenPOZFileToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.POZFileToolStripLabel = New System.Windows.Forms.ToolStripLabel()
-        Me.ZoomToLayerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.KMLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ShapefileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ShapefileToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.MainTabControl.SuspendLayout()
         Me.MapTabPage.SuspendLayout()
         CType(Me.MapSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -162,21 +162,15 @@ Partial Class Form1
         '
         'MapLayerContextMenuStrip
         '
-        Me.MapLayerContextMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ZoomToLayerToolStripMenuItem, Me.ExportToKMLToolStripMenuItem, Me.ExportToShapefileToolStripMenuItem, Me.LayerPropertiesToolStripMenuItem, Me.AddSpatialDataToolStripMenuItem})
+        Me.MapLayerContextMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AddSpatialDataToolStripMenuItem, Me.ZoomToLayerToolStripMenuItem, Me.LayerPropertiesToolStripMenuItem, Me.ToolStripMenuItem1})
         Me.MapLayerContextMenuStrip.Name = "MapLayerContextMenuStrip"
-        Me.MapLayerContextMenuStrip.Size = New System.Drawing.Size(182, 136)
+        Me.MapLayerContextMenuStrip.Size = New System.Drawing.Size(168, 92)
         '
-        'ExportToKMLToolStripMenuItem
+        'ZoomToLayerToolStripMenuItem
         '
-        Me.ExportToKMLToolStripMenuItem.Name = "ExportToKMLToolStripMenuItem"
-        Me.ExportToKMLToolStripMenuItem.Size = New System.Drawing.Size(181, 22)
-        Me.ExportToKMLToolStripMenuItem.Text = "Export to KML..."
-        '
-        'ExportToShapefileToolStripMenuItem
-        '
-        Me.ExportToShapefileToolStripMenuItem.Name = "ExportToShapefileToolStripMenuItem"
-        Me.ExportToShapefileToolStripMenuItem.Size = New System.Drawing.Size(181, 22)
-        Me.ExportToShapefileToolStripMenuItem.Text = "Export to shapefile..."
+        Me.ZoomToLayerToolStripMenuItem.Name = "ZoomToLayerToolStripMenuItem"
+        Me.ZoomToLayerToolStripMenuItem.Size = New System.Drawing.Size(181, 22)
+        Me.ZoomToLayerToolStripMenuItem.Text = "Zoom to layer"
         '
         'LayerPropertiesToolStripMenuItem
         '
@@ -186,16 +180,23 @@ Partial Class Form1
         '
         'AddSpatialDataToolStripMenuItem
         '
-        Me.AddSpatialDataToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CSVToolStripMenuItem})
+        Me.AddSpatialDataToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CSVToolStripMenuItem, Me.ShapefileToolStripMenuItem1})
         Me.AddSpatialDataToolStripMenuItem.Name = "AddSpatialDataToolStripMenuItem"
-        Me.AddSpatialDataToolStripMenuItem.Size = New System.Drawing.Size(181, 22)
+        Me.AddSpatialDataToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.AddSpatialDataToolStripMenuItem.Text = "Add spatial data"
         '
         'CSVToolStripMenuItem
         '
         Me.CSVToolStripMenuItem.Name = "CSVToolStripMenuItem"
         Me.CSVToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.CSVToolStripMenuItem.Text = "CSV"
+        Me.CSVToolStripMenuItem.Text = "CSV..."
+        '
+        'ToolStripMenuItem1
+        '
+        Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.KMLToolStripMenuItem, Me.ShapefileToolStripMenuItem})
+        Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(181, 22)
+        Me.ToolStripMenuItem1.Text = "Export data"
         '
         'MapLayersToolStrip
         '
@@ -338,7 +339,7 @@ Partial Class Form1
         '
         'MapToolStrip
         '
-        Me.MapToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ZoomToFitAllLayersToolStripButton, Me.ToolStripSeparator2, Me.AddLayerToolStripLabel, Me.ToolStripSeparator1})
+        Me.MapToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ZoomToFitAllLayersToolStripButton, Me.ToolStripSeparator2})
         Me.MapToolStrip.Location = New System.Drawing.Point(0, 0)
         Me.MapToolStrip.Name = "MapToolStrip"
         Me.MapToolStrip.Size = New System.Drawing.Size(915, 25)
@@ -359,17 +360,6 @@ Partial Class Form1
         '
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
         Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 25)
-        '
-        'AddLayerToolStripLabel
-        '
-        Me.AddLayerToolStripLabel.Name = "AddLayerToolStripLabel"
-        Me.AddLayerToolStripLabel.Size = New System.Drawing.Size(66, 22)
-        Me.AddLayerToolStripLabel.Text = "Add layer..."
-        '
-        'ToolStripSeparator1
-        '
-        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
         '
         'MapLayerGridControl
         '
@@ -411,11 +401,23 @@ Partial Class Form1
         Me.POZFileToolStripLabel.Size = New System.Drawing.Size(48, 22)
         Me.POZFileToolStripLabel.Text = "POZFile"
         '
-        'ZoomToLayerToolStripMenuItem
+        'KMLToolStripMenuItem
         '
-        Me.ZoomToLayerToolStripMenuItem.Name = "ZoomToLayerToolStripMenuItem"
-        Me.ZoomToLayerToolStripMenuItem.Size = New System.Drawing.Size(181, 22)
-        Me.ZoomToLayerToolStripMenuItem.Text = "Zoom to layer"
+        Me.KMLToolStripMenuItem.Name = "KMLToolStripMenuItem"
+        Me.KMLToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.KMLToolStripMenuItem.Text = "KML"
+        '
+        'ShapefileToolStripMenuItem
+        '
+        Me.ShapefileToolStripMenuItem.Name = "ShapefileToolStripMenuItem"
+        Me.ShapefileToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ShapefileToolStripMenuItem.Text = "Shapefile"
+        '
+        'ShapefileToolStripMenuItem1
+        '
+        Me.ShapefileToolStripMenuItem1.Name = "ShapefileToolStripMenuItem1"
+        Me.ShapefileToolStripMenuItem1.Size = New System.Drawing.Size(180, 22)
+        Me.ShapefileToolStripMenuItem1.Text = "Shapefile..."
         '
         'Form1
         '
@@ -489,8 +491,6 @@ Partial Class Form1
     Friend WithEvents MapToolStrip As ToolStrip
     Friend WithEvents ZoomToFitAllLayersToolStripButton As ToolStripButton
     Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
-    Friend WithEvents AddLayerToolStripLabel As ToolStripLabel
-    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
     Friend WithEvents POZFileToolStripLabel As ToolStripLabel
     Friend WithEvents MapLayersToolStrip As ToolStrip
     Friend WithEvents ToolStripLabel1 As ToolStripLabel
@@ -498,10 +498,12 @@ Partial Class Form1
     Friend WithEvents PromoteLayerToolStripButton As ToolStripButton
     Friend WithEvents DemoteLayerToolStripButton As ToolStripButton
     Friend WithEvents MapLayerContextMenuStrip As ContextMenuStrip
-    Friend WithEvents ExportToKMLToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents ExportToShapefileToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents LayerPropertiesToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents AddSpatialDataToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents CSVToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ZoomToLayerToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ToolStripMenuItem1 As ToolStripMenuItem
+    Friend WithEvents KMLToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ShapefileToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ShapefileToolStripMenuItem1 As ToolStripMenuItem
 End Class
