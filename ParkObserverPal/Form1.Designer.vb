@@ -32,6 +32,7 @@ Partial Class Form1
         Me.MapLayerContextMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.ExportToKMLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExportToShapefileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.LayerPropertiesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MapLayersToolStrip = New System.Windows.Forms.ToolStrip()
         Me.ToolStripLabel1 = New System.Windows.Forms.ToolStripLabel()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
@@ -56,7 +57,6 @@ Partial Class Form1
         Me.MainToolStrip = New System.Windows.Forms.ToolStrip()
         Me.OpenPOZFileToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.POZFileToolStripLabel = New System.Windows.Forms.ToolStripLabel()
-        Me.LayerPropertiesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MainTabControl.SuspendLayout()
         Me.MapTabPage.SuspendLayout()
         CType(Me.MapSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -145,7 +145,7 @@ Partial Class Form1
         Me.MapLayersSplitContainerControl.Panel2.Controls.Add(Me.MapLayerTabControl)
         Me.MapLayersSplitContainerControl.Panel2.Text = "Panel2"
         Me.MapLayersSplitContainerControl.Size = New System.Drawing.Size(242, 665)
-        Me.MapLayersSplitContainerControl.SplitterPosition = 188
+        Me.MapLayersSplitContainerControl.SplitterPosition = 440
         Me.MapLayersSplitContainerControl.TabIndex = 4
         '
         'MapLayersCheckedListBoxControl
@@ -154,14 +154,14 @@ Partial Class Form1
         Me.MapLayersCheckedListBoxControl.Dock = System.Windows.Forms.DockStyle.Fill
         Me.MapLayersCheckedListBoxControl.Location = New System.Drawing.Point(0, 25)
         Me.MapLayersCheckedListBoxControl.Name = "MapLayersCheckedListBoxControl"
-        Me.MapLayersCheckedListBoxControl.Size = New System.Drawing.Size(242, 163)
+        Me.MapLayersCheckedListBoxControl.Size = New System.Drawing.Size(242, 415)
         Me.MapLayersCheckedListBoxControl.TabIndex = 3
         '
         'MapLayerContextMenuStrip
         '
         Me.MapLayerContextMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ExportToKMLToolStripMenuItem, Me.ExportToShapefileToolStripMenuItem, Me.LayerPropertiesToolStripMenuItem})
         Me.MapLayerContextMenuStrip.Name = "MapLayerContextMenuStrip"
-        Me.MapLayerContextMenuStrip.Size = New System.Drawing.Size(182, 92)
+        Me.MapLayerContextMenuStrip.Size = New System.Drawing.Size(182, 70)
         '
         'ExportToKMLToolStripMenuItem
         '
@@ -174,6 +174,12 @@ Partial Class Form1
         Me.ExportToShapefileToolStripMenuItem.Name = "ExportToShapefileToolStripMenuItem"
         Me.ExportToShapefileToolStripMenuItem.Size = New System.Drawing.Size(181, 22)
         Me.ExportToShapefileToolStripMenuItem.Text = "Export to shapefile..."
+        '
+        'LayerPropertiesToolStripMenuItem
+        '
+        Me.LayerPropertiesToolStripMenuItem.Name = "LayerPropertiesToolStripMenuItem"
+        Me.LayerPropertiesToolStripMenuItem.Size = New System.Drawing.Size(181, 22)
+        Me.LayerPropertiesToolStripMenuItem.Text = "Layer properties..."
         '
         'MapLayersToolStrip
         '
@@ -222,7 +228,7 @@ Partial Class Form1
         Me.MapLayerTabControl.Location = New System.Drawing.Point(0, 0)
         Me.MapLayerTabControl.Name = "MapLayerTabControl"
         Me.MapLayerTabControl.SelectedIndex = 0
-        Me.MapLayerTabControl.Size = New System.Drawing.Size(242, 467)
+        Me.MapLayerTabControl.Size = New System.Drawing.Size(242, 215)
         Me.MapLayerTabControl.TabIndex = 5
         '
         'MapLayerLabelingTabPage
@@ -231,7 +237,7 @@ Partial Class Form1
         Me.MapLayerLabelingTabPage.Location = New System.Drawing.Point(4, 22)
         Me.MapLayerLabelingTabPage.Name = "MapLayerLabelingTabPage"
         Me.MapLayerLabelingTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.MapLayerLabelingTabPage.Size = New System.Drawing.Size(234, 441)
+        Me.MapLayerLabelingTabPage.Size = New System.Drawing.Size(234, 189)
         Me.MapLayerLabelingTabPage.TabIndex = 0
         Me.MapLayerLabelingTabPage.Text = "Choose map labels"
         Me.MapLayerLabelingTabPage.UseVisualStyleBackColor = True
@@ -241,7 +247,7 @@ Partial Class Form1
         Me.LayerLabelCheckedListBoxControl.Dock = System.Windows.Forms.DockStyle.Fill
         Me.LayerLabelCheckedListBoxControl.Location = New System.Drawing.Point(3, 3)
         Me.LayerLabelCheckedListBoxControl.Name = "LayerLabelCheckedListBoxControl"
-        Me.LayerLabelCheckedListBoxControl.Size = New System.Drawing.Size(228, 435)
+        Me.LayerLabelCheckedListBoxControl.Size = New System.Drawing.Size(228, 183)
         Me.LayerLabelCheckedListBoxControl.TabIndex = 4
         '
         'MapLayerPropertiesTabPage
@@ -302,16 +308,16 @@ Partial Class Form1
         '
         Me.MapPanelSplitContainer.Panel2.Controls.Add(Me.MapLayerGridControl)
         Me.MapPanelSplitContainer.Size = New System.Drawing.Size(915, 665)
-        Me.MapPanelSplitContainer.SplitterDistance = 444
+        Me.MapPanelSplitContainer.SplitterDistance = 511
         Me.MapPanelSplitContainer.TabIndex = 1
         '
         'MapControl
         '
         Me.MapControl.BackColor = System.Drawing.Color.LightSteelBlue
-        Me.MapControl.Dock = System.Windows.Forms.DockStyle.Right
+        Me.MapControl.Dock = System.Windows.Forms.DockStyle.Fill
         Me.MapControl.Location = New System.Drawing.Point(0, 25)
         Me.MapControl.Name = "MapControl"
-        Me.MapControl.Size = New System.Drawing.Size(915, 419)
+        Me.MapControl.Size = New System.Drawing.Size(915, 486)
         Me.MapControl.TabIndex = 0
         '
         'MapToolStrip
@@ -355,7 +361,7 @@ Partial Class Form1
         Me.MapLayerGridControl.Location = New System.Drawing.Point(0, 0)
         Me.MapLayerGridControl.MainView = Me.GridView1
         Me.MapLayerGridControl.Name = "MapLayerGridControl"
-        Me.MapLayerGridControl.Size = New System.Drawing.Size(915, 217)
+        Me.MapLayerGridControl.Size = New System.Drawing.Size(915, 150)
         Me.MapLayerGridControl.TabIndex = 0
         Me.MapLayerGridControl.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.GridView1})
         '
@@ -388,12 +394,6 @@ Partial Class Form1
         Me.POZFileToolStripLabel.Name = "POZFileToolStripLabel"
         Me.POZFileToolStripLabel.Size = New System.Drawing.Size(48, 22)
         Me.POZFileToolStripLabel.Text = "POZFile"
-        '
-        'LayerPropertiesToolStripMenuItem
-        '
-        Me.LayerPropertiesToolStripMenuItem.Name = "LayerPropertiesToolStripMenuItem"
-        Me.LayerPropertiesToolStripMenuItem.Size = New System.Drawing.Size(181, 22)
-        Me.LayerPropertiesToolStripMenuItem.Text = "Layer properties..."
         '
         'Form1
         '

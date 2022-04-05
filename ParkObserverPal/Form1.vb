@@ -11,21 +11,17 @@ Public Class Form1
     Dim POZDataSet As New DataSet
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+
+    End Sub
+
+    Private Sub OpenPOZArchive(POZArchive As FileInfo)
         'Temporary holder for poz file
-        Dim POZZipFile As String = "C:\Temp\Loons 2022-03-29.poz"
+        Dim POZZipFile As String = POZArchive.FullName '"C:\Temp\Loons 2022-03-29.poz"
 
         'Create a Dataset into which to dump the contents of all the CSV files in POZZipFile
         POZDataSet.Clear()
-
         POZDataSet = GetDatasetFromPOZFile(POZZipFile)
         POZDataSet.DataSetName = POZZipFile
-
-        'Dim DSTabPage As New TabPage("Park Observer Dataset")
-        'Me.MainTabControl.TabPages.Add(DSTabPage)
-        'Dim DSPropertyGrid As New PropertyGrid
-        'DSPropertyGrid.Dock = DockStyle.Fill
-        'DSPropertyGrid.SelectedObject = POZDataSet
-        'DSTabPage.Controls.Add(DSPropertyGrid)
 
         'Load up the various grids and map with poz data
         LoadPOZDataset(POZDataSet)
@@ -770,5 +766,10 @@ Public Class Form1
         Catch ex As Exception
             MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
         End Try
+    End Sub
+
+    Private Sub OpenPOZFileToolStripButton_Click(sender As Object, e As EventArgs) Handles OpenPOZFileToolStripButton.Click
+        Dim POZFile As FileInfo = SkeeterUtilities.DirectoryAndFile.DirectoryAndFileUtilities.GetFile("Park Observer File (*.poz)|*.poz", "Select a Park Observer File (.poz)", "")
+        OpenPOZArchive(POZFile)
     End Sub
 End Class

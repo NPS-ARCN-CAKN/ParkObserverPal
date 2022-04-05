@@ -11,20 +11,51 @@ Public Class MapLayerPropertiesForm
         ' This call is required by the designer.
         InitializeComponent()
 
-        'Declare the map layer to work with
-        MapLayer = VectorItemsLayer
+        'Make sure we have a valid layer
+        If Not MapLayer Is Nothing Then
+            Me.Text = MapLayer.Name & " Properties"
 
-        'DevEx sets the shape titles pattern by default to {NAME}, clear it so we can use our own
-        MapLayer.ShapeTitlesPattern = ""
+            'Declare the map layer to work with
+            MapLayer = VectorItemsLayer
 
-        'Show the map layers name in the text box
-        Me.LayerNameLabel.Text = MapLayer.Name
+            'DevEx sets the shape titles pattern by default to {NAME}, clear it so we can use our own
+            MapLayer.ShapeTitlesPattern = ""
 
-        'Load the columns into the chooser listbox so user can choose columns for labels
-        LoadMapItemAttributesIntoListBox(MapLayer)
+            'Show the map layers name in the text box
+            Me.LayerNameLabel.Text = MapLayer.Name
 
-        'Load the map layer into the advanced map layer property grid control
-        Me.MapLayerPropertyGridControl.SelectedObject = MapLayer
+            'Load the columns into the chooser listbox so user can choose columns for labels
+            LoadMapItemAttributesIntoListBox(MapLayer)
+
+            'Load the map layer into the advanced map layer property grid control
+            Me.MapLayerPropertyGridControl.SelectedObject = MapLayer
+
+            'Load the mark type options into the selector list box
+            With Me.MarkerSymbolListBox.Items
+                .Add(MarkerType.Circle.ToString)
+                .Add(MarkerType.Cross.ToString)
+                .Add(MarkerType.Diamond.ToString)
+                .Add(MarkerType.Hexagon.ToString)
+                .Add(MarkerType.InvertedTriangle.ToString)
+                .Add(MarkerType.Pentagon.ToString)
+                .Add(MarkerType.Plus.ToString)
+                .Add(MarkerType.Square.ToString)
+                .Add(MarkerType.Star5.ToString)
+                .Add(MarkerType.Star6.ToString)
+                .Add(MarkerType.Star8.ToString)
+                .Add(MarkerType.Triangle.ToString)
+            End With
+
+
+
+
+        Else
+            Dim Message As String = "Map layer is nothing."
+            MsgBox(Message, MsgBoxStyle.Information)
+            Me.Close()
+        End If
+
+
     End Sub
 
     ''' <summary>
@@ -35,23 +66,25 @@ Public Class MapLayerPropertiesForm
         Try
             'Make sure we have a map layer to work with
             If Not MapLayer Is Nothing Then
-                'Make sure there is at least one row of data
-                If MapLayer.Data.Items.Count >= 0 Then
+                'Make sure there is map layer data
+                If Not MapLayer.Data Is Nothing Then
+                    'Make sure there is at least one row of data
+                    If MapLayer.Data.Items.Count >= 0 Then
 
-                    'Clear out the existing items in the list box of column names
-                    Me.MapLayerColumnsCheckedListBoxControl.Items.Clear()
+                        'Clear out the existing items in the list box of column names
+                        Me.MapLayerColumnsCheckedListBoxControl.Items.Clear()
 
-                    'Get a handle on the first map item (row) in the layer
-                    Dim MI As MapItem = MapLayer.Data.Items(0)
+                        'Get a handle on the first map item (row) in the layer
+                        Dim MI As MapItem = MapLayer.Data.Items(0)
 
-                    'Loop through the column names and add them to the listbox of column names
-                    For i As Integer = 0 To MI.Attributes.Count - 1
-                        Me.MapLayerColumnsCheckedListBoxControl.Items.Add(MI.Attributes(i).Name)
-                    Next
+                        'Loop through the column names and add them to the listbox of column names
+                        For i As Integer = 0 To MI.Attributes.Count - 1
+                            Me.MapLayerColumnsCheckedListBoxControl.Items.Add(MI.Attributes(i).Name)
+                        Next
+                    End If
                 End If
+
             End If
-
-
         Catch ex As Exception
             MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
         End Try
@@ -102,4 +135,76 @@ Public Class MapLayerPropertiesForm
         End If
     End Sub
 
+
+
+    Private Function GetCurrentMarker() As MarkerType
+        Dim Symbology As String = Me.MarkerSymbolListBox.Text.Trim
+        Dim MarkerType As MarkerType = MarkerType.Circle
+        If Symbology = "Circle" Then
+            MarkerType = MarkerType.Circle
+        ElseIf Symbology = "Cross" Then
+            MarkerType = MarkerType.Cross
+        ElseIf Symbology = "Diamond" Then
+            MarkerType = MarkerType.Diamond
+        ElseIf Symbology = "Hexagon" Then
+            MarkerType = MarkerType.Hexagon
+        ElseIf Symbology = "InvertedTriangle" Then
+            MarkerType = MarkerType.InvertedTriangle
+        ElseIf Symbology = "Pentagon" Then
+            MarkerType = MarkerType.Pentagon
+        ElseIf Symbology = "Plus" Then
+            MarkerType = MarkerType.Plus
+        ElseIf Symbology = "Square" Then
+            MarkerType = MarkerType.Square
+        ElseIf Symbology = "Star5" Then
+            MarkerType = MarkerType.Star5
+        ElseIf Symbology = "Star6" Then
+            MarkerType = MarkerType.Star6
+        ElseIf Symbology = "Star8" Then
+            MarkerType = MarkerType.Star8
+        ElseIf Symbology = "Triangle" Then
+            MarkerType = MarkerType.Triangle
+        End If
+        Return MarkerType
+    End Function
+
+    ''' <summary>
+    ''' Changes the symbology of the map layer
+    ''' </summary>
+    ''' <param name="MapLayer">Map layer. VectorItemsLayer.</param>
+    Private Sub ChangeSymbology(MapLayer As VectorItemsLayer)
+        Try
+            If Not MapLayer Is Nothing Then
+
+                'If Not MapLayer.Data Is Nothing Then
+                Dim CurrentMarkerType As MarkerType = GetCurrentMarker()
+
+                'Loop through each map item and change the properties
+                For Each Item As MapBubble In MapLayer.Data.Items
+                    Item.MarkerType = CurrentMarkerType
+                    Item.Fill = Me.MarkerColorPickEdit.Color
+                    Item.Stroke = Me.MarkerBorderColorPickEdit.Color
+                    Item.Size = Me.MarkerSizeNumericUpDown.Value
+                Next
+                'End If
+            End If
+        Catch ex As Exception
+            MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
+        End Try
+    End Sub
+
+    Private Sub MarkerSizeNumericUpDown_ValueChanged(sender As Object, e As EventArgs) Handles MarkerSizeNumericUpDown.ValueChanged
+        ChangeSymbology(MapLayer)
+    End Sub
+
+    Private Sub MarkerColorPickEdit_TextChanged(sender As Object, e As EventArgs) Handles MarkerColorPickEdit.TextChanged
+        ChangeSymbology(MapLayer)
+    End Sub
+    Private Sub MarkerSymbolListBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles MarkerSymbolListBox.SelectedIndexChanged
+        ChangeSymbology(MapLayer)
+    End Sub
+
+    Private Sub MarkerBorderColorPickEdit_TextChanged(sender As Object, e As EventArgs) Handles MarkerBorderColorPickEdit.TextChanged
+        ChangeSymbology(MapLayer)
+    End Sub
 End Class

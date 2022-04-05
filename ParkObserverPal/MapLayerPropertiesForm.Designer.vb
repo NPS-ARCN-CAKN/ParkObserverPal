@@ -36,11 +36,23 @@ Partial Class MapLayerPropertiesForm
         Me.SymbologyTabPage = New System.Windows.Forms.TabPage()
         Me.LayerPropertiesTabPage = New System.Windows.Forms.TabPage()
         Me.MapLayerPropertyGridControl = New DevExpress.XtraVerticalGrid.PropertyGridControl()
+        Me.MarkerSymbolListBox = New System.Windows.Forms.ListBox()
+        Me.MarkerSizeNumericUpDown = New System.Windows.Forms.NumericUpDown()
+        Me.MarkerColorPickEdit = New DevExpress.XtraEditors.ColorPickEdit()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.MarkerBorderColorPickEdit = New DevExpress.XtraEditors.ColorPickEdit()
         CType(Me.MapLayerColumnsCheckedListBoxControl, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.LayerTabControl.SuspendLayout()
         Me.LabelsTabPage.SuspendLayout()
+        Me.SymbologyTabPage.SuspendLayout()
         Me.LayerPropertiesTabPage.SuspendLayout()
         CType(Me.MapLayerPropertyGridControl, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.MarkerSizeNumericUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.MarkerColorPickEdit.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.MarkerBorderColorPickEdit.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'LayerNameLabel
@@ -139,10 +151,18 @@ Partial Class MapLayerPropertiesForm
         '
         'SymbologyTabPage
         '
+        Me.SymbologyTabPage.Controls.Add(Me.Label5)
+        Me.SymbologyTabPage.Controls.Add(Me.MarkerBorderColorPickEdit)
+        Me.SymbologyTabPage.Controls.Add(Me.Label4)
+        Me.SymbologyTabPage.Controls.Add(Me.Label3)
+        Me.SymbologyTabPage.Controls.Add(Me.Label2)
+        Me.SymbologyTabPage.Controls.Add(Me.MarkerColorPickEdit)
+        Me.SymbologyTabPage.Controls.Add(Me.MarkerSizeNumericUpDown)
+        Me.SymbologyTabPage.Controls.Add(Me.MarkerSymbolListBox)
         Me.SymbologyTabPage.Location = New System.Drawing.Point(4, 22)
         Me.SymbologyTabPage.Name = "SymbologyTabPage"
         Me.SymbologyTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.SymbologyTabPage.Size = New System.Drawing.Size(251, 373)
+        Me.SymbologyTabPage.Size = New System.Drawing.Size(243, 354)
         Me.SymbologyTabPage.TabIndex = 1
         Me.SymbologyTabPage.Text = "Symbology"
         Me.SymbologyTabPage.UseVisualStyleBackColor = True
@@ -167,6 +187,84 @@ Partial Class MapLayerPropertiesForm
         Me.MapLayerPropertyGridControl.Size = New System.Drawing.Size(245, 367)
         Me.MapLayerPropertyGridControl.TabIndex = 0
         '
+        'MarkerSymbolListBox
+        '
+        Me.MarkerSymbolListBox.FormattingEnabled = True
+        Me.MarkerSymbolListBox.Location = New System.Drawing.Point(8, 34)
+        Me.MarkerSymbolListBox.Name = "MarkerSymbolListBox"
+        Me.MarkerSymbolListBox.Size = New System.Drawing.Size(227, 173)
+        Me.MarkerSymbolListBox.TabIndex = 0
+        '
+        'MarkerSizeNumericUpDown
+        '
+        Me.MarkerSizeNumericUpDown.Location = New System.Drawing.Point(115, 225)
+        Me.MarkerSizeNumericUpDown.Name = "MarkerSizeNumericUpDown"
+        Me.MarkerSizeNumericUpDown.Size = New System.Drawing.Size(120, 20)
+        Me.MarkerSizeNumericUpDown.TabIndex = 1
+        Me.MarkerSizeNumericUpDown.Value = New Decimal(New Integer() {12, 0, 0, 0})
+        '
+        'MarkerColorPickEdit
+        '
+        Me.MarkerColorPickEdit.EditValue = System.Drawing.Color.Empty
+        Me.MarkerColorPickEdit.Location = New System.Drawing.Point(8, 274)
+        Me.MarkerColorPickEdit.Name = "MarkerColorPickEdit"
+        Me.MarkerColorPickEdit.Properties.AutomaticColor = System.Drawing.Color.Black
+        Me.MarkerColorPickEdit.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)})
+        Me.MarkerColorPickEdit.Properties.ShowWebSafeColors = True
+        Me.MarkerColorPickEdit.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.Standard
+        Me.MarkerColorPickEdit.Size = New System.Drawing.Size(227, 20)
+        Me.MarkerColorPickEdit.TabIndex = 2
+        Me.MarkerColorPickEdit.ToolTip = "Select a color for the map layer's items."
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(8, 18)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(78, 13)
+        Me.Label2.TabIndex = 3
+        Me.Label2.Text = "Marker symbol:"
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(5, 258)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(69, 13)
+        Me.Label3.TabIndex = 4
+        Me.Label3.Text = "Marker color:"
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(5, 227)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(64, 13)
+        Me.Label4.TabIndex = 5
+        Me.Label4.Text = "Marker size:"
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(5, 307)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(101, 13)
+        Me.Label5.TabIndex = 7
+        Me.Label5.Text = "Marker stroke color:"
+        '
+        'MarkerBorderColorPickEdit
+        '
+        Me.MarkerBorderColorPickEdit.EditValue = System.Drawing.Color.Empty
+        Me.MarkerBorderColorPickEdit.Location = New System.Drawing.Point(8, 323)
+        Me.MarkerBorderColorPickEdit.Name = "MarkerBorderColorPickEdit"
+        Me.MarkerBorderColorPickEdit.Properties.AutomaticColor = System.Drawing.Color.Black
+        Me.MarkerBorderColorPickEdit.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)})
+        Me.MarkerBorderColorPickEdit.Properties.ShowWebSafeColors = True
+        Me.MarkerBorderColorPickEdit.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.Standard
+        Me.MarkerBorderColorPickEdit.Size = New System.Drawing.Size(227, 20)
+        Me.MarkerBorderColorPickEdit.TabIndex = 6
+        Me.MarkerBorderColorPickEdit.ToolTip = "Select a color for the map layer's items."
+        '
         'MapLayerPropertiesForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -177,12 +275,18 @@ Partial Class MapLayerPropertiesForm
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow
         Me.Name = "MapLayerPropertiesForm"
         Me.Text = "Map layer properties"
+        Me.TopMost = True
         CType(Me.MapLayerColumnsCheckedListBoxControl, System.ComponentModel.ISupportInitialize).EndInit()
         Me.LayerTabControl.ResumeLayout(False)
         Me.LabelsTabPage.ResumeLayout(False)
         Me.LabelsTabPage.PerformLayout()
+        Me.SymbologyTabPage.ResumeLayout(False)
+        Me.SymbologyTabPage.PerformLayout()
         Me.LayerPropertiesTabPage.ResumeLayout(False)
         CType(Me.MapLayerPropertyGridControl, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.MarkerSizeNumericUpDown, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.MarkerColorPickEdit.Properties, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.MarkerBorderColorPickEdit.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -200,4 +304,12 @@ Partial Class MapLayerPropertiesForm
     Friend WithEvents Label1 As Label
     Friend WithEvents LayerPropertiesTabPage As TabPage
     Friend WithEvents MapLayerPropertyGridControl As DevExpress.XtraVerticalGrid.PropertyGridControl
+    Friend WithEvents MarkerSymbolListBox As ListBox
+    Friend WithEvents MarkerColorPickEdit As DevExpress.XtraEditors.ColorPickEdit
+    Friend WithEvents MarkerSizeNumericUpDown As NumericUpDown
+    Friend WithEvents Label5 As Label
+    Friend WithEvents MarkerBorderColorPickEdit As DevExpress.XtraEditors.ColorPickEdit
+    Friend WithEvents Label4 As Label
+    Friend WithEvents Label3 As Label
+    Friend WithEvents Label2 As Label
 End Class
