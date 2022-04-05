@@ -33,8 +33,6 @@ Public Class Form1
 
         'Load the map layers into the list box selector
         LoadMapLayersListBox()
-
-        Me.MapControlPropertyGridControl.SelectedObject = Me.MapControl
     End Sub
 
     ''' <summary>
@@ -524,17 +522,6 @@ Public Class Form1
             'Get a handle on the map layer with the name from above
             Dim MapLayer As VectorItemsLayer = MapControl.Layers(LayerName)
 
-            'Load the map layer's properties into the map layer property grid
-            Me.MapLayerPropertyGridControl.SelectedObject = MapLayer
-
-            'Load the column names into the labeling columns listbox
-            Me.LayerLabelCheckedListBoxControl.Items.Clear()
-            If Not POZDataSet.Tables(LayerName) Is Nothing Then
-                For Each Col As DataColumn In POZDataSet.Tables(LayerName).Columns
-                    Me.LayerLabelCheckedListBoxControl.Items.Add(Col.ColumnName, False)
-                Next
-            End If
-
             'Show the data in the map layer grid control
             Dim DT As DataTable
             Dim GV As GridView = TryCast(MapLayerGridControl.MainView, GridView)
@@ -557,34 +544,34 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub LayerLabelCheckedListBoxControl_ItemCheck(sender As Object, e As DevExpress.XtraEditors.Controls.ItemCheckEventArgs) Handles LayerLabelCheckedListBoxControl.ItemCheck
-        'Loop through the column names in the LayerLabelCheckedListBoxControl's CheckedItems collection
-        'create a labeling pattern and label the points in the map layer referenced by LayerName
-        Try
-            'Get the name of the layer from the MapLayersCheckedListBoxControl
-            Dim LayerName As String = MapLayersCheckedListBoxControl.Text
+    'Private Sub LayerLabelCheckedListBoxControl_ItemCheck(sender As Object, e As DevExpress.XtraEditors.Controls.ItemCheckEventArgs)
+    '    'Loop through the column names in the LayerLabelCheckedListBoxControl's CheckedItems collection
+    '    'create a labeling pattern and label the points in the map layer referenced by LayerName
+    '    Try
+    '        'Get the name of the layer from the MapLayersCheckedListBoxControl
+    '        Dim LayerName As String = MapLayersCheckedListBoxControl.Text
 
-            'Make a labeling pattern based on the columns selected in the child LayerLabelCheckedListBoxControl
-            Dim LabelPattern As String = ""
-            For Each SelectedItem As Object In Me.LayerLabelCheckedListBoxControl.CheckedItems
-                'Append each column name to the pattern
-                LabelPattern = LabelPattern & "{" & SelectedItem.ToString & "} "
-            Next
+    '        'Make a labeling pattern based on the columns selected in the child LayerLabelCheckedListBoxControl
+    '        Dim LabelPattern As String = ""
+    '        For Each SelectedItem As Object In Me.LayerLabelCheckedListBoxControl.CheckedItems
+    '            'Append each column name to the pattern
+    '            LabelPattern = LabelPattern & "{" & SelectedItem.ToString & "} "
+    '        Next
 
-            'Get a reference to the map layer referenced by LayerName
-            Dim BubblesLayer As VectorItemsLayer = Me.MapControl.Layers(LayerName)
+    '        'Get a reference to the map layer referenced by LayerName
+    '        Dim BubblesLayer As VectorItemsLayer = Me.MapControl.Layers(LayerName)
 
-            'Submit the label pattern for labeling the points.
-            If Not BubblesLayer Is Nothing Then
-                With BubblesLayer
-                    .ShapeTitlesPattern = LabelPattern.Trim
-                    .ShapeTitlesVisibility = True
-                End With
-            End If
-        Catch ex As Exception
-            MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
-        End Try
-    End Sub
+    '        'Submit the label pattern for labeling the points.
+    '        If Not BubblesLayer Is Nothing Then
+    '            With BubblesLayer
+    '                .ShapeTitlesPattern = LabelPattern.Trim
+    '                .ShapeTitlesVisibility = True
+    '            End With
+    '        End If
+    '    Catch ex As Exception
+    '        MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
+    '    End Try
+    'End Sub
 
     Private Sub MapControl_DrawMapItem(sender As Object, e As DrawMapItemEventArgs) Handles MapControl.DrawMapItem
         'e.StrokeWidth = InputBox("Stroke", "Stroke", 10)

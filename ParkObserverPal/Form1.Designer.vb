@@ -27,26 +27,21 @@ Partial Class Form1
         Me.MainTabControl = New System.Windows.Forms.TabControl()
         Me.MapTabPage = New System.Windows.Forms.TabPage()
         Me.MapSplitContainer = New System.Windows.Forms.SplitContainer()
-        Me.MapLayersSplitContainerControl = New DevExpress.XtraEditors.SplitContainerControl()
         Me.MapLayersCheckedListBoxControl = New DevExpress.XtraEditors.CheckedListBoxControl()
         Me.MapLayerContextMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.ZoomToLayerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.LayerPropertiesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AddSpatialDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CSVToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ShapefileToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ZoomToLayerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.LayerPropertiesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.KMLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ShapefileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MapLayersToolStrip = New System.Windows.Forms.ToolStrip()
         Me.ToolStripLabel1 = New System.Windows.Forms.ToolStripLabel()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.PromoteLayerToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.DemoteLayerToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.MapLayerTabControl = New System.Windows.Forms.TabControl()
-        Me.MapLayerLabelingTabPage = New System.Windows.Forms.TabPage()
-        Me.LayerLabelCheckedListBoxControl = New DevExpress.XtraEditors.CheckedListBoxControl()
-        Me.MapLayerPropertiesTabPage = New System.Windows.Forms.TabPage()
-        Me.MapLayerPropertyGridControl = New DevExpress.XtraVerticalGrid.PropertyGridControl()
-        Me.MapPropertiesTabPage = New System.Windows.Forms.TabPage()
-        Me.MapControlPropertyGridControl = New DevExpress.XtraVerticalGrid.PropertyGridControl()
         Me.MapPanelSplitContainer = New System.Windows.Forms.SplitContainer()
         Me.MapControl = New DevExpress.XtraMap.MapControl()
         Me.MapToolStrip = New System.Windows.Forms.ToolStrip()
@@ -57,31 +52,15 @@ Partial Class Form1
         Me.MainToolStrip = New System.Windows.Forms.ToolStrip()
         Me.OpenPOZFileToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.POZFileToolStripLabel = New System.Windows.Forms.ToolStripLabel()
-        Me.KMLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ShapefileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ShapefileToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.MainTabControl.SuspendLayout()
         Me.MapTabPage.SuspendLayout()
         CType(Me.MapSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MapSplitContainer.Panel1.SuspendLayout()
         Me.MapSplitContainer.Panel2.SuspendLayout()
         Me.MapSplitContainer.SuspendLayout()
-        CType(Me.MapLayersSplitContainerControl, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.MapLayersSplitContainerControl.Panel1, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.MapLayersSplitContainerControl.Panel1.SuspendLayout()
-        CType(Me.MapLayersSplitContainerControl.Panel2, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.MapLayersSplitContainerControl.Panel2.SuspendLayout()
-        Me.MapLayersSplitContainerControl.SuspendLayout()
         CType(Me.MapLayersCheckedListBoxControl, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MapLayerContextMenuStrip.SuspendLayout()
         Me.MapLayersToolStrip.SuspendLayout()
-        Me.MapLayerTabControl.SuspendLayout()
-        Me.MapLayerLabelingTabPage.SuspendLayout()
-        CType(Me.LayerLabelCheckedListBoxControl, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.MapLayerPropertiesTabPage.SuspendLayout()
-        CType(Me.MapLayerPropertyGridControl, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.MapPropertiesTabPage.SuspendLayout()
-        CType(Me.MapControlPropertyGridControl, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.MapPanelSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MapPanelSplitContainer.Panel1.SuspendLayout()
         Me.MapPanelSplitContainer.Panel2.SuspendLayout()
@@ -121,7 +100,8 @@ Partial Class Form1
         '
         'MapSplitContainer.Panel1
         '
-        Me.MapSplitContainer.Panel1.Controls.Add(Me.MapLayersSplitContainerControl)
+        Me.MapSplitContainer.Panel1.Controls.Add(Me.MapLayersCheckedListBoxControl)
+        Me.MapSplitContainer.Panel1.Controls.Add(Me.MapLayersToolStrip)
         '
         'MapSplitContainer.Panel2
         '
@@ -130,34 +110,13 @@ Partial Class Form1
         Me.MapSplitContainer.SplitterDistance = 242
         Me.MapSplitContainer.TabIndex = 1
         '
-        'MapLayersSplitContainerControl
-        '
-        Me.MapLayersSplitContainerControl.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.MapLayersSplitContainerControl.Horizontal = False
-        Me.MapLayersSplitContainerControl.Location = New System.Drawing.Point(0, 0)
-        Me.MapLayersSplitContainerControl.Name = "MapLayersSplitContainerControl"
-        '
-        'MapLayersSplitContainerControl.Panel1
-        '
-        Me.MapLayersSplitContainerControl.Panel1.Controls.Add(Me.MapLayersCheckedListBoxControl)
-        Me.MapLayersSplitContainerControl.Panel1.Controls.Add(Me.MapLayersToolStrip)
-        Me.MapLayersSplitContainerControl.Panel1.Text = "Panel1"
-        '
-        'MapLayersSplitContainerControl.Panel2
-        '
-        Me.MapLayersSplitContainerControl.Panel2.Controls.Add(Me.MapLayerTabControl)
-        Me.MapLayersSplitContainerControl.Panel2.Text = "Panel2"
-        Me.MapLayersSplitContainerControl.Size = New System.Drawing.Size(242, 665)
-        Me.MapLayersSplitContainerControl.SplitterPosition = 440
-        Me.MapLayersSplitContainerControl.TabIndex = 4
-        '
         'MapLayersCheckedListBoxControl
         '
         Me.MapLayersCheckedListBoxControl.ContextMenuStrip = Me.MapLayerContextMenuStrip
         Me.MapLayersCheckedListBoxControl.Dock = System.Windows.Forms.DockStyle.Fill
         Me.MapLayersCheckedListBoxControl.Location = New System.Drawing.Point(0, 25)
         Me.MapLayersCheckedListBoxControl.Name = "MapLayersCheckedListBoxControl"
-        Me.MapLayersCheckedListBoxControl.Size = New System.Drawing.Size(242, 415)
+        Me.MapLayersCheckedListBoxControl.Size = New System.Drawing.Size(242, 640)
         Me.MapLayersCheckedListBoxControl.TabIndex = 3
         '
         'MapLayerContextMenuStrip
@@ -166,37 +125,55 @@ Partial Class Form1
         Me.MapLayerContextMenuStrip.Name = "MapLayerContextMenuStrip"
         Me.MapLayerContextMenuStrip.Size = New System.Drawing.Size(168, 92)
         '
-        'ZoomToLayerToolStripMenuItem
-        '
-        Me.ZoomToLayerToolStripMenuItem.Name = "ZoomToLayerToolStripMenuItem"
-        Me.ZoomToLayerToolStripMenuItem.Size = New System.Drawing.Size(181, 22)
-        Me.ZoomToLayerToolStripMenuItem.Text = "Zoom to layer"
-        '
-        'LayerPropertiesToolStripMenuItem
-        '
-        Me.LayerPropertiesToolStripMenuItem.Name = "LayerPropertiesToolStripMenuItem"
-        Me.LayerPropertiesToolStripMenuItem.Size = New System.Drawing.Size(181, 22)
-        Me.LayerPropertiesToolStripMenuItem.Text = "Layer properties..."
-        '
         'AddSpatialDataToolStripMenuItem
         '
         Me.AddSpatialDataToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CSVToolStripMenuItem, Me.ShapefileToolStripMenuItem1})
         Me.AddSpatialDataToolStripMenuItem.Name = "AddSpatialDataToolStripMenuItem"
-        Me.AddSpatialDataToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.AddSpatialDataToolStripMenuItem.Size = New System.Drawing.Size(167, 22)
         Me.AddSpatialDataToolStripMenuItem.Text = "Add spatial data"
         '
         'CSVToolStripMenuItem
         '
         Me.CSVToolStripMenuItem.Name = "CSVToolStripMenuItem"
-        Me.CSVToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.CSVToolStripMenuItem.Size = New System.Drawing.Size(131, 22)
         Me.CSVToolStripMenuItem.Text = "CSV..."
+        '
+        'ShapefileToolStripMenuItem1
+        '
+        Me.ShapefileToolStripMenuItem1.Name = "ShapefileToolStripMenuItem1"
+        Me.ShapefileToolStripMenuItem1.Size = New System.Drawing.Size(131, 22)
+        Me.ShapefileToolStripMenuItem1.Text = "Shapefile..."
+        '
+        'ZoomToLayerToolStripMenuItem
+        '
+        Me.ZoomToLayerToolStripMenuItem.Name = "ZoomToLayerToolStripMenuItem"
+        Me.ZoomToLayerToolStripMenuItem.Size = New System.Drawing.Size(167, 22)
+        Me.ZoomToLayerToolStripMenuItem.Text = "Zoom to layer"
+        '
+        'LayerPropertiesToolStripMenuItem
+        '
+        Me.LayerPropertiesToolStripMenuItem.Name = "LayerPropertiesToolStripMenuItem"
+        Me.LayerPropertiesToolStripMenuItem.Size = New System.Drawing.Size(167, 22)
+        Me.LayerPropertiesToolStripMenuItem.Text = "Layer properties..."
         '
         'ToolStripMenuItem1
         '
         Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.KMLToolStripMenuItem, Me.ShapefileToolStripMenuItem})
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(181, 22)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(167, 22)
         Me.ToolStripMenuItem1.Text = "Export data"
+        '
+        'KMLToolStripMenuItem
+        '
+        Me.KMLToolStripMenuItem.Name = "KMLToolStripMenuItem"
+        Me.KMLToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
+        Me.KMLToolStripMenuItem.Text = "KML"
+        '
+        'ShapefileToolStripMenuItem
+        '
+        Me.ShapefileToolStripMenuItem.Name = "ShapefileToolStripMenuItem"
+        Me.ShapefileToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
+        Me.ShapefileToolStripMenuItem.Text = "Shapefile"
         '
         'MapLayersToolStrip
         '
@@ -235,79 +212,6 @@ Partial Class Form1
         Me.DemoteLayerToolStripButton.Name = "DemoteLayerToolStripButton"
         Me.DemoteLayerToolStripButton.Size = New System.Drawing.Size(23, 22)
         Me.DemoteLayerToolStripButton.Text = "Demote layer"
-        '
-        'MapLayerTabControl
-        '
-        Me.MapLayerTabControl.Controls.Add(Me.MapLayerLabelingTabPage)
-        Me.MapLayerTabControl.Controls.Add(Me.MapLayerPropertiesTabPage)
-        Me.MapLayerTabControl.Controls.Add(Me.MapPropertiesTabPage)
-        Me.MapLayerTabControl.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.MapLayerTabControl.Location = New System.Drawing.Point(0, 0)
-        Me.MapLayerTabControl.Name = "MapLayerTabControl"
-        Me.MapLayerTabControl.SelectedIndex = 0
-        Me.MapLayerTabControl.Size = New System.Drawing.Size(242, 215)
-        Me.MapLayerTabControl.TabIndex = 5
-        '
-        'MapLayerLabelingTabPage
-        '
-        Me.MapLayerLabelingTabPage.Controls.Add(Me.LayerLabelCheckedListBoxControl)
-        Me.MapLayerLabelingTabPage.Location = New System.Drawing.Point(4, 22)
-        Me.MapLayerLabelingTabPage.Name = "MapLayerLabelingTabPage"
-        Me.MapLayerLabelingTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.MapLayerLabelingTabPage.Size = New System.Drawing.Size(234, 189)
-        Me.MapLayerLabelingTabPage.TabIndex = 0
-        Me.MapLayerLabelingTabPage.Text = "Choose map labels"
-        Me.MapLayerLabelingTabPage.UseVisualStyleBackColor = True
-        '
-        'LayerLabelCheckedListBoxControl
-        '
-        Me.LayerLabelCheckedListBoxControl.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LayerLabelCheckedListBoxControl.Location = New System.Drawing.Point(3, 3)
-        Me.LayerLabelCheckedListBoxControl.Name = "LayerLabelCheckedListBoxControl"
-        Me.LayerLabelCheckedListBoxControl.Size = New System.Drawing.Size(228, 183)
-        Me.LayerLabelCheckedListBoxControl.TabIndex = 4
-        '
-        'MapLayerPropertiesTabPage
-        '
-        Me.MapLayerPropertiesTabPage.Controls.Add(Me.MapLayerPropertyGridControl)
-        Me.MapLayerPropertiesTabPage.Location = New System.Drawing.Point(4, 22)
-        Me.MapLayerPropertiesTabPage.Name = "MapLayerPropertiesTabPage"
-        Me.MapLayerPropertiesTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.MapLayerPropertiesTabPage.Size = New System.Drawing.Size(234, 189)
-        Me.MapLayerPropertiesTabPage.TabIndex = 1
-        Me.MapLayerPropertiesTabPage.Text = "Layer properties"
-        Me.MapLayerPropertiesTabPage.UseVisualStyleBackColor = True
-        '
-        'MapLayerPropertyGridControl
-        '
-        Me.MapLayerPropertyGridControl.Cursor = System.Windows.Forms.Cursors.Default
-        Me.MapLayerPropertyGridControl.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.MapLayerPropertyGridControl.Location = New System.Drawing.Point(3, 3)
-        Me.MapLayerPropertyGridControl.Name = "MapLayerPropertyGridControl"
-        Me.MapLayerPropertyGridControl.OptionsView.AllowReadOnlyRowAppearance = DevExpress.Utils.DefaultBoolean.[True]
-        Me.MapLayerPropertyGridControl.Size = New System.Drawing.Size(228, 183)
-        Me.MapLayerPropertyGridControl.TabIndex = 0
-        '
-        'MapPropertiesTabPage
-        '
-        Me.MapPropertiesTabPage.Controls.Add(Me.MapControlPropertyGridControl)
-        Me.MapPropertiesTabPage.Location = New System.Drawing.Point(4, 22)
-        Me.MapPropertiesTabPage.Name = "MapPropertiesTabPage"
-        Me.MapPropertiesTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.MapPropertiesTabPage.Size = New System.Drawing.Size(234, 189)
-        Me.MapPropertiesTabPage.TabIndex = 2
-        Me.MapPropertiesTabPage.Text = "Map properties"
-        Me.MapPropertiesTabPage.UseVisualStyleBackColor = True
-        '
-        'MapControlPropertyGridControl
-        '
-        Me.MapControlPropertyGridControl.Cursor = System.Windows.Forms.Cursors.Default
-        Me.MapControlPropertyGridControl.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.MapControlPropertyGridControl.Location = New System.Drawing.Point(3, 3)
-        Me.MapControlPropertyGridControl.Name = "MapControlPropertyGridControl"
-        Me.MapControlPropertyGridControl.OptionsView.AllowReadOnlyRowAppearance = DevExpress.Utils.DefaultBoolean.[True]
-        Me.MapControlPropertyGridControl.Size = New System.Drawing.Size(228, 183)
-        Me.MapControlPropertyGridControl.TabIndex = 1
         '
         'MapPanelSplitContainer
         '
@@ -401,24 +305,6 @@ Partial Class Form1
         Me.POZFileToolStripLabel.Size = New System.Drawing.Size(48, 22)
         Me.POZFileToolStripLabel.Text = "POZFile"
         '
-        'KMLToolStripMenuItem
-        '
-        Me.KMLToolStripMenuItem.Name = "KMLToolStripMenuItem"
-        Me.KMLToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.KMLToolStripMenuItem.Text = "KML"
-        '
-        'ShapefileToolStripMenuItem
-        '
-        Me.ShapefileToolStripMenuItem.Name = "ShapefileToolStripMenuItem"
-        Me.ShapefileToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.ShapefileToolStripMenuItem.Text = "Shapefile"
-        '
-        'ShapefileToolStripMenuItem1
-        '
-        Me.ShapefileToolStripMenuItem1.Name = "ShapefileToolStripMenuItem1"
-        Me.ShapefileToolStripMenuItem1.Size = New System.Drawing.Size(180, 22)
-        Me.ShapefileToolStripMenuItem1.Text = "Shapefile..."
-        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -432,27 +318,14 @@ Partial Class Form1
         Me.MainTabControl.ResumeLayout(False)
         Me.MapTabPage.ResumeLayout(False)
         Me.MapSplitContainer.Panel1.ResumeLayout(False)
+        Me.MapSplitContainer.Panel1.PerformLayout()
         Me.MapSplitContainer.Panel2.ResumeLayout(False)
         CType(Me.MapSplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MapSplitContainer.ResumeLayout(False)
-        CType(Me.MapLayersSplitContainerControl.Panel1, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.MapLayersSplitContainerControl.Panel1.ResumeLayout(False)
-        Me.MapLayersSplitContainerControl.Panel1.PerformLayout()
-        CType(Me.MapLayersSplitContainerControl.Panel2, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.MapLayersSplitContainerControl.Panel2.ResumeLayout(False)
-        CType(Me.MapLayersSplitContainerControl, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.MapLayersSplitContainerControl.ResumeLayout(False)
         CType(Me.MapLayersCheckedListBoxControl, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MapLayerContextMenuStrip.ResumeLayout(False)
         Me.MapLayersToolStrip.ResumeLayout(False)
         Me.MapLayersToolStrip.PerformLayout()
-        Me.MapLayerTabControl.ResumeLayout(False)
-        Me.MapLayerLabelingTabPage.ResumeLayout(False)
-        CType(Me.LayerLabelCheckedListBoxControl, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.MapLayerPropertiesTabPage.ResumeLayout(False)
-        CType(Me.MapLayerPropertyGridControl, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.MapPropertiesTabPage.ResumeLayout(False)
-        CType(Me.MapControlPropertyGridControl, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MapPanelSplitContainer.Panel1.ResumeLayout(False)
         Me.MapPanelSplitContainer.Panel1.PerformLayout()
         Me.MapPanelSplitContainer.Panel2.ResumeLayout(False)
@@ -477,17 +350,9 @@ Partial Class Form1
     Friend WithEvents MainToolStrip As ToolStrip
     Friend WithEvents OpenPOZFileToolStripButton As ToolStripButton
     Friend WithEvents MapLayersCheckedListBoxControl As DevExpress.XtraEditors.CheckedListBoxControl
-    Friend WithEvents MapLayersSplitContainerControl As DevExpress.XtraEditors.SplitContainerControl
-    Friend WithEvents LayerLabelCheckedListBoxControl As DevExpress.XtraEditors.CheckedListBoxControl
-    Friend WithEvents MapLayerTabControl As TabControl
-    Friend WithEvents MapLayerLabelingTabPage As TabPage
-    Friend WithEvents MapLayerPropertiesTabPage As TabPage
-    Friend WithEvents MapLayerPropertyGridControl As DevExpress.XtraVerticalGrid.PropertyGridControl
     Friend WithEvents MapPanelSplitContainer As SplitContainer
     Friend WithEvents MapLayerGridControl As DevExpress.XtraGrid.GridControl
     Friend WithEvents GridView1 As DevExpress.XtraGrid.Views.Grid.GridView
-    Friend WithEvents MapControlPropertyGridControl As DevExpress.XtraVerticalGrid.PropertyGridControl
-    Friend WithEvents MapPropertiesTabPage As TabPage
     Friend WithEvents MapToolStrip As ToolStrip
     Friend WithEvents ZoomToFitAllLayersToolStripButton As ToolStripButton
     Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
