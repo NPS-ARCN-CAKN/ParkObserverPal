@@ -564,7 +564,7 @@ Public Class Form1
     Private Sub AddLayerToolStripLabel_Click(sender As Object, e As EventArgs) Handles AddLayerToolStripLabel.Click
         Try
             Dim ShpFile As FileInfo = SkeeterUtilities.DirectoryAndFile.DirectoryAndFileUtilities.GetFile("Shapefile|*.shp", "Choose a shapefile.", "")
-            LoadShapefile(ShpFile.FullName, Me.MapControl)
+            If Not ShpFile Is Nothing Then LoadShapefile(ShpFile.FullName, Me.MapControl)
             Me.MapControl.Layers(ShpFile.Name).ZIndex = Me.MapControl.Layers.Count - 1
             LoadMapLayersListBox()
         Catch ex As Exception
