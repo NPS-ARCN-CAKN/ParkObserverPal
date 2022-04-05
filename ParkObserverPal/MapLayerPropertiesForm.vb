@@ -11,6 +11,8 @@ Public Class MapLayerPropertiesForm
         ' This call is required by the designer.
         InitializeComponent()
 
+        MapLayer = VectorItemsLayer 'Make the private VectorItemsLayer available to other functions as a global MapLayer
+
         'Make sure we have a valid layer
         If Not MapLayer Is Nothing Then
             Me.Text = MapLayer.Name & " Properties"
