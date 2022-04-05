@@ -300,60 +300,86 @@ Public Class Form1
     ''' <param name="LongitudeColumnName">Name of the longitude column. String.</param>
     ''' <returns>VectorItemLayer of points from WKT.</returns>
     Public Function GetBubbleVectorItemsLayerFromPointsDataTable(PointsDataTable As DataTable, LatitudeColumnName As String, LongitudeColumnName As String, FeatureSize As Integer, MarkerType As MarkerType, FillColor As Color) As DevExpress.XtraMap.VectorItemsLayer
-        'Create a MapItemStorage object (basically DevExpress's version of a spatial data table, stores MapItem objects which are like DataRows
-        Dim MyMapItemStorage As New MapItemStorage
 
         'Create a new VectorItemsLayer which is essentially a map layer
         Dim MyPointsVectorItemsLayer As New VectorItemsLayer()
 
-        'Make sure we have spatial column names
-        If LatitudeColumnName.Trim <> "" And LongitudeColumnName.Trim <> "" Then
+        Try
+            'Create a MapItemStorage object (basically DevExpress's version of a spatial data table, stores MapItem objects which are like DataRows
+            Dim MyMapItemStorage As New MapItemStorage
 
-            'Convert .NET DataRows to MapBubbles
-            For Each MyPointDataRow As DataRow In PointsDataTable.Rows
-                'Make sure we have a valid row
-                If Not MyPointDataRow Is Nothing Then
-                    'Make sure the LatLon columns are not NULL
-                    If Not IsDBNull(MyPointDataRow.Item(LatitudeColumnName)) And Not IsDBNull(MyPointDataRow.Item(LongitudeColumnName)) Then
 
-                        'Get the Lat/Lon
-                        Dim Lat As Double = CDbl(MyPointDataRow.Item(LatitudeColumnName))
-                        Dim Lon As Double = CDbl(MyPointDataRow.Item(LongitudeColumnName))
 
-                        'Make a new MapBubble
-                        Dim MyMapBubble As New MapBubble()
-                        With MyMapBubble
-                            'Give the bubble a geo-location
-                            .Location = New GeoPoint(Lat, Lon)
+            'Count up NULL or empty or non-numeric rows
+            Dim NullSpatialRowsCount As Integer = 0
+            Dim NonNumericSpatialRowsCount As Integer = 0
 
-                            'Make the MapBubble object the same as the source DataRow (transfer DataTable model)
-                            For Each Col As DataColumn In PointsDataTable.Columns
-                                Dim MIA As New MapItemAttribute
-                                With MIA
-                                    .Name = Col.ColumnName 'The name of the column
-                                    .Value = MyPointDataRow.Item(Col.ColumnName) 'The value at the Row/Column intersection
+            'Make sure we have spatial column names
+            If LatitudeColumnName.Trim <> "" And LongitudeColumnName.Trim <> "" Then
+
+                'Convert .NET DataRows to MapBubbles
+                For Each MyPointDataRow As DataRow In PointsDataTable.Rows
+                    'Make sure we have a valid row
+                    If Not MyPointDataRow Is Nothing Then
+                        'Make sure the LatLon columns are not NULL
+                        If Not IsDBNull(MyPointDataRow.Item(LatitudeColumnName)) And Not IsDBNull(MyPointDataRow.Item(LongitudeColumnName)) Then
+                            'Make sure the column is numeric
+                            If IsNumeric(MyPointDataRow.Item(LatitudeColumnName)) And IsNumeric(MyPointDataRow.Item(LongitudeColumnName)) Then
+
+                                'Get the Lat/Lon
+                                Dim Lat As Double = CDbl(MyPointDataRow.Item(LatitudeColumnName))
+                                Dim Lon As Double = CDbl(MyPointDataRow.Item(LongitudeColumnName))
+
+                                'Make a new MapBubble
+                                Dim MyMapBubble As New MapBubble()
+                                With MyMapBubble
+                                    'Give the bubble a geo-location
+                                    .Location = New GeoPoint(Lat, Lon)
+
+                                    'Make the MapBubble object the same as the source DataRow (transfer DataTable model)
+                                    For Each Col As DataColumn In PointsDataTable.Columns
+                                        Dim MIA As New MapItemAttribute
+                                        With MIA
+                                            .Name = Col.ColumnName 'The name of the column
+                                            .Value = MyPointDataRow.Item(Col.ColumnName) 'The value at the Row/Column intersection
+                                        End With
+                                        'Add the attribute to the MapBubble
+                                        .Attributes.Add(MIA)
+                                    Next
+
+                                    'Give it styling
+                                    .MarkerType = MarkerType
+                                    .Fill = FillColor
                                 End With
-                                'Add the attribute to the MapBubble
-                                .Attributes.Add(MIA)
-                            Next
 
-                            'Give it styling
-                            .MarkerType = MarkerType
-                            .Fill = FillColor
-                        End With
-
-                        'Add the MapBubble to the MapItemStorage 
-                        MyMapItemStorage.Items.Add(MyMapBubble)
+                                'Add the MapBubble to the MapItemStorage 
+                                MyMapItemStorage.Items.Add(MyMapBubble)
+                            Else
+                                'Increment the non numeric row counter
+                                NonNumericSpatialRowsCount = NonNumericSpatialRowsCount + 1
+                            End If
+                        Else
+                            'Increment the null rows counter
+                            NullSpatialRowsCount = NullSpatialRowsCount + 1
+                        End If
                     End If
-                End If
-            Next
+                Next
 
-            'Configure the map layer from above
-            With MyPointsVectorItemsLayer
-                .Data = MyMapItemStorage
-                .Name = PointsDataTable.TableName
-            End With
-        End If
+                'Configure the map layer from above
+                With MyPointsVectorItemsLayer
+                    .Data = MyMapItemStorage
+                    .Name = PointsDataTable.TableName
+                End With
+
+                'Alert user if they don't have a full dataset
+                If NullSpatialRowsCount > 0 Or NonNumericSpatialRowsCount > 0 Then
+                    MsgBox("Warning: " & NullSpatialRowsCount & " rows were omitted because the spatial columns contained null values and " & NonNumericSpatialRowsCount & " rows were omitted because the spatial data was non-numeric.", MsgBoxStyle.Information, "Warning")
+                End If
+
+            End If
+        Catch ex As Exception
+            MsgBox(ex.Message & " (" & System.Reflection.MethodBase.GetCurrentMethod.Name & ").")
+        End Try
         Return MyPointsVectorItemsLayer
     End Function
 
@@ -774,12 +800,21 @@ Public Class Form1
     End Sub
 
     Private Sub CSVToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CSVToolStripMenuItem.Click
+        'Get the CSV file to import
         Dim CSVFileInfo As FileInfo = SkeeterUtilities.DirectoryAndFile.DirectoryAndFileUtilities.GetFile("Comma separated values text files|*.csv", "Select a CSV file to import.", "")
+
+        'Convert the CSV to a DataTable
         Dim DT As DataTable = SkeeterUtilities.DataFileToDataTableConverters.DataFileToDataTableConverters.GetDataTableFromCSV(CSVFileInfo, True, Format.Delimited)
 
+        'Ask the user to supply the lat/lon column names
         Dim ImportForm As New ImportCSVForm(DT)
         ImportForm.ShowDialog()
+
+        'Create a new map layer and add it to the map
         Dim CSVLayer As VectorItemsLayer = GetBubbleVectorItemsLayerFromPointsDataTable(DT, ImportForm.LatitudeColumnName, ImportForm.LongitudeColumnName, 12, MarkerType.Circle, Color.GreenYellow)
         Me.MapControl.Layers.Add(CSVLayer)
+
+        'Refresh the map layers list box
+        LoadMapLayersListBox()
     End Sub
 End Class
