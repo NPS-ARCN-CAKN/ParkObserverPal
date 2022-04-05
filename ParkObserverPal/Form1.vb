@@ -41,6 +41,15 @@ Public Class Form1
     ''' Loads the main map control's layers into the MapLayersListBox
     ''' </summary>
     Private Sub LoadMapLayersListBox()
+
+        'Now set the z order
+        Dim ZIndex As Integer = 0
+        For Each Layer As VectorItemsLayer In Me.MapControl.Layers
+            Layer.ZIndex = ZIndex
+            ZIndex = ZIndex + 1
+        Next
+
+
         Dim CurrentItem As String = Me.MapLayersCheckedListBoxControl.Text
 
         'Loop through the map layers and add them as listbox items
@@ -599,7 +608,9 @@ Public Class Form1
     End Sub
 
     Private Sub PromoteLayerToolStripButton_Click(sender As Object, e As EventArgs) Handles PromoteLayerToolStripButton.Click
+
         If Me.MapLayersCheckedListBoxControl.Text.Trim <> "" Then
+            'Get a handle on the current layer name
             Dim LayerName As String = Me.MapLayersCheckedListBoxControl.Text.Trim
             Dim Lyr As VectorItemsLayer = Me.MapControl.Layers(LayerName)
 
@@ -608,10 +619,14 @@ Public Class Form1
             For i As Integer = 0 To Me.MapControl.Layers.Count - 1
                 If Me.MapControl.Layers(i).Name = LayerName Then CurrentLayerIndex = i
             Next
+
+            'Swap the current layer with the layer above it
             If CurrentLayerIndex - 1 >= 0 Then
                 Me.MapControl.Layers.Swap(CurrentLayerIndex, CurrentLayerIndex - 1)
             End If
+
         End If
+
         LoadMapLayersListBox()
     End Sub
 
@@ -625,7 +640,9 @@ Public Class Form1
             For i As Integer = 0 To Me.MapControl.Layers.Count - 1
                 If Me.MapControl.Layers(i).Name = LayerName Then CurrentLayerIndex = i
             Next
-            If CurrentLayerIndex + 1 >= Me.MapControl.Layers.Count - 1 Then
+
+            'Make sure we don't exceed the maximum count of map layers
+            If CurrentLayerIndex + 1 <= Me.MapControl.Layers.Count - 1 Then
                 Me.MapControl.Layers.Swap(CurrentLayerIndex, CurrentLayerIndex + 1)
             End If
         End If
@@ -800,21 +817,37 @@ Public Class Form1
     End Sub
 
     Private Sub CSVToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CSVToolStripMenuItem.Click
-        'Get the CSV file to import
-        Dim CSVFileInfo As FileInfo = SkeeterUtilities.DirectoryAndFile.DirectoryAndFileUtilities.GetFile("Comma separated values text files|*.csv", "Select a CSV file to import.", "")
+        Try
+            'Get the CSV file to import
+            Dim CSVFileInfo As FileInfo = SkeeterUtilities.DirectoryAndFile.DirectoryAndFileUtilities.GetFile("Comma separated values text files|*.csv", "Select a CSV file to import.", "")
 
-        'Convert the CSV to a DataTable
-        Dim DT As DataTable = SkeeterUtilities.DataFileToDataTableConverters.DataFileToDataTableConverters.GetDataTableFromCSV(CSVFileInfo, True, Format.Delimited)
+            'Convert the CSV to a DataTable
+            Dim DT As DataTable = SkeeterUtilities.DataFileToDataTableConverters.DataFileToDataTableConverters.GetDataTableFromCSV(CSVFileInfo, True, Format.Delimited)
 
-        'Ask the user to supply the lat/lon column names
-        Dim ImportForm As New ImportCSVForm(DT)
-        ImportForm.ShowDialog()
+            'Ask the user to supply the lat/lon column names
+            Dim ImportForm As New ImportCSVForm(DT)
+            ImportForm.ShowDialog()
 
-        'Create a new map layer and add it to the map
-        Dim CSVLayer As VectorItemsLayer = GetBubbleVectorItemsLayerFromPointsDataTable(DT, ImportForm.LatitudeColumnName, ImportForm.LongitudeColumnName, 12, MarkerType.Circle, Color.GreenYellow)
-        Me.MapControl.Layers.Add(CSVLayer)
+            'Create a new map layer and add it to the map
+            Dim CSVLayer As VectorItemsLayer = GetBubbleVectorItemsLayerFromPointsDataTable(DT, ImportForm.LatitudeColumnName, ImportForm.LongitudeColumnName, 12, MarkerType.Circle, Color.GreenYellow)
+            Me.MapControl.Layers.Add(CSVLayer)
 
-        'Refresh the map layers list box
-        LoadMapLayersListBox()
+            'Refresh the map layers list box
+            LoadMapLayersListBox()
+        Catch ex As Exception
+            MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
+        End Try
+    End Sub
+
+    Private Sub ZoomToLayerToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ZoomToLayerToolStripMenuItem.Click
+        Try
+            Dim LayerName As String = Me.MapLayersCheckedListBoxControl.Text.Trim
+            Dim CurrentLayer As VectorItemsLayer = Me.MapControl.Layers(LayerName)
+            If Not CurrentLayer Is Nothing Then
+                Me.MapControl.ZoomToFit(CurrentLayer.Data.Items)
+            End If
+        Catch ex As Exception
+            MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
+        End Try
     End Sub
 End Class
