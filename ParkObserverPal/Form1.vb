@@ -772,4 +772,14 @@ Public Class Form1
         Dim POZFile As FileInfo = SkeeterUtilities.DirectoryAndFile.DirectoryAndFileUtilities.GetFile("Park Observer File (*.poz)|*.poz", "Select a Park Observer File (.poz)", "")
         OpenPOZArchive(POZFile)
     End Sub
+
+    Private Sub CSVToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CSVToolStripMenuItem.Click
+        Dim CSVFileInfo As FileInfo = SkeeterUtilities.DirectoryAndFile.DirectoryAndFileUtilities.GetFile("Comma separated values text files|*.csv", "Select a CSV file to import.", "")
+        Dim DT As DataTable = SkeeterUtilities.DataFileToDataTableConverters.DataFileToDataTableConverters.GetDataTableFromCSV(CSVFileInfo, True, Format.Delimited)
+
+        Dim ImportForm As New ImportCSVForm(DT)
+        ImportForm.ShowDialog()
+        Dim CSVLayer As VectorItemsLayer = GetBubbleVectorItemsLayerFromPointsDataTable(DT, ImportForm.LatitudeColumnName, ImportForm.LongitudeColumnName, 12, MarkerType.Circle, Color.GreenYellow)
+        Me.MapControl.Layers.Add(CSVLayer)
+    End Sub
 End Class

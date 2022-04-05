@@ -57,6 +57,8 @@ Partial Class Form1
         Me.MainToolStrip = New System.Windows.Forms.ToolStrip()
         Me.OpenPOZFileToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.POZFileToolStripLabel = New System.Windows.Forms.ToolStripLabel()
+        Me.AddSpatialDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CSVToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MainTabControl.SuspendLayout()
         Me.MapTabPage.SuspendLayout()
         CType(Me.MapSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -159,9 +161,9 @@ Partial Class Form1
         '
         'MapLayerContextMenuStrip
         '
-        Me.MapLayerContextMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ExportToKMLToolStripMenuItem, Me.ExportToShapefileToolStripMenuItem, Me.LayerPropertiesToolStripMenuItem})
+        Me.MapLayerContextMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ExportToKMLToolStripMenuItem, Me.ExportToShapefileToolStripMenuItem, Me.LayerPropertiesToolStripMenuItem, Me.AddSpatialDataToolStripMenuItem})
         Me.MapLayerContextMenuStrip.Name = "MapLayerContextMenuStrip"
-        Me.MapLayerContextMenuStrip.Size = New System.Drawing.Size(182, 70)
+        Me.MapLayerContextMenuStrip.Size = New System.Drawing.Size(182, 114)
         '
         'ExportToKMLToolStripMenuItem
         '
@@ -256,7 +258,7 @@ Partial Class Form1
         Me.MapLayerPropertiesTabPage.Location = New System.Drawing.Point(4, 22)
         Me.MapLayerPropertiesTabPage.Name = "MapLayerPropertiesTabPage"
         Me.MapLayerPropertiesTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.MapLayerPropertiesTabPage.Size = New System.Drawing.Size(234, 441)
+        Me.MapLayerPropertiesTabPage.Size = New System.Drawing.Size(234, 189)
         Me.MapLayerPropertiesTabPage.TabIndex = 1
         Me.MapLayerPropertiesTabPage.Text = "Layer properties"
         Me.MapLayerPropertiesTabPage.UseVisualStyleBackColor = True
@@ -268,7 +270,7 @@ Partial Class Form1
         Me.MapLayerPropertyGridControl.Location = New System.Drawing.Point(3, 3)
         Me.MapLayerPropertyGridControl.Name = "MapLayerPropertyGridControl"
         Me.MapLayerPropertyGridControl.OptionsView.AllowReadOnlyRowAppearance = DevExpress.Utils.DefaultBoolean.[True]
-        Me.MapLayerPropertyGridControl.Size = New System.Drawing.Size(228, 435)
+        Me.MapLayerPropertyGridControl.Size = New System.Drawing.Size(228, 183)
         Me.MapLayerPropertyGridControl.TabIndex = 0
         '
         'MapPropertiesTabPage
@@ -277,7 +279,7 @@ Partial Class Form1
         Me.MapPropertiesTabPage.Location = New System.Drawing.Point(4, 22)
         Me.MapPropertiesTabPage.Name = "MapPropertiesTabPage"
         Me.MapPropertiesTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.MapPropertiesTabPage.Size = New System.Drawing.Size(234, 441)
+        Me.MapPropertiesTabPage.Size = New System.Drawing.Size(234, 189)
         Me.MapPropertiesTabPage.TabIndex = 2
         Me.MapPropertiesTabPage.Text = "Map properties"
         Me.MapPropertiesTabPage.UseVisualStyleBackColor = True
@@ -289,7 +291,7 @@ Partial Class Form1
         Me.MapControlPropertyGridControl.Location = New System.Drawing.Point(3, 3)
         Me.MapControlPropertyGridControl.Name = "MapControlPropertyGridControl"
         Me.MapControlPropertyGridControl.OptionsView.AllowReadOnlyRowAppearance = DevExpress.Utils.DefaultBoolean.[True]
-        Me.MapControlPropertyGridControl.Size = New System.Drawing.Size(228, 435)
+        Me.MapControlPropertyGridControl.Size = New System.Drawing.Size(228, 183)
         Me.MapControlPropertyGridControl.TabIndex = 1
         '
         'MapPanelSplitContainer
@@ -308,7 +310,7 @@ Partial Class Form1
         '
         Me.MapPanelSplitContainer.Panel2.Controls.Add(Me.MapLayerGridControl)
         Me.MapPanelSplitContainer.Size = New System.Drawing.Size(915, 665)
-        Me.MapPanelSplitContainer.SplitterDistance = 511
+        Me.MapPanelSplitContainer.SplitterDistance = 510
         Me.MapPanelSplitContainer.TabIndex = 1
         '
         'MapControl
@@ -317,7 +319,7 @@ Partial Class Form1
         Me.MapControl.Dock = System.Windows.Forms.DockStyle.Fill
         Me.MapControl.Location = New System.Drawing.Point(0, 25)
         Me.MapControl.Name = "MapControl"
-        Me.MapControl.Size = New System.Drawing.Size(915, 486)
+        Me.MapControl.Size = New System.Drawing.Size(915, 485)
         Me.MapControl.TabIndex = 0
         '
         'MapToolStrip
@@ -361,7 +363,7 @@ Partial Class Form1
         Me.MapLayerGridControl.Location = New System.Drawing.Point(0, 0)
         Me.MapLayerGridControl.MainView = Me.GridView1
         Me.MapLayerGridControl.Name = "MapLayerGridControl"
-        Me.MapLayerGridControl.Size = New System.Drawing.Size(915, 150)
+        Me.MapLayerGridControl.Size = New System.Drawing.Size(915, 151)
         Me.MapLayerGridControl.TabIndex = 0
         Me.MapLayerGridControl.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.GridView1})
         '
@@ -394,6 +396,19 @@ Partial Class Form1
         Me.POZFileToolStripLabel.Name = "POZFileToolStripLabel"
         Me.POZFileToolStripLabel.Size = New System.Drawing.Size(48, 22)
         Me.POZFileToolStripLabel.Text = "POZFile"
+        '
+        'AddSpatialDataToolStripMenuItem
+        '
+        Me.AddSpatialDataToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CSVToolStripMenuItem})
+        Me.AddSpatialDataToolStripMenuItem.Name = "AddSpatialDataToolStripMenuItem"
+        Me.AddSpatialDataToolStripMenuItem.Size = New System.Drawing.Size(181, 22)
+        Me.AddSpatialDataToolStripMenuItem.Text = "Add spatial data"
+        '
+        'CSVToolStripMenuItem
+        '
+        Me.CSVToolStripMenuItem.Name = "CSVToolStripMenuItem"
+        Me.CSVToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.CSVToolStripMenuItem.Text = "CSV"
         '
         'Form1
         '
@@ -479,4 +494,6 @@ Partial Class Form1
     Friend WithEvents ExportToKMLToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ExportToShapefileToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents LayerPropertiesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents AddSpatialDataToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents CSVToolStripMenuItem As ToolStripMenuItem
 End Class

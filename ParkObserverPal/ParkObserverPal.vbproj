@@ -98,6 +98,12 @@
       <DependentUpon>Form1.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ImportCSVForm.Designer.vb">
+      <DependentUpon>ImportCSVForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ImportCSVForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="MapLayerPropertiesForm.Designer.vb">
       <DependentUpon>MapLayerPropertiesForm.vb</DependentUpon>
     </Compile>
@@ -124,6 +130,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportCSVForm.resx">
+      <DependentUpon>ImportCSVForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MapLayerPropertiesForm.resx">
       <DependentUpon>MapLayerPropertiesForm.vb</DependentUpon>
