@@ -217,6 +217,7 @@ Partial Class Form1
         'MapControl
         '
         Me.MapControl.BackColor = System.Drawing.Color.LightSteelBlue
+        Me.MapControl.ContextMenuStrip = Me.MapContextMenuStrip
         Me.MapControl.Dock = System.Windows.Forms.DockStyle.Fill
         Me.MapControl.Location = New System.Drawing.Point(0, 25)
         Me.MapControl.Name = "MapControl"
@@ -267,7 +268,7 @@ Partial Class Form1
         '
         Me.MapContextMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MapPropertiesToolStripMenuItem})
         Me.MapContextMenuStrip.Name = "MapContextMenuStrip"
-        Me.MapContextMenuStrip.Size = New System.Drawing.Size(181, 48)
+        Me.MapContextMenuStrip.Size = New System.Drawing.Size(164, 26)
         '
         'MapPropertiesToolStripMenuItem
         '

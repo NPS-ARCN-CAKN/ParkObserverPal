@@ -805,6 +805,8 @@ Public Class Form1
 
             'Convert the CSV to a DataTable
             Dim DT As DataTable = SkeeterUtilities.DataFileToDataTableConverters.DataFileToDataTableConverters.GetDataTableFromCSV(CSVFileInfo, True, Format.Delimited)
+            DT.TableName = CSVFileInfo.Name
+            POZDataSet.Tables.Add(DT)
 
             'Ask the user to supply the lat/lon column names
             Dim ImportForm As New ImportCSVForm(DT)
