@@ -72,8 +72,6 @@ Public Class Form1
     Private Sub LoadPOZDataset(POZDataset As DataSet)
         Try
 
-            Me.POZFileToolStripLabel.Text = POZDataset.DataSetName
-
             'Loop through each DataTable in POZDataset
             Dim CSVDataTableCounter As Integer = 1
             For Each CSVDataTable As DataTable In POZDataset.Tables
