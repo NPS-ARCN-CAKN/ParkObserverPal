@@ -4,6 +4,8 @@ Imports SkeeterUtilities.DataFileToDataTableConverters.DataFileToDataTableConver
 Imports System.IO
 Imports DevExpress.XtraGrid.Views.Grid
 Imports DevExpress.XtraPivotGrid
+Imports DevExpress.XtraGrid.Views.Base
+Imports DevExpress.XtraGrid.Columns
 
 Public Class Form1
 
@@ -11,7 +13,18 @@ Public Class Form1
     Dim POZDataSet As New DataSet
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+        LoadCSVFile()
 
+        Dim GV As GridView = TryCast(Me.MapLayerGridControl.MainView, GridView)
+
+        For Each Col As GridColumn In GV.Columns
+            Col.SummaryItem.SummaryType = DevExpress.Data.SummaryItemType.Sum
+
+            'Dim GGSI As New GridGroupSummaryItem
+            'GGSI.FieldName = Col.Name
+            'GGSI.SummaryType = DevExpress.Data.SummaryItemType.Count
+            'GV.GroupSummary.Add(GGSI)
+        Next
     End Sub
 
     Private Sub OpenPOZArchive(POZArchive As FileInfo)
@@ -796,9 +809,7 @@ Public Class Form1
         End Try
     End Sub
 
-
-
-    Private Sub CSVToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CSVToolStripMenuItem.Click
+    Private Sub LoadCSVFile()
         Try
             'Get the CSV file to import
             Dim CSVFileInfo As FileInfo = SkeeterUtilities.DirectoryAndFile.DirectoryAndFileUtilities.GetFile("Comma separated values text files|*.csv", "Select a CSV file to import.", "")
@@ -821,6 +832,10 @@ Public Class Form1
         Catch ex As Exception
             MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
         End Try
+    End Sub
+
+    Private Sub CSVToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CSVToolStripMenuItem.Click
+        LoadCSVFile()
     End Sub
 
     Private Sub ZoomToLayerToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ZoomToLayerToolStripMenuItem.Click
