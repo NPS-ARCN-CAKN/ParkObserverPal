@@ -24,14 +24,13 @@ Partial Class Form1
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
-        Me.MainTabControl = New System.Windows.Forms.TabControl()
-        Me.MapTabPage = New System.Windows.Forms.TabPage()
         Me.MapSplitContainer = New System.Windows.Forms.SplitContainer()
         Me.MapLayersCheckedListBoxControl = New DevExpress.XtraEditors.CheckedListBoxControl()
         Me.MapLayerContextMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.AddSpatialDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CSVToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShapefileToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ParkObserverArchivepozToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ZoomToLayerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LayerPropertiesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
@@ -49,11 +48,8 @@ Partial Class Form1
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.MapLayerGridControl = New DevExpress.XtraGrid.GridControl()
         Me.GridView1 = New DevExpress.XtraGrid.Views.Grid.GridView()
-        Me.MainToolStrip = New System.Windows.Forms.ToolStrip()
-        Me.OpenPOZFileToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.POZFileToolStripLabel = New System.Windows.Forms.ToolStripLabel()
-        Me.MainTabControl.SuspendLayout()
-        Me.MapTabPage.SuspendLayout()
+        Me.MapContextMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.MapPropertiesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         CType(Me.MapSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MapSplitContainer.Panel1.SuspendLayout()
         Me.MapSplitContainer.Panel2.SuspendLayout()
@@ -69,28 +65,8 @@ Partial Class Form1
         Me.MapToolStrip.SuspendLayout()
         CType(Me.MapLayerGridControl, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.GridView1, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.MainToolStrip.SuspendLayout()
+        Me.MapContextMenuStrip.SuspendLayout()
         Me.SuspendLayout()
-        '
-        'MainTabControl
-        '
-        Me.MainTabControl.Controls.Add(Me.MapTabPage)
-        Me.MainTabControl.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.MainTabControl.Location = New System.Drawing.Point(0, 25)
-        Me.MainTabControl.Name = "MainTabControl"
-        Me.MainTabControl.SelectedIndex = 0
-        Me.MainTabControl.Size = New System.Drawing.Size(1169, 691)
-        Me.MainTabControl.TabIndex = 0
-        '
-        'MapTabPage
-        '
-        Me.MapTabPage.Controls.Add(Me.MapSplitContainer)
-        Me.MapTabPage.Location = New System.Drawing.Point(4, 22)
-        Me.MapTabPage.Name = "MapTabPage"
-        Me.MapTabPage.Size = New System.Drawing.Size(1161, 665)
-        Me.MapTabPage.TabIndex = 0
-        Me.MapTabPage.Text = "Map"
-        Me.MapTabPage.UseVisualStyleBackColor = True
         '
         'MapSplitContainer
         '
@@ -106,8 +82,8 @@ Partial Class Form1
         'MapSplitContainer.Panel2
         '
         Me.MapSplitContainer.Panel2.Controls.Add(Me.MapPanelSplitContainer)
-        Me.MapSplitContainer.Size = New System.Drawing.Size(1161, 665)
-        Me.MapSplitContainer.SplitterDistance = 242
+        Me.MapSplitContainer.Size = New System.Drawing.Size(1169, 716)
+        Me.MapSplitContainer.SplitterDistance = 243
         Me.MapSplitContainer.TabIndex = 1
         '
         'MapLayersCheckedListBoxControl
@@ -116,7 +92,7 @@ Partial Class Form1
         Me.MapLayersCheckedListBoxControl.Dock = System.Windows.Forms.DockStyle.Fill
         Me.MapLayersCheckedListBoxControl.Location = New System.Drawing.Point(0, 25)
         Me.MapLayersCheckedListBoxControl.Name = "MapLayersCheckedListBoxControl"
-        Me.MapLayersCheckedListBoxControl.Size = New System.Drawing.Size(242, 640)
+        Me.MapLayersCheckedListBoxControl.Size = New System.Drawing.Size(243, 691)
         Me.MapLayersCheckedListBoxControl.TabIndex = 3
         '
         'MapLayerContextMenuStrip
@@ -127,22 +103,28 @@ Partial Class Form1
         '
         'AddSpatialDataToolStripMenuItem
         '
-        Me.AddSpatialDataToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CSVToolStripMenuItem, Me.ShapefileToolStripMenuItem1})
+        Me.AddSpatialDataToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CSVToolStripMenuItem, Me.ShapefileToolStripMenuItem1, Me.ParkObserverArchivepozToolStripMenuItem})
         Me.AddSpatialDataToolStripMenuItem.Name = "AddSpatialDataToolStripMenuItem"
         Me.AddSpatialDataToolStripMenuItem.Size = New System.Drawing.Size(167, 22)
-        Me.AddSpatialDataToolStripMenuItem.Text = "Add spatial data"
+        Me.AddSpatialDataToolStripMenuItem.Text = "Add data"
         '
         'CSVToolStripMenuItem
         '
         Me.CSVToolStripMenuItem.Name = "CSVToolStripMenuItem"
-        Me.CSVToolStripMenuItem.Size = New System.Drawing.Size(131, 22)
+        Me.CSVToolStripMenuItem.Size = New System.Drawing.Size(230, 22)
         Me.CSVToolStripMenuItem.Text = "CSV..."
         '
         'ShapefileToolStripMenuItem1
         '
         Me.ShapefileToolStripMenuItem1.Name = "ShapefileToolStripMenuItem1"
-        Me.ShapefileToolStripMenuItem1.Size = New System.Drawing.Size(131, 22)
+        Me.ShapefileToolStripMenuItem1.Size = New System.Drawing.Size(230, 22)
         Me.ShapefileToolStripMenuItem1.Text = "Shapefile..."
+        '
+        'ParkObserverArchivepozToolStripMenuItem
+        '
+        Me.ParkObserverArchivepozToolStripMenuItem.Name = "ParkObserverArchivepozToolStripMenuItem"
+        Me.ParkObserverArchivepozToolStripMenuItem.Size = New System.Drawing.Size(230, 22)
+        Me.ParkObserverArchivepozToolStripMenuItem.Text = "Park Observer archive (.poz)..."
         '
         'ZoomToLayerToolStripMenuItem
         '
@@ -180,7 +162,7 @@ Partial Class Form1
         Me.MapLayersToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripLabel1, Me.ToolStripSeparator3, Me.PromoteLayerToolStripButton, Me.DemoteLayerToolStripButton})
         Me.MapLayersToolStrip.Location = New System.Drawing.Point(0, 0)
         Me.MapLayersToolStrip.Name = "MapLayersToolStrip"
-        Me.MapLayersToolStrip.Size = New System.Drawing.Size(242, 25)
+        Me.MapLayersToolStrip.Size = New System.Drawing.Size(243, 25)
         Me.MapLayersToolStrip.TabIndex = 4
         Me.MapLayersToolStrip.Text = "ToolStrip1"
         '
@@ -228,8 +210,8 @@ Partial Class Form1
         'MapPanelSplitContainer.Panel2
         '
         Me.MapPanelSplitContainer.Panel2.Controls.Add(Me.MapLayerGridControl)
-        Me.MapPanelSplitContainer.Size = New System.Drawing.Size(915, 665)
-        Me.MapPanelSplitContainer.SplitterDistance = 510
+        Me.MapPanelSplitContainer.Size = New System.Drawing.Size(922, 716)
+        Me.MapPanelSplitContainer.SplitterDistance = 549
         Me.MapPanelSplitContainer.TabIndex = 1
         '
         'MapControl
@@ -238,7 +220,7 @@ Partial Class Form1
         Me.MapControl.Dock = System.Windows.Forms.DockStyle.Fill
         Me.MapControl.Location = New System.Drawing.Point(0, 25)
         Me.MapControl.Name = "MapControl"
-        Me.MapControl.Size = New System.Drawing.Size(915, 485)
+        Me.MapControl.Size = New System.Drawing.Size(922, 524)
         Me.MapControl.TabIndex = 0
         '
         'MapToolStrip
@@ -246,7 +228,7 @@ Partial Class Form1
         Me.MapToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ZoomToFitAllLayersToolStripButton, Me.ToolStripSeparator2})
         Me.MapToolStrip.Location = New System.Drawing.Point(0, 0)
         Me.MapToolStrip.Name = "MapToolStrip"
-        Me.MapToolStrip.Size = New System.Drawing.Size(915, 25)
+        Me.MapToolStrip.Size = New System.Drawing.Size(922, 25)
         Me.MapToolStrip.TabIndex = 1
         Me.MapToolStrip.Text = "ToolStrip1"
         '
@@ -271,7 +253,7 @@ Partial Class Form1
         Me.MapLayerGridControl.Location = New System.Drawing.Point(0, 0)
         Me.MapLayerGridControl.MainView = Me.GridView1
         Me.MapLayerGridControl.Name = "MapLayerGridControl"
-        Me.MapLayerGridControl.Size = New System.Drawing.Size(915, 151)
+        Me.MapLayerGridControl.Size = New System.Drawing.Size(922, 163)
         Me.MapLayerGridControl.TabIndex = 0
         Me.MapLayerGridControl.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.GridView1})
         '
@@ -281,42 +263,27 @@ Partial Class Form1
         Me.GridView1.Name = "GridView1"
         Me.GridView1.OptionsView.ShowFooter = True
         '
-        'MainToolStrip
+        'MapContextMenuStrip
         '
-        Me.MainToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenPOZFileToolStripButton, Me.POZFileToolStripLabel})
-        Me.MainToolStrip.Location = New System.Drawing.Point(0, 0)
-        Me.MainToolStrip.Name = "MainToolStrip"
-        Me.MainToolStrip.Size = New System.Drawing.Size(1169, 25)
-        Me.MainToolStrip.TabIndex = 2
-        Me.MainToolStrip.Text = "ToolStrip1"
+        Me.MapContextMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MapPropertiesToolStripMenuItem})
+        Me.MapContextMenuStrip.Name = "MapContextMenuStrip"
+        Me.MapContextMenuStrip.Size = New System.Drawing.Size(181, 48)
         '
-        'OpenPOZFileToolStripButton
+        'MapPropertiesToolStripMenuItem
         '
-        Me.OpenPOZFileToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.OpenPOZFileToolStripButton.Image = CType(resources.GetObject("OpenPOZFileToolStripButton.Image"), System.Drawing.Image)
-        Me.OpenPOZFileToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.OpenPOZFileToolStripButton.Name = "OpenPOZFileToolStripButton"
-        Me.OpenPOZFileToolStripButton.Size = New System.Drawing.Size(144, 22)
-        Me.OpenPOZFileToolStripButton.Text = "Open Park Observer file..."
-        '
-        'POZFileToolStripLabel
-        '
-        Me.POZFileToolStripLabel.Name = "POZFileToolStripLabel"
-        Me.POZFileToolStripLabel.Size = New System.Drawing.Size(48, 22)
-        Me.POZFileToolStripLabel.Text = "POZFile"
+        Me.MapPropertiesToolStripMenuItem.Name = "MapPropertiesToolStripMenuItem"
+        Me.MapPropertiesToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.MapPropertiesToolStripMenuItem.Text = "Map properties..."
         '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1169, 716)
-        Me.Controls.Add(Me.MainTabControl)
-        Me.Controls.Add(Me.MainToolStrip)
+        Me.Controls.Add(Me.MapSplitContainer)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "Form1"
         Me.Text = "NPS Data Ranger"
-        Me.MainTabControl.ResumeLayout(False)
-        Me.MapTabPage.ResumeLayout(False)
         Me.MapSplitContainer.Panel1.ResumeLayout(False)
         Me.MapSplitContainer.Panel1.PerformLayout()
         Me.MapSplitContainer.Panel2.ResumeLayout(False)
@@ -336,19 +303,12 @@ Partial Class Form1
         Me.MapToolStrip.PerformLayout()
         CType(Me.MapLayerGridControl, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.GridView1, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.MainToolStrip.ResumeLayout(False)
-        Me.MainToolStrip.PerformLayout()
+        Me.MapContextMenuStrip.ResumeLayout(False)
         Me.ResumeLayout(False)
-        Me.PerformLayout()
 
     End Sub
-
-    Friend WithEvents MainTabControl As TabControl
-    Friend WithEvents MapTabPage As TabPage
     Friend WithEvents MapControl As DevExpress.XtraMap.MapControl
     Friend WithEvents MapSplitContainer As SplitContainer
-    Friend WithEvents MainToolStrip As ToolStrip
-    Friend WithEvents OpenPOZFileToolStripButton As ToolStripButton
     Friend WithEvents MapLayersCheckedListBoxControl As DevExpress.XtraEditors.CheckedListBoxControl
     Friend WithEvents MapPanelSplitContainer As SplitContainer
     Friend WithEvents MapLayerGridControl As DevExpress.XtraGrid.GridControl
@@ -356,7 +316,6 @@ Partial Class Form1
     Friend WithEvents MapToolStrip As ToolStrip
     Friend WithEvents ZoomToFitAllLayersToolStripButton As ToolStripButton
     Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
-    Friend WithEvents POZFileToolStripLabel As ToolStripLabel
     Friend WithEvents MapLayersToolStrip As ToolStrip
     Friend WithEvents ToolStripLabel1 As ToolStripLabel
     Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
@@ -371,4 +330,7 @@ Partial Class Form1
     Friend WithEvents KMLToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ShapefileToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ShapefileToolStripMenuItem1 As ToolStripMenuItem
+    Friend WithEvents ParkObserverArchivepozToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents MapContextMenuStrip As ContextMenuStrip
+    Friend WithEvents MapPropertiesToolStripMenuItem As ToolStripMenuItem
 End Class

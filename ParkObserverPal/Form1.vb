@@ -798,10 +798,7 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub OpenPOZFileToolStripButton_Click(sender As Object, e As EventArgs) Handles OpenPOZFileToolStripButton.Click
-        Dim POZFile As FileInfo = SkeeterUtilities.DirectoryAndFile.DirectoryAndFileUtilities.GetFile("Park Observer File (*.poz)|*.poz", "Select a Park Observer File (.poz)", "")
-        OpenPOZArchive(POZFile)
-    End Sub
+
 
     Private Sub CSVToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CSVToolStripMenuItem.Click
         Try
@@ -855,5 +852,10 @@ Public Class Form1
         Catch ex As Exception
             MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
         End Try
+    End Sub
+
+    Private Sub ParkObserverArchivepozToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ParkObserverArchivepozToolStripMenuItem.Click
+        Dim POZFile As FileInfo = SkeeterUtilities.DirectoryAndFile.DirectoryAndFileUtilities.GetFile("Park Observer File (*.poz)|*.poz", "Select a Park Observer File (.poz)", "")
+        OpenPOZArchive(POZFile)
     End Sub
 End Class
