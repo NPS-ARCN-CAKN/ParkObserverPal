@@ -205,6 +205,11 @@ Public Class Form1
         End Try
     End Sub
 
+    ''' <summary>
+    ''' Unzips a Park Observer file archive (.poz) into the same directory and loads each .csv file within into the returned Dataset
+    ''' </summary>
+    ''' <param name="POZFile">Park Observer archive (.poz). String.</param>
+    ''' <returns>Dataset.</returns>
     Private Function GetDatasetFromPOZFile(POZFile As String) As DataSet
         Dim POZDataset As New DataSet("Park Observer Dataset")
         Try
@@ -263,8 +268,17 @@ Public Class Form1
 
 
 
-
-    Private Function GetTracklogLineVectorItemsLayer(PointsDataTable As DataTable, LatitudeColumnName As String, LongitudeColumnName As String, TimeColumnName As String, Color As Color, Width As Integer) As VectorItemsLayer
+    ''' <summary>
+    ''' Converts PointsDataTable into a line VectorItemsLayer.
+    ''' </summary>
+    ''' <param name="PointsDataTable">DataTable of Lat/Lon points. DataTable.</param>
+    ''' <param name="LatitudeColumnName">Name of the latitude column. String.</param>
+    ''' <param name="LongitudeColumnName">Name of the Longitude column. String.</param>
+    ''' <param name="TimeColumnName">Name of the time column. String.</param>
+    ''' <param name="Color">Line color. Color.</param>
+    ''' <param name="Width">Line width. Integer.</param>
+    ''' <returns></returns>
+    Private Function GetLineVectorItemsLayer(PointsDataTable As DataTable, LatitudeColumnName As String, LongitudeColumnName As String, TimeColumnName As String, Color As Color, Width As Integer) As VectorItemsLayer
         'Create a VectorItemsLayer
         Dim MyLineVectorItemsLayer As New VectorItemsLayer
 
@@ -873,4 +887,6 @@ Public Class Form1
         Dim POZFile As FileInfo = SkeeterUtilities.DirectoryAndFile.DirectoryAndFileUtilities.GetFile("Park Observer File (*.poz)|*.poz", "Select a Park Observer File (.poz)", "")
         OpenPOZArchive(POZFile)
     End Sub
+
+
 End Class

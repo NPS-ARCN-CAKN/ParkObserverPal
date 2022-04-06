@@ -43,13 +43,13 @@ Partial Class Form1
         Me.DemoteLayerToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.MapPanelSplitContainer = New System.Windows.Forms.SplitContainer()
         Me.MapControl = New DevExpress.XtraMap.MapControl()
+        Me.MapContextMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.MapPropertiesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MapToolStrip = New System.Windows.Forms.ToolStrip()
         Me.ZoomToFitAllLayersToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.MapLayerGridControl = New DevExpress.XtraGrid.GridControl()
         Me.GridView1 = New DevExpress.XtraGrid.Views.Grid.GridView()
-        Me.MapContextMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.MapPropertiesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         CType(Me.MapSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MapSplitContainer.Panel1.SuspendLayout()
         Me.MapSplitContainer.Panel2.SuspendLayout()
@@ -62,10 +62,10 @@ Partial Class Form1
         Me.MapPanelSplitContainer.Panel2.SuspendLayout()
         Me.MapPanelSplitContainer.SuspendLayout()
         CType(Me.MapControl, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.MapContextMenuStrip.SuspendLayout()
         Me.MapToolStrip.SuspendLayout()
         CType(Me.MapLayerGridControl, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.GridView1, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.MapContextMenuStrip.SuspendLayout()
         Me.SuspendLayout()
         '
         'MapSplitContainer
@@ -224,6 +224,18 @@ Partial Class Form1
         Me.MapControl.Size = New System.Drawing.Size(922, 524)
         Me.MapControl.TabIndex = 0
         '
+        'MapContextMenuStrip
+        '
+        Me.MapContextMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MapPropertiesToolStripMenuItem})
+        Me.MapContextMenuStrip.Name = "MapContextMenuStrip"
+        Me.MapContextMenuStrip.Size = New System.Drawing.Size(164, 26)
+        '
+        'MapPropertiesToolStripMenuItem
+        '
+        Me.MapPropertiesToolStripMenuItem.Name = "MapPropertiesToolStripMenuItem"
+        Me.MapPropertiesToolStripMenuItem.Size = New System.Drawing.Size(163, 22)
+        Me.MapPropertiesToolStripMenuItem.Text = "Map properties..."
+        '
         'MapToolStrip
         '
         Me.MapToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ZoomToFitAllLayersToolStripButton, Me.ToolStripSeparator2})
@@ -264,18 +276,6 @@ Partial Class Form1
         Me.GridView1.Name = "GridView1"
         Me.GridView1.OptionsView.ShowFooter = True
         '
-        'MapContextMenuStrip
-        '
-        Me.MapContextMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MapPropertiesToolStripMenuItem})
-        Me.MapContextMenuStrip.Name = "MapContextMenuStrip"
-        Me.MapContextMenuStrip.Size = New System.Drawing.Size(164, 26)
-        '
-        'MapPropertiesToolStripMenuItem
-        '
-        Me.MapPropertiesToolStripMenuItem.Name = "MapPropertiesToolStripMenuItem"
-        Me.MapPropertiesToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.MapPropertiesToolStripMenuItem.Text = "Map properties..."
-        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -300,11 +300,11 @@ Partial Class Form1
         CType(Me.MapPanelSplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MapPanelSplitContainer.ResumeLayout(False)
         CType(Me.MapControl, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.MapContextMenuStrip.ResumeLayout(False)
         Me.MapToolStrip.ResumeLayout(False)
         Me.MapToolStrip.PerformLayout()
         CType(Me.MapLayerGridControl, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.GridView1, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.MapContextMenuStrip.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
