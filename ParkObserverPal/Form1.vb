@@ -9,22 +9,24 @@ Imports DevExpress.XtraGrid.Columns
 
 Public Class Form1
 
-    Dim MapLayersDataTable As New DataTable("Layers")
-    Dim POZDataSet As New DataSet
+    Dim MapLayersDataTable As New DataTable("Layers") 'The data table that will show the current layer's data
+    Dim POZDataSet As New DataSet 'Park Observer data set
+
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        LoadCSVFile()
+        '
+        'LoadCSVFile()
 
-        Dim GV As GridView = TryCast(Me.MapLayerGridControl.MainView, GridView)
+        'Dim GV As GridView = TryCast(Me.MapLayerGridControl.MainView, GridView)
 
-        For Each Col As GridColumn In GV.Columns
-            Col.SummaryItem.SummaryType = DevExpress.Data.SummaryItemType.Sum
+        'For Each Col As GridColumn In GV.Columns
+        '    Col.SummaryItem.SummaryType = DevExpress.Data.SummaryItemType.Sum
 
-            'Dim GGSI As New GridGroupSummaryItem
-            'GGSI.FieldName = Col.Name
-            'GGSI.SummaryType = DevExpress.Data.SummaryItemType.Count
-            'GV.GroupSummary.Add(GGSI)
-        Next
+        '    'Dim GGSI As New GridGroupSummaryItem
+        '    'GGSI.FieldName = Col.Name
+        '    'GGSI.SummaryType = DevExpress.Data.SummaryItemType.Count
+        '    'GV.GroupSummary.Add(GGSI)
+        'Next
     End Sub
 
     Private Sub OpenPOZArchive(POZArchive As FileInfo)
@@ -88,43 +90,6 @@ Public Class Form1
             'Loop through each DataTable in POZDataset
             Dim CSVDataTableCounter As Integer = 1
             For Each CSVDataTable As DataTable In POZDataset.Tables
-                '#Region "GridControl"
-
-                '                'Create a GridControl to display the CSVData
-                '                Dim CSVGridControl As New GridControl
-                '                Dim CSVGridView As New GridView
-                '                With CSVGridControl
-                '                    .ViewCollection.Add(CSVGridView)
-                '                    .DataSource = CSVDataTable
-                '                    .Dock = DockStyle.Fill
-                '                    .Name = CSVDataTable.TableName & "GridControl"
-                '                End With
-                '                SetUpGridControl(CSVGridControl)
-
-                '                'Create a new tabpage to hold a grid showing the CSV datatable 
-                '                Dim CSVTabPage As New TabPage(CSVDataTable.TableName & " Dataset")
-                '                CSVTabPage.Controls.Add(CSVGridControl)
-
-                '                'Add the new data grid tab page to the main TabControl
-                '                Me.MainTabControl.TabPages.Add(CSVTabPage)
-                '#End Region
-
-                '#Region "PivotGrid"
-                '                'Create a PivotGridControl and add it to the main tab control
-                '                Dim CSVPivotGridTabPage As New TabPage(CSVDataTable.TableName & " Pivot Table")
-                '                Dim CSVPivotGridControl As New PivotGridControl
-                '                With CSVPivotGridControl
-                '                    .DataSource = CSVDataTable
-                '                    .RetrieveFields()
-                '                End With
-                '                SetUpPivotGridControl(CSVPivotGridControl)
-
-                '                'Add the controls above to the main tab control
-                '                CSVPivotGridTabPage.Controls.Add(CSVPivotGridControl)
-                '                Me.MainTabControl.TabPages.Add(CSVPivotGridTabPage)
-                '#End Region
-
-
 
 #Region "Map"
                 'Load the CSV spatial data into the map
@@ -144,11 +109,16 @@ Public Class Form1
                         Exit For
                     End If
                 Next
+
+                'Add WKT and Geography columns and data to the data table
+                AddWKTAndGeographyColumnsToDataTable(CSVDataTable, LatColumnName, LonColumnName)
+
                 'Create a VectorItemsLayer to show the spatial data
                 Dim LabelLayer As New VectorItemsLayer
                 Dim Color As Color = Color.Gray
                 Dim PtSize As Integer = 4
                 Dim Marker As MarkerType = MarkerType.Circle
+
                 'Mix up the marker symbols
                 If CSVDataTableCounter = 2 Then
                     Marker = MarkerType.Cross
@@ -178,7 +148,7 @@ Public Class Form1
                 'Add the tracklog to the map
                 If CSVDataTable.TableName.ToLower = "gpspoints" Then
                     'Draw a tracklog as a line vector items layer
-                    Dim TrackLogVectorItemsLayer As VectorItemsLayer = GetTracklogLineVectorItemsLayer(CSVDataTable, "Latitude", "Longitude", "Timestamp", Color.Gray, 1)
+                    Dim TrackLogVectorItemsLayer As VectorItemsLayer = GetLineVectorItemsLayer(CSVDataTable, "Latitude", "Longitude", "Timestamp", Color.Gray, 1)
                     TrackLogVectorItemsLayer.Name = CSVDataTable.TableName
                     Me.MapControl.Layers.Add(TrackLogVectorItemsLayer)
                     Me.MapControl.ZoomToFitLayerItems()
@@ -436,6 +406,7 @@ Public Class Form1
 
                 'Add the shapefile to the map.
                 MapControl.Layers.Add(ShapefileVectorItemsLayer)
+
             Else
                 MsgBox("Error loading the requested shapefile: " & Shapefile & " does not exist at the path submitted.")
             End If
@@ -447,9 +418,9 @@ Public Class Form1
 
 
     ''' <summary>
-    ''' Returns a DevExpress
+    ''' Returns a DevExpress VectorItemsLayer for a shapefile.
     ''' </summary>
-    ''' <param name="ShapefilePath"></param>
+    ''' <param name="ShapefilePath">Path to the shapefile to load.</param>
     ''' <returns></returns>
     Private Function GetShapefileVectorItemsLayer(ShapefilePath As String) As DevExpress.XtraMap.VectorItemsLayer
         Dim MyVectorItemsLayer As New DevExpress.XtraMap.VectorItemsLayer
@@ -459,15 +430,73 @@ Public Class Form1
 
             'Make a DevEx ShapefileDataAdapter for the submitted shapefile
             Dim MyShapefileDataAdapter As New ShapefileDataAdapter() With {.FileUri = New Uri(MyBaseUri, ShapefilePath)}
-            With MyVectorItemsLayer
-                .Data = MyShapefileDataAdapter
-            End With
+
+            'Add a handler so that we can access the data when it is loaded
+            AddHandler MyShapefileDataAdapter.ItemsLoaded, AddressOf ShapefileDataAdapterItemsLoaded
+            MyVectorItemsLayer.Data = MyShapefileDataAdapter
+
         Catch ex As Exception
             MsgBox(ex.Message & " (" & System.Reflection.MethodBase.GetCurrentMethod.Name & ").")
         End Try
 
         Return MyVectorItemsLayer
     End Function
+
+    ''' <summary>
+    ''' Handles ShapefileDataAdapterItemsLoaded event.
+    ''' </summary>
+    ''' <param name="sender">ShapefileDataAdapter.</param>
+    ''' <param name="e">ItemsLoadedEventArgs.</param>
+    Private Sub ShapefileDataAdapterItemsLoaded(sender As Object, e As ItemsLoadedEventArgs)
+        Try
+            Dim MyShapefileDataAdapter As ShapefileDataAdapter = sender
+
+            'First, make a DataTable
+            Dim DT As New DataTable()
+
+            'Get a name for the data table same as the file name
+            Dim TableName As String = ""
+            Dim FilePath As String = MyShapefileDataAdapter.FileUri.ToString
+            Dim FI As New FileInfo(FilePath.Replace("file:///", ""))
+            TableName = FI.Name
+            DT.TableName = TableName
+
+            'The data in a VectorItemsLayer are stored as Name/Value pairs, we need to convert them to a DataTable
+            If e.Items.Count > 0 Then
+                'Get a handle on the first item in the list
+                Dim FirstMapItem As MapItem = e.Items(0)
+
+                'Create a DataColumn for each map item's Name attribute and add it to the data table
+                For Each FirstMapItemAttributes As MapItemAttribute In FirstMapItem.Attributes
+                    Dim ColumnName As String = FirstMapItemAttributes.Name
+                    Dim NewColumn As New DataColumn(ColumnName, FirstMapItemAttributes.Value.GetType)
+                    DT.Columns.Add(NewColumn)
+                Next
+
+
+                'Now go through each item and transfer the values to the datatable
+                For Each MI As MapItem In e.Items
+                    Dim NewRow As DataRow = DT.NewRow
+                    For Each Mapitemattribute In MI.Attributes
+                        NewRow.Item(Mapitemattribute.Name) = Mapitemattribute.Value
+                    Next
+                    DT.Rows.Add(NewRow)
+                Next
+
+            End If
+
+            'Add the DataTable to a Dataset
+            If POZDataSet.Tables(TableName) Is Nothing Then
+                POZDataSet.Tables.Add(DT)
+            Else
+                POZDataSet.Tables.Remove(POZDataSet.Tables(TableName))
+                POZDataSet.Tables.Add(DT)
+            End If
+            Me.MapLayerGridControl.DataSource = DT
+        Catch ex As Exception
+            MsgBox(ex.Message & " (" & System.Reflection.MethodBase.GetCurrentMethod.Name & ").")
+        End Try
+    End Sub
 
     ''' <summary>
     ''' Sets up a GridControl the way I like it
@@ -759,7 +788,7 @@ Public Class Form1
                     With SFD
                         .AddExtension = True
                         .DefaultExt = FileExtension
-                        .FileName = LayerName.Trim & "." & FileExtension
+                        .FileName = LayerName.Trim & FileExtension
                         .Filter = FileFilter
                     End With
 
@@ -805,11 +834,12 @@ Public Class Form1
 
     End Sub
 
-
-
-    Private Sub LayerPropertiesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LayerPropertiesToolStripMenuItem.Click
+    ''' <summary>
+    ''' Show the map layer's properties in a PropertyGrid in a Form.
+    ''' </summary>
+    ''' <param name="LayerName">Name of the layer for which properties should be shown.</param>
+    Private Sub ShowLayerPropertiesForm(LayerName As String)
         Try
-            Dim LayerName As String = Me.MapLayersCheckedListBoxControl.Text.Trim
             If Not LayerName = "" Then
                 Dim VIL As VectorItemsLayer = Me.MapControl.Layers(LayerName)
                 If Not VIL Is Nothing Then
@@ -819,10 +849,20 @@ Public Class Form1
 
             End If
         Catch ex As Exception
-            MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
+            MsgBox("Properties for this layer cannot be shown: " & ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
         End Try
     End Sub
 
+    Private Sub LayerPropertiesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LayerPropertiesToolStripMenuItem.Click
+        'Show the properties for the selected layer.
+        Dim LayerName As String = Me.MapLayersCheckedListBoxControl.Text.Trim
+        ShowLayerPropertiesForm(LayerName)
+    End Sub
+
+    ''' <summary>
+    ''' Opens a file open dialog allowing the user to select a comma separated values text file to load into the main interface. Opens a selector dialog to let the user
+    ''' select any lat/lon fields, if desired.
+    ''' </summary>
     Private Sub LoadCSVFile()
         Try
             'Get the CSV file to import
@@ -831,32 +871,82 @@ Public Class Form1
             'Convert the CSV to a DataTable
             Dim DT As DataTable = SkeeterUtilities.DataFileToDataTableConverters.DataFileToDataTableConverters.GetDataTableFromCSV(CSVFileInfo, True, Format.Delimited)
             DT.TableName = CSVFileInfo.Name
-            POZDataSet.Tables.Add(DT)
 
-            'Ask the user to supply the lat/lon column names
-            Dim ImportForm As New ImportCSVForm(DT)
-            ImportForm.ShowDialog()
+            If Not DT Is Nothing Then
+                If DT.Rows.Count > 0 Then
 
-            'Create a new map layer and add it to the map
-            Dim CSVLayer As VectorItemsLayer = GetBubbleVectorItemsLayerFromPointsDataTable(DT, ImportForm.LatitudeColumnName, ImportForm.LongitudeColumnName, 12, MarkerType.Circle, Color.GreenYellow)
-            Me.MapControl.Layers.Add(CSVLayer)
 
-            'Refresh the map layers list box
-            LoadMapLayersListBox()
+                    'Ask the user to supply the lat/lon column names
+                    Dim ImportForm As New ImportCSVForm(DT)
+                    ImportForm.ShowDialog()
+
+                    'Make sure we get lat lon column names
+                    If ImportForm.LatitudeColumnName.Trim <> "" And ImportForm.LongitudeColumnName.Trim <> "" Then
+                        Dim LatColumnName As String = ImportForm.LatitudeColumnName.Trim
+                        Dim LonColumnName As String = ImportForm.LongitudeColumnName.Trim
+
+                        AddWKTAndGeographyColumnsToDataTable(DT, LatColumnName, LonColumnName)
+
+
+                        Dim CSVLayer As VectorItemsLayer = GetBubbleVectorItemsLayerFromPointsDataTable(DT, LatColumnName, LonColumnName, 12, MarkerType.Circle, Color.GreenYellow)
+                        Me.MapControl.Layers.Add(CSVLayer)
+                        POZDataSet.Tables.Add(DT)
+                    Else
+                        'User didn't supply column names, add as a non-spatial data table
+                        POZDataSet.Tables.Add(DT)
+
+
+                    End If
+                    'Refresh the map layers list box
+                    LoadMapLayersListBox()
+                End If
+            End If
+
         Catch ex As Exception
             MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
         End Try
     End Sub
 
+    ''' <summary>
+    ''' Adds a WKT and a Geography DataColumn to the submitted DataTable, then populates these new columns with the Well-Known Text and Geography representations of the submitted
+    ''' Lat/Lon columns.
+    ''' </summary>
+    ''' <param name="DT"></param>
+    ''' <param name="LatColumnName"></param>
+    ''' <param name="LonColumnName"></param>
+    Private Sub AddWKTAndGeographyColumnsToDataTable(DT As DataTable, LatColumnName As String, LonColumnName As String)
+        'Add a WKT and Geography column to the data table
+        Dim WKTColumn As New DataColumn("WKT", GetType(String))
+        DT.Columns.Add(WKTColumn)
+        Dim GeogColumn As New DataColumn("Geography", GetType(String))
+        DT.Columns.Add(GeogColumn)
+        For Each Row As DataRow In DT.Rows
+            Dim Lat As String = Row.Item(LatColumnName)
+            Dim Lon As String = Row.Item(LonColumnName)
+            Dim WKT As String = "POINT(" & Lon.Trim & " " & Lat.Trim & ",4326)"
+            Dim Geog As String = "geography::Point (" & WKT & ")"
+            Row.Item("WKT") = WKT
+            Row.Item("Geography") = Geog
+        Next
+    End Sub
+
+
     Private Sub CSVToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CSVToolStripMenuItem.Click
+        'Load a CSV file into the tool.
         LoadCSVFile()
     End Sub
 
-    Private Sub ZoomToLayerToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ZoomToLayerToolStripMenuItem.Click
+    ''' <summary>
+    ''' Zooms the main map control to the extent of the map layer named LayerName.
+    ''' </summary>
+    ''' <param name="LayerName">Name of the map layer to which to zoom.</param>
+    Private Sub ZoomToLayer(LayerName As String)
+        'Zoom to the extent of the currently selected layer.
         Try
-            Dim LayerName As String = Me.MapLayersCheckedListBoxControl.Text.Trim
+            'Get the currently selected layer as a VectorItemsLayer
             Dim CurrentLayer As VectorItemsLayer = Me.MapControl.Layers(LayerName)
             If Not CurrentLayer Is Nothing Then
+                'Zoom the map to the selected layer
                 Me.MapControl.ZoomToFit(CurrentLayer.Data.Items)
             End If
         Catch ex As Exception
@@ -864,15 +954,24 @@ Public Class Form1
         End Try
     End Sub
 
+    Private Sub ZoomToLayerToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ZoomToLayerToolStripMenuItem.Click
+        'Zoom to the currently selected layer.
+        Dim LayerName As String = Me.MapLayersCheckedListBoxControl.Text.Trim
+        ZoomToLayer(LayerName)
+    End Sub
+
     Private Sub KMLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles KMLToolStripMenuItem.Click
+        'Export the map to Keyhole Markup Language (Google Earth) file.
         ExportMapLayer(Me.MapLayersCheckedListBoxControl.Text, Me.MapControl, MapLayerExportFormat.KML)
     End Sub
 
     Private Sub ShapefileToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ShapefileToolStripMenuItem.Click
+        'Export the map layer to shapefile
         ExportMapLayer(Me.MapLayersCheckedListBoxControl.Text, Me.MapControl, MapLayerExportFormat.Shapefile)
     End Sub
 
     Private Sub ShapefileToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ShapefileToolStripMenuItem1.Click
+        'Allow the user to select a shapefile to load into the interface
         Try
             Dim ShpFile As FileInfo = SkeeterUtilities.DirectoryAndFile.DirectoryAndFileUtilities.GetFile("Shapefile|*.shp", "Choose a shapefile.", "")
             If Not ShpFile Is Nothing Then LoadShapefile(ShpFile.FullName, Me.MapControl)
@@ -884,6 +983,7 @@ Public Class Form1
     End Sub
 
     Private Sub ParkObserverArchivepozToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ParkObserverArchivepozToolStripMenuItem.Click
+        'Allow the user to select a Park Observer file archive to load into the layers list.
         Dim POZFile As FileInfo = SkeeterUtilities.DirectoryAndFile.DirectoryAndFileUtilities.GetFile("Park Observer File (*.poz)|*.poz", "Select a Park Observer File (.poz)", "")
         OpenPOZArchive(POZFile)
     End Sub
