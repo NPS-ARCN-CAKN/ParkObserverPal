@@ -15,7 +15,8 @@ Public Class Form1
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         '
-        'LoadCSVFile()
+        Dim CSVFileInfo As New FileInfo("C:\temp\zspatialdata.csv")
+        LoadCSVFile(CSVFileInfo)
 
         'Dim GV As GridView = TryCast(Me.MapLayerGridControl.MainView, GridView)
 
@@ -294,6 +295,10 @@ Public Class Form1
         Return MyLineVectorItemsLayer
     End Function
 
+
+
+
+
     ''' <summary>
     ''' Returns a DevExpress VectorItemsLayer of MapBubble points derived a DataTable containing Lat/Lon pairs.
     ''' </summary>
@@ -309,8 +314,6 @@ Public Class Form1
         Try
             'Create a MapItemStorage object (basically DevExpress's version of a spatial data table, stores MapItem objects which are like DataRows
             Dim MyMapItemStorage As New MapItemStorage
-
-
 
             'Count up NULL or empty or non-numeric rows
             Dim NullSpatialRowsCount As Integer = 0
@@ -332,9 +335,11 @@ Public Class Form1
                                 Dim Lat As Double = CDbl(MyPointDataRow.Item(LatitudeColumnName))
                                 Dim Lon As Double = CDbl(MyPointDataRow.Item(LongitudeColumnName))
 
-                                'Make a new MapBubble
-                                Dim MyMapBubble As New MapBubble()
-                                With MyMapBubble
+                                'Make a new point for the map
+                                Dim MyMapPoint As New MapBubble()
+                                'Dim MyMapPoint As New MapDot
+
+                                With MyMapPoint
                                     'Give the bubble a geo-location
                                     .Location = New GeoPoint(Lat, Lon)
 
@@ -347,15 +352,18 @@ Public Class Form1
                                         End With
                                         'Add the attribute to the MapBubble
                                         .Attributes.Add(MIA)
+
                                     Next
 
                                     'Give it styling
+                                    .Size = 20
                                     .MarkerType = MarkerType
                                     .Fill = FillColor
                                 End With
 
                                 'Add the MapBubble to the MapItemStorage 
-                                MyMapItemStorage.Items.Add(MyMapBubble)
+                                MyMapItemStorage.Items.Add(MyMapPoint)
+
                             Else
                                 'Increment the non numeric row counter
                                 NonNumericSpatialRowsCount = NonNumericSpatialRowsCount + 1
@@ -449,9 +457,10 @@ Public Class Form1
     ''' <param name="e">ItemsLoadedEventArgs.</param>
     Private Sub ShapefileDataAdapterItemsLoaded(sender As Object, e As ItemsLoadedEventArgs)
         Try
+            'Get a handle on the ShapefileDataAdapter that sent the event
             Dim MyShapefileDataAdapter As ShapefileDataAdapter = sender
 
-            'First, make a DataTable
+            'Make a DataTable
             Dim DT As New DataTable()
 
             'Get a name for the data table same as the file name
@@ -492,6 +501,8 @@ Public Class Form1
                 POZDataSet.Tables.Remove(POZDataSet.Tables(TableName))
                 POZDataSet.Tables.Add(DT)
             End If
+
+
             Me.MapLayerGridControl.DataSource = DT
         Catch ex As Exception
             MsgBox(ex.Message & " (" & System.Reflection.MethodBase.GetCurrentMethod.Name & ").")
@@ -863,11 +874,8 @@ Public Class Form1
     ''' Opens a file open dialog allowing the user to select a comma separated values text file to load into the main interface. Opens a selector dialog to let the user
     ''' select any lat/lon fields, if desired.
     ''' </summary>
-    Private Sub LoadCSVFile()
+    Private Sub LoadCSVFile(CSVFileInfo As FileInfo)
         Try
-            'Get the CSV file to import
-            Dim CSVFileInfo As FileInfo = SkeeterUtilities.DirectoryAndFile.DirectoryAndFileUtilities.GetFile("Comma separated values text files|*.csv", "Select a CSV file to import.", "")
-
             'Convert the CSV to a DataTable
             Dim DT As DataTable = SkeeterUtilities.DataFileToDataTableConverters.DataFileToDataTableConverters.GetDataTableFromCSV(CSVFileInfo, True, Format.Delimited)
             DT.TableName = CSVFileInfo.Name
@@ -932,8 +940,11 @@ Public Class Form1
 
 
     Private Sub CSVToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CSVToolStripMenuItem.Click
+
+        'Get the CSV file to import
+        Dim CSVFileInfo As FileInfo = SkeeterUtilities.DirectoryAndFile.DirectoryAndFileUtilities.GetFile("Comma separated values text files|*.csv", "Select a CSV file to import.", "")
         'Load a CSV file into the tool.
-        LoadCSVFile()
+        LoadCSVFile(CSVFileInfo)
     End Sub
 
     ''' <summary>
