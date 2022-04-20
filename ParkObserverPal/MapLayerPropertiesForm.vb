@@ -206,11 +206,19 @@ Public Class MapLayerPropertiesForm
                 Dim CurrentMarkerType As MarkerType = GetCurrentMarker()
 
                 'Loop through each map item and change the properties
-                For Each Item As MapBubble In MapLayer.Data.Items
-                    Item.MarkerType = CurrentMarkerType
+                For Each Item As MapItem In MapLayer.Data.Items
+                    Debug.Print(Item.GetType.Name)
+
                     Item.Fill = Me.MarkerColorPickEdit.Color
                     Item.Stroke = Me.MarkerBorderColorPickEdit.Color
-                    Item.Size = Me.MarkerSizeNumericUpDown.Value
+                    If Item.GetType.Name = "MapBubble" Then
+                        Dim BubbleItem As MapBubble = Item
+                        With BubbleItem
+                            .MarkerType = CurrentMarkerType
+                            .Size = Me.MarkerSizeNumericUpDown.Value
+                        End With
+                    End If
+
                 Next
                 'End If
             End If

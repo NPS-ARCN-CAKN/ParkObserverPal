@@ -14,9 +14,11 @@ Public Class Form1
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        '
+        LoadShapefile("C:\Work\GIS Common Layers\AlaskaSimplified_1km.shp", Me.MapControl)
         Dim CSVFileInfo As New FileInfo("C:\temp\zspatialdata.csv")
         LoadCSVFile(CSVFileInfo)
+
+
 
         'Dim GV As GridView = TryCast(Me.MapLayerGridControl.MainView, GridView)
 
