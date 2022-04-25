@@ -37,23 +37,36 @@ Public Class MapLayerPropertiesForm
                 'Load the map layer into the advanced map layer property grid control
                 Me.MapLayerPropertyGridControl.SelectedObject = MapLayer
 
-                'Load the mark type options into the selector list box
-                With Me.MarkerSymbolListBox.Items
-                    .Add(MarkerType.Circle.ToString)
-                    .Add(MarkerType.Cross.ToString)
-                    .Add(MarkerType.Diamond.ToString)
-                    .Add(MarkerType.Hexagon.ToString)
-                    .Add(MarkerType.InvertedTriangle.ToString)
-                    .Add(MarkerType.Pentagon.ToString)
-                    .Add(MarkerType.Plus.ToString)
-                    .Add(MarkerType.Square.ToString)
-                    .Add(MarkerType.Star5.ToString)
-                    .Add(MarkerType.Star6.ToString)
-                    .Add(MarkerType.Star8.ToString)
-                    .Add(MarkerType.Triangle.ToString)
-                End With
+                'Determine if we have MapDots or MapBubbles
+                Me.MarkerSymbolListBox.Items.Clear()
 
-
+                If MapLayer.Data.Items.Count > 0 Then
+                    Dim FirstLayerItem As MapItem = MapLayer.Data.Items(0)
+                    Debug.Print(FirstLayerItem.GetType.Name)
+                    If FirstLayerItem.GetType.Name = "MapBubble" Then
+                        'Load the mark type options into the selector list box
+                        With Me.MarkerSymbolListBox.Items
+                            .Add(MarkerType.Circle.ToString)
+                            .Add(MarkerType.Cross.ToString)
+                            .Add(MarkerType.Diamond.ToString)
+                            .Add(MarkerType.Hexagon.ToString)
+                            .Add(MarkerType.InvertedTriangle.ToString)
+                            .Add(MarkerType.Pentagon.ToString)
+                            .Add(MarkerType.Plus.ToString)
+                            .Add(MarkerType.Square.ToString)
+                            .Add(MarkerType.Star5.ToString)
+                            .Add(MarkerType.Star6.ToString)
+                            .Add(MarkerType.Star8.ToString)
+                            .Add(MarkerType.Triangle.ToString)
+                        End With
+                    ElseIf FirstLayerItem.GetType.name = "MapDot" Then
+                        'Load the mark type options into the selector list box
+                        With Me.MarkerSymbolListBox.Items
+                            .Add(MapDotShapeKind.Circle.ToString)
+                            .Add(MapDotShapeKind.Rectangle.ToString)
+                        End With
+                    End If
+                End If
 
 
             Else
@@ -157,7 +170,10 @@ Public Class MapLayerPropertiesForm
     End Sub
 
 
-
+    ''' <summary>
+    ''' Returns the equivalent DevExpress MarkerType for the marker type selected in MarkerSymbolListBox
+    ''' </summary>
+    ''' <returns>MarkerType</returns>
     Private Function GetCurrentMarker() As MarkerType
         Dim Symbology As String = Me.MarkerSymbolListBox.Text.Trim
         Dim MarkerType As MarkerType = MarkerType.Circle
@@ -176,7 +192,7 @@ Public Class MapLayerPropertiesForm
                 MarkerType = MarkerType.Pentagon
             ElseIf Symbology = "Plus" Then
                 MarkerType = MarkerType.Plus
-            ElseIf Symbology = "Square" Then
+            ElseIf Symbology = "Square" Or Symbology = "Rectangle" Then
                 MarkerType = MarkerType.Square
             ElseIf Symbology = "Star5" Then
                 MarkerType = MarkerType.Star5
@@ -186,6 +202,8 @@ Public Class MapLayerPropertiesForm
                 MarkerType = MarkerType.Star8
             ElseIf Symbology = "Triangle" Then
                 MarkerType = MarkerType.Triangle
+            ElseIf Symbology = "Rectangle" Then
+                MarkerType = MarkerType.Square
             End If
         Catch ex As Exception
             MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
@@ -202,25 +220,43 @@ Public Class MapLayerPropertiesForm
             'Make sure we have a map layer
             If Not MapLayer Is Nothing Then
 
+                'Find out if we have a MapBubble or MapDot layer
+                If MapLayer.Data.Items.Count > 0 Then
 
-                Dim CurrentMarkerType As MarkerType = GetCurrentMarker()
+                    Dim ItemType As String = MapLayer.Data.Items(0).GetType.Name
+                    MsgBox("itemtype: " & ItemType & " (ChangeSymbology)")
 
-                'Loop through each map item and change the properties
-                For Each Item As MapItem In MapLayer.Data.Items
-                    Debug.Print(Item.GetType.Name)
+                    'Get the selected marker type
+                    Dim CurrentMarkerType As MarkerType = GetCurrentMarker()
+                    Dim CurrentShapeKind As MapDotShapeKind = MapDotShapeKind.Circle
 
-                    Item.Fill = Me.MarkerColorPickEdit.Color
-                    Item.Stroke = Me.MarkerBorderColorPickEdit.Color
-                    If Item.GetType.Name = "MapBubble" Then
-                        Dim BubbleItem As MapBubble = Item
-                        With BubbleItem
-                            .MarkerType = CurrentMarkerType
-                            .Size = Me.MarkerSizeNumericUpDown.Value
-                        End With
-                    End If
+                    'Loop through each map item and change the properties
+                    For Each Item As MapItem In MapLayer.Data.Items
 
-                Next
-                'End If
+                        Item.Fill = Me.MarkerColorPickEdit.Color
+                        Item.Stroke = Me.MarkerBorderColorPickEdit.Color
+                        If Item.GetType.Name = "MapBubble" Then
+                            Dim CurrentItem As MapBubble = TryCast(Item, MapBubble)
+                            If Not CurrentItem Is Nothing Then
+                                With CurrentItem
+
+                                    .MarkerType = CurrentMarkerType
+                                    .Size = Me.MarkerSizeNumericUpDown.Value
+                                End With
+                            End If
+                        ElseIf Item.GetType.Name = "MapDot" Then
+                            Dim CurrentItem As MapDot = TryCast(Item, MapDot)
+                            If Not CurrentItem Is Nothing Then
+                                If CurrentMarkerType = MarkerType.Square Then CurrentShapeKind = MapDotShapeKind.Rectangle
+                                With CurrentItem
+                                    .ShapeKind = CurrentShapeKind
+                                    .Size = Me.MarkerSizeNumericUpDown.Value
+                                End With
+                            End If
+                        End If
+                    Next
+                    'End If
+                End If
             End If
         Catch ex As Exception
             MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)

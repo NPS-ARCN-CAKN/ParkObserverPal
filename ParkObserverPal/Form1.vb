@@ -4,8 +4,7 @@ Imports SkeeterUtilities.DataFileToDataTableConverters.DataFileToDataTableConver
 Imports System.IO
 Imports DevExpress.XtraGrid.Views.Grid
 Imports DevExpress.XtraPivotGrid
-Imports DevExpress.XtraGrid.Views.Base
-Imports DevExpress.XtraGrid.Columns
+
 
 Public Class Form1
 
@@ -15,7 +14,11 @@ Public Class Form1
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         LoadShapefile("C:\Work\GIS Common Layers\AlaskaSimplified_1km.shp", Me.MapControl)
-        Dim CSVFileInfo As New FileInfo("C:\temp\zspatialdata.csv")
+        Dim Filepath As String = "C:\temp\zspatialdata.csv"
+        Filepath = "C:\temp\zSpatialData - invalid.csv"
+        Filepath = "C:\temp\zLakesMonuments.csv"
+        Dim CSVFileInfo As New FileInfo(Filepath)
+
         LoadCSVFile(CSVFileInfo)
 
 
@@ -879,36 +882,38 @@ Public Class Form1
     Private Sub LoadCSVFile(CSVFileInfo As FileInfo)
         Try
             'Convert the CSV to a DataTable
-            Dim DT As DataTable = SkeeterUtilities.DataFileToDataTableConverters.DataFileToDataTableConverters.GetDataTableFromCSV(CSVFileInfo, True, Format.Delimited)
-            DT.TableName = CSVFileInfo.Name
+            Dim CSVDataTable As DataTable = SkeeterUtilities.DataFileToDataTableConverters.DataFileToDataTableConverters.GetDataTableFromCSV(CSVFileInfo, True, Format.Delimited)
+            CSVDataTable.TableName = CSVFileInfo.Name
 
-            If Not DT Is Nothing Then
-                If DT.Rows.Count > 0 Then
-
+            If Not CSVDataTable Is Nothing Then
+                If CSVDataTable.Rows.Count > 0 Then
 
                     'Ask the user to supply the lat/lon column names
-                    Dim ImportForm As New ImportCSVForm(DT)
+                    Dim ImportForm As New ImportCSVForm(CSVDataTable)
                     ImportForm.ShowDialog()
 
                     'Make sure we get lat lon column names
-                    If ImportForm.LatitudeColumnName.Trim <> "" And ImportForm.LongitudeColumnName.Trim <> "" Then
-                        Dim LatColumnName As String = ImportForm.LatitudeColumnName.Trim
-                        Dim LonColumnName As String = ImportForm.LongitudeColumnName.Trim
+                    If Not ImportForm.LatitudeColumnName Is Nothing And Not ImportForm.LongitudeColumnName Is Nothing Then
+                        If ImportForm.LatitudeColumnName.Trim <> "" And ImportForm.LongitudeColumnName.Trim <> "" Then
+                            Dim LatColumnName As String = ImportForm.LatitudeColumnName.Trim
+                            Dim LonColumnName As String = ImportForm.LongitudeColumnName.Trim
 
-                        AddWKTAndGeographyColumnsToDataTable(DT, LatColumnName, LonColumnName)
-
-
-                        Dim CSVLayer As VectorItemsLayer = GetBubbleVectorItemsLayerFromPointsDataTable(DT, LatColumnName, LonColumnName, 12, MarkerType.Circle, Color.GreenYellow)
-                        Me.MapControl.Layers.Add(CSVLayer)
-                        POZDataSet.Tables.Add(DT)
-                    Else
-                        'User didn't supply column names, add as a non-spatial data table
-                        POZDataSet.Tables.Add(DT)
+                            AddWKTAndGeographyColumnsToDataTable(CSVDataTable, LatColumnName, LonColumnName)
 
 
+                            Dim CSVLayer As VectorItemsLayer = GetBubbleVectorItemsLayerFromPointsDataTable(CSVDataTable, LatColumnName, LonColumnName, 12, MarkerType.Circle, Color.GreenYellow)
+                            Me.MapControl.Layers.Add(CSVLayer)
+                            POZDataSet.Tables.Add(CSVDataTable)
+                        Else
+                            'User didn't supply column names, add as a non-spatial data table
+                            POZDataSet.Tables.Add(CSVDataTable)
+
+
+                        End If
+                        'Refresh the map layers list box
+                        LoadMapLayersListBox()
                     End If
-                    'Refresh the map layers list box
-                    LoadMapLayersListBox()
+
                 End If
             End If
 
@@ -1001,5 +1006,15 @@ Public Class Form1
         OpenPOZArchive(POZFile)
     End Sub
 
-
+    Private Sub MapControl_MapItemClick(sender As Object, e As MapItemClickEventArgs) Handles MapControl.MapItemClick
+        If Not e.Item Is Nothing Then
+            'Show the selected item in a form
+            Dim ItemForm As New Form
+            Dim PG As New PropertyGrid
+            PG.Dock = DockStyle.Fill
+            PG.SelectedObject = e.Item
+            ItemForm.Controls.Add(PG)
+            ItemForm.Show()
+        End If
+    End Sub
 End Class

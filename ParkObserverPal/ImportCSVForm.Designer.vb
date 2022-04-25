@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class ImportCSVForm
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,22 +20,22 @@ Partial Class ImportCSVForm
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.CSVDataGridView = New System.Windows.Forms.DataGridView()
-        Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
-        Me.ToolStripLabel1 = New System.Windows.Forms.ToolStripLabel()
-        Me.LatitudeToolStripComboBox = New System.Windows.Forms.ToolStripComboBox()
-        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.ToolStripLabel2 = New System.Windows.Forms.ToolStripLabel()
-        Me.LongitudeToolStripComboBox = New System.Windows.Forms.ToolStripComboBox()
-        Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.FooterPanel = New System.Windows.Forms.Panel()
+        Me.ValidationLabel = New System.Windows.Forms.Label()
         Me.OKButton = New System.Windows.Forms.Button()
         Me.HeaderPanel = New System.Windows.Forms.Panel()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.LatitudeColumnNameListBox = New System.Windows.Forms.ListBox()
+        Me.LongitudeColumnNameListBox = New System.Windows.Forms.ListBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.ValidationTextBox = New System.Windows.Forms.TextBox()
+        Me.ValidationTextBoxLabel = New System.Windows.Forms.Label()
         CType(Me.CSVDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.ToolStrip1.SuspendLayout()
         Me.FooterPanel.SuspendLayout()
         Me.HeaderPanel.SuspendLayout()
         Me.SuspendLayout()
@@ -44,64 +44,35 @@ Partial Class ImportCSVForm
         '
         Me.CSVDataGridView.AllowUserToAddRows = False
         Me.CSVDataGridView.AllowUserToDeleteRows = False
+        Me.CSVDataGridView.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CSVDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.CSVDataGridView.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.CSVDataGridView.Location = New System.Drawing.Point(0, 64)
+        Me.CSVDataGridView.Enabled = False
+        Me.CSVDataGridView.Location = New System.Drawing.Point(324, 46)
+        Me.CSVDataGridView.MultiSelect = False
         Me.CSVDataGridView.Name = "CSVDataGridView"
         Me.CSVDataGridView.ReadOnly = True
-        Me.CSVDataGridView.Size = New System.Drawing.Size(800, 340)
+        Me.CSVDataGridView.Size = New System.Drawing.Size(476, 167)
         Me.CSVDataGridView.TabIndex = 0
-        '
-        'ToolStrip1
-        '
-        Me.ToolStrip1.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripLabel1, Me.LatitudeToolStripComboBox, Me.ToolStripSeparator1, Me.ToolStripLabel2, Me.LongitudeToolStripComboBox, Me.ToolStripSeparator2})
-        Me.ToolStrip1.Location = New System.Drawing.Point(0, 39)
-        Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(800, 25)
-        Me.ToolStrip1.TabIndex = 1
-        Me.ToolStrip1.Text = "ToolStrip1"
-        '
-        'ToolStripLabel1
-        '
-        Me.ToolStripLabel1.Name = "ToolStripLabel1"
-        Me.ToolStripLabel1.Size = New System.Drawing.Size(137, 22)
-        Me.ToolStripLabel1.Text = "Select a latitude column:"
-        '
-        'LatitudeToolStripComboBox
-        '
-        Me.LatitudeToolStripComboBox.Name = "LatitudeToolStripComboBox"
-        Me.LatitudeToolStripComboBox.Size = New System.Drawing.Size(121, 25)
-        '
-        'ToolStripSeparator1
-        '
-        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
-        '
-        'ToolStripLabel2
-        '
-        Me.ToolStripLabel2.Name = "ToolStripLabel2"
-        Me.ToolStripLabel2.Size = New System.Drawing.Size(145, 22)
-        Me.ToolStripLabel2.Text = "Select a longitude column"
-        '
-        'LongitudeToolStripComboBox
-        '
-        Me.LongitudeToolStripComboBox.Name = "LongitudeToolStripComboBox"
-        Me.LongitudeToolStripComboBox.Size = New System.Drawing.Size(121, 25)
-        '
-        'ToolStripSeparator2
-        '
-        Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 25)
         '
         'FooterPanel
         '
+        Me.FooterPanel.Controls.Add(Me.ValidationLabel)
         Me.FooterPanel.Controls.Add(Me.OKButton)
         Me.FooterPanel.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.FooterPanel.Location = New System.Drawing.Point(0, 404)
+        Me.FooterPanel.Location = New System.Drawing.Point(0, 361)
         Me.FooterPanel.Name = "FooterPanel"
         Me.FooterPanel.Size = New System.Drawing.Size(800, 46)
         Me.FooterPanel.TabIndex = 2
+        '
+        'ValidationLabel
+        '
+        Me.ValidationLabel.AutoEllipsis = True
+        Me.ValidationLabel.Location = New System.Drawing.Point(3, 11)
+        Me.ValidationLabel.Name = "ValidationLabel"
+        Me.ValidationLabel.Size = New System.Drawing.Size(704, 23)
+        Me.ValidationLabel.TabIndex = 1
+        Me.ValidationLabel.Text = "Select valid latitude and longitude columns."
         '
         'OKButton
         '
@@ -115,11 +86,10 @@ Partial Class ImportCSVForm
         'HeaderPanel
         '
         Me.HeaderPanel.Controls.Add(Me.Label1)
-        Me.HeaderPanel.Controls.Add(Me.ToolStrip1)
         Me.HeaderPanel.Dock = System.Windows.Forms.DockStyle.Top
         Me.HeaderPanel.Location = New System.Drawing.Point(0, 0)
         Me.HeaderPanel.Name = "HeaderPanel"
-        Me.HeaderPanel.Size = New System.Drawing.Size(800, 64)
+        Me.HeaderPanel.Size = New System.Drawing.Size(800, 31)
         Me.HeaderPanel.TabIndex = 3
         '
         'Label1
@@ -129,16 +99,89 @@ Partial Class ImportCSVForm
         Me.Label1.Location = New System.Drawing.Point(0, 0)
         Me.Label1.Name = "Label1"
         Me.Label1.Padding = New System.Windows.Forms.Padding(4)
-        Me.Label1.Size = New System.Drawing.Size(800, 39)
+        Me.Label1.Size = New System.Drawing.Size(800, 31)
         Me.Label1.TabIndex = 2
         Me.Label1.Text = "To import your CSV file as a spatial layer you must identify the latitude and lon" &
     "gitude columns:"
+        '
+        'LatitudeColumnNameListBox
+        '
+        Me.LatitudeColumnNameListBox.FormattingEnabled = True
+        Me.LatitudeColumnNameListBox.Location = New System.Drawing.Point(12, 46)
+        Me.LatitudeColumnNameListBox.Name = "LatitudeColumnNameListBox"
+        Me.LatitudeColumnNameListBox.Size = New System.Drawing.Size(150, 303)
+        Me.LatitudeColumnNameListBox.TabIndex = 3
+        '
+        'LongitudeColumnNameListBox
+        '
+        Me.LongitudeColumnNameListBox.FormattingEnabled = True
+        Me.LongitudeColumnNameListBox.Location = New System.Drawing.Point(168, 46)
+        Me.LongitudeColumnNameListBox.Name = "LongitudeColumnNameListBox"
+        Me.LongitudeColumnNameListBox.Size = New System.Drawing.Size(150, 303)
+        Me.LongitudeColumnNameListBox.TabIndex = 4
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(12, 30)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(85, 13)
+        Me.Label2.TabIndex = 5
+        Me.Label2.Text = "Latitude column:"
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(165, 30)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(94, 13)
+        Me.Label3.TabIndex = 6
+        Me.Label3.Text = "Longitude column:"
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(321, 30)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(68, 13)
+        Me.Label4.TabIndex = 7
+        Me.Label4.Text = "Data source:"
+        '
+        'ValidationTextBox
+        '
+        Me.ValidationTextBox.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ValidationTextBox.Location = New System.Drawing.Point(324, 237)
+        Me.ValidationTextBox.Multiline = True
+        Me.ValidationTextBox.Name = "ValidationTextBox"
+        Me.ValidationTextBox.ReadOnly = True
+        Me.ValidationTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both
+        Me.ValidationTextBox.Size = New System.Drawing.Size(476, 112)
+        Me.ValidationTextBox.TabIndex = 8
+        Me.ValidationTextBox.Text = "Select latitude and longitude columns to begin validation."
+        '
+        'ValidationTextBoxLabel
+        '
+        Me.ValidationTextBoxLabel.AutoSize = True
+        Me.ValidationTextBoxLabel.Location = New System.Drawing.Point(321, 221)
+        Me.ValidationTextBoxLabel.Name = "ValidationTextBoxLabel"
+        Me.ValidationTextBoxLabel.Size = New System.Drawing.Size(53, 13)
+        Me.ValidationTextBoxLabel.TabIndex = 9
+        Me.ValidationTextBoxLabel.Text = "Validation"
         '
         'ImportCSVForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(800, 450)
+        Me.ClientSize = New System.Drawing.Size(800, 407)
+        Me.Controls.Add(Me.ValidationTextBoxLabel)
+        Me.Controls.Add(Me.ValidationTextBox)
+        Me.Controls.Add(Me.Label4)
+        Me.Controls.Add(Me.Label3)
+        Me.Controls.Add(Me.Label2)
+        Me.Controls.Add(Me.LongitudeColumnNameListBox)
+        Me.Controls.Add(Me.LatitudeColumnNameListBox)
         Me.Controls.Add(Me.CSVDataGridView)
         Me.Controls.Add(Me.HeaderPanel)
         Me.Controls.Add(Me.FooterPanel)
@@ -146,25 +189,24 @@ Partial Class ImportCSVForm
         Me.Name = "ImportCSVForm"
         Me.Text = "Import comma separated values data file"
         CType(Me.CSVDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.ToolStrip1.ResumeLayout(False)
-        Me.ToolStrip1.PerformLayout()
         Me.FooterPanel.ResumeLayout(False)
         Me.HeaderPanel.ResumeLayout(False)
-        Me.HeaderPanel.PerformLayout()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
 
     Friend WithEvents CSVDataGridView As DataGridView
-    Friend WithEvents ToolStrip1 As ToolStrip
-    Friend WithEvents LatitudeToolStripComboBox As ToolStripComboBox
-    Friend WithEvents LongitudeToolStripComboBox As ToolStripComboBox
-    Friend WithEvents ToolStripLabel1 As ToolStripLabel
-    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
-    Friend WithEvents ToolStripLabel2 As ToolStripLabel
-    Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
     Friend WithEvents FooterPanel As Panel
     Friend WithEvents OKButton As Button
     Friend WithEvents HeaderPanel As Panel
     Friend WithEvents Label1 As Label
+    Friend WithEvents LatitudeColumnNameListBox As ListBox
+    Friend WithEvents LongitudeColumnNameListBox As ListBox
+    Friend WithEvents Label2 As Label
+    Friend WithEvents Label3 As Label
+    Friend WithEvents Label4 As Label
+    Friend WithEvents ValidationLabel As Label
+    Friend WithEvents ValidationTextBox As TextBox
+    Friend WithEvents ValidationTextBoxLabel As Label
 End Class
