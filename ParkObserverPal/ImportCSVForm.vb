@@ -1,5 +1,8 @@
 ﻿Public Class ImportCSVForm
 
+    ''' <summary>
+    ''' Name of the latitude column. String.
+    ''' </summary>
     Private LatitudeColumnNameValue As String
     Public Property LatitudeColumnName() As String
         Get
@@ -10,6 +13,9 @@
         End Set
     End Property
 
+    ''' <summary>
+    ''' Name of the longitude column. String.
+    ''' </summary>
     Private LongitudeColumnNameValue As String
     Public Property LongitudeColumnName() As String
         Get
@@ -20,6 +26,7 @@
         End Set
     End Property
 
+    'DataTable of comma separated values files. DataTable.
     Private DataTableValue As DataTable
     Public Property DataTable() As DataTable
         Get
@@ -30,6 +37,7 @@
         End Set
     End Property
 
+    'All the spatial coordinate values are valid geographic coordinates (lat/lon pairs). Boolean.
     Private CoordinateColumnsAreValidValue As Boolean
     Public Property CoordinateColumnsAreValid() As Boolean
         Get
@@ -40,6 +48,10 @@
         End Set
     End Property
 
+    ''' <summary>
+    ''' Creates a new CSVForm. Accepts a DataTable of comma separated values and the form allows the user to define latitude and longitude columns (geographic coordinates) as form properties.
+    ''' </summary>
+    ''' <param name="CSVDataTable">DataTable of comma separated values. The DataTable have valid latitude/longitude columns in geographic coordinate system.</param>
     Public Sub New(CSVDataTable As DataTable)
 
         ' This call is required by the designer.
@@ -73,6 +85,25 @@
                     If ColumnDataType <> "String" And ColumnDataType <> "Date" And ColumnDataType <> "Char" And ColumnDataType <> "Boolean" Then '& ColumnDataType <> "Object"Then
                         Me.LatitudeColumnNameListBox.Items.Add(Col.ColumnName)
                         Me.LongitudeColumnNameListBox.Items.Add(Col.ColumnName)
+
+                        'Try to pre-load the lat/lon column names selector list boxes
+                        If Col.ColumnName.Trim = "Latitude" Then
+                            Me.LatitudeColumnNameListBox.SelectedItem = Col.ColumnName.Trim
+                        ElseIf Col.ColumnName.Trim = "Longitude" Then
+                            Me.LongitudeColumnNameListBox.SelectedItem = Col.ColumnName.Trim
+                        ElseIf Col.ColumnName.Trim = "Feature_Latitude" Then
+                            Me.LatitudeColumnNameListBox.SelectedItem = Col.ColumnName.Trim
+                        ElseIf Col.ColumnName.Trim = "Feature_Longitude" Then
+                            Me.LongitudeColumnNameListBox.SelectedItem = Col.ColumnName.Trim
+                        ElseIf Col.ColumnName.Trim = "Start_Latitude" Then
+                            Me.LatitudeColumnNameListBox.SelectedItem = Col.ColumnName.Trim
+                        ElseIf Col.ColumnName.Trim = "Start_Longitude" Then
+                            Me.LongitudeColumnNameListBox.SelectedItem = Col.ColumnName.Trim
+                        ElseIf Col.ColumnName.Trim = "Lat" Then
+                            Me.LatitudeColumnNameListBox.SelectedItem = Col.ColumnName.Trim
+                        ElseIf Col.ColumnName.Trim = "Lon" Then
+                            Me.LongitudeColumnNameListBox.SelectedItem = Col.ColumnName.Trim
+                        End If
                     End If
                 Next
             Else
@@ -246,4 +277,5 @@
         Me.LatitudeColumnName = Me.LatitudeColumnNameListBox.Text
         ValidateForm()
     End Sub
+
 End Class

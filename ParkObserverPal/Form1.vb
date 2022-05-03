@@ -62,35 +62,37 @@ Public Class Form1
         Dim DT As New DataTable()
 
         Try
-            'Set the returned DataTable's name.
-            If TableName.Trim <> "" Then
-                DT.TableName = TableName
-            Else
-                DT.TableName = VIL.Name
-            End If
+            If Not VIL Is Nothing Then
+                'Set the returned DataTable's name.
+                If TableName.Trim <> "" Then
+                    DT.TableName = TableName
+                Else
+                    DT.TableName = VIL.Name
+                End If
 
-            'The data in a VectorItemsLayer are stored as Name/Value pairs, we need to convert them to a DataTable.
-            If VIL.Data.Items.Count > 0 Then
+                'The data in a VectorItemsLayer are stored as Name/Value pairs, we need to convert them to a DataTable.
+                If VIL.Data.Items.Count > 0 Then
 
-                'Get a handle on the first item in the list so we can use it as a model to create DataColumns for DT.
-                Dim FirstMapItem As MapItem = VIL.Data.Items(0)
+                    'Get a handle on the first item in the list so we can use it as a model to create DataColumns for DT.
+                    Dim FirstMapItem As MapItem = VIL.Data.Items(0)
 
-                'Create a DataColumn for each map item's Name attribute and add it to the data table.
-                For Each FirstMapItemAttributes As MapItemAttribute In FirstMapItem.Attributes
-                    Dim ColumnName As String = FirstMapItemAttributes.Name
-                    Dim NewColumn As New DataColumn(ColumnName, FirstMapItemAttributes.Value.GetType)
-                    DT.Columns.Add(NewColumn)
-                Next
-
-                'Now go through each item, create an equivalent DataRow and add it to DT.Rows.
-                For Each MI As MapItem In VIL.Data.Items
-                    Dim NewRow As DataRow = DT.NewRow
-                    For Each Mapitemattribute In MI.Attributes
-                        NewRow.Item(Mapitemattribute.Name) = Mapitemattribute.Value
+                    'Create a DataColumn for each map item's Name attribute and add it to the data table.
+                    For Each FirstMapItemAttributes As MapItemAttribute In FirstMapItem.Attributes
+                        Dim ColumnName As String = FirstMapItemAttributes.Name
+                        Dim NewColumn As New DataColumn(ColumnName, FirstMapItemAttributes.Value.GetType)
+                        DT.Columns.Add(NewColumn)
                     Next
-                    DT.Rows.Add(NewRow)
-                Next
 
+                    'Now go through each item, create an equivalent DataRow and add it to DT.Rows.
+                    For Each MI As MapItem In VIL.Data.Items
+                        Dim NewRow As DataRow = DT.NewRow
+                        For Each Mapitemattribute In MI.Attributes
+                            NewRow.Item(Mapitemattribute.Name) = Mapitemattribute.Value
+                        Next
+                        DT.Rows.Add(NewRow)
+                    Next
+
+                End If
             End If
         Catch ex As Exception
             MsgBox(ex.Message & " (" & System.Reflection.MethodBase.GetCurrentMethod.Name & ").")
@@ -107,9 +109,10 @@ Public Class Form1
         'POZDataSet = GetDatasetFromPOZFile(POZZipFile)
         'POZDataSet.DataSetName = POZZipFile
 
+
         'Load up the various grids and map with poz data
-        'LoadPOZDataset(POZDataSet)
-        MsgBox("fix OpenPOZArchive")
+        LoadPOZArchive(POZZipFile)
+
 
         Me.MapControl.ZoomToFitLayerItems()
         With Me.MapControl
@@ -150,108 +153,106 @@ Public Class Form1
         Me.MapLayersCheckedListBoxControl.SelectedItem = CurrentItem
     End Sub
 
-    ''' <summary>
-    ''' Loads a POZDataset into various grids, pivot grids and map controls on the main form
-    ''' </summary>
-    ''' <param name="POZDataset">Park Observer Dataset. POZDataset.</param>
-    Private Sub LoadPOZDataset(POZDataset As DataSet)
-        Try
+    '    ''' <summary>
+    '    ''' Loads a POZDataset into various grids, pivot grids and map controls on the main form
+    '    ''' </summary>
+    '    Private Sub LoadPOZDataset()
+    '        Try
 
-            'Loop through each DataTable in POZDataset
-            Dim CSVDataTableCounter As Integer = 1
-            For Each CSVDataTable As DataTable In POZDataset.Tables
+    '            'Loop through each DataTable in POZDataset
+    '            Dim CSVDataTableCounter As Integer = 1
+    '            For Each CSVDataTable As DataTable In POZDataset.Tables
 
-#Region "Map"
-                'Load the CSV spatial data into the map
-                'Find out if the data tables contain lat/lon columns
-                'Some tables have LatLon stored in columns named Latitude and Longitude
-                'Some tables have LatLon stored in columns named Feature_Latitude and Feature_Longitude
-                Dim LatColumnName As String = ""
-                Dim LonColumnName As String = ""
-                For Each Col As DataColumn In CSVDataTable.Columns
-                    If Col.ColumnName.Trim = "Latitude" Then
-                        LatColumnName = "Latitude"
-                        LonColumnName = "Longitude"
-                        Exit For
-                    ElseIf Col.ColumnName = "Feature_Latitude" Then
-                        LatColumnName = "Feature_Latitude"
-                        LonColumnName = "Feature_Longitude"
-                        Exit For
-                    End If
-                Next
+    '#Region "Map"
+    '                'Load the CSV spatial data into the map
+    '                'Find out if the data tables contain lat/lon columns
+    '                'Some tables have LatLon stored in columns named Latitude and Longitude
+    '                'Some tables have LatLon stored in columns named Feature_Latitude and Feature_Longitude
+    '                Dim LatColumnName As String = ""
+    '                Dim LonColumnName As String = ""
+    '                For Each Col As DataColumn In CSVDataTable.Columns
+    '                    If Col.ColumnName.Trim = "Latitude" Then
+    '                        LatColumnName = "Latitude"
+    '                        LonColumnName = "Longitude"
+    '                        Exit For
+    '                    ElseIf Col.ColumnName = "Feature_Latitude" Then
+    '                        LatColumnName = "Feature_Latitude"
+    '                        LonColumnName = "Feature_Longitude"
+    '                        Exit For
+    '                    End If
+    '                Next
 
-                'Add WKT and Geography columns and data to the data table
-                AddWKTAndGeographyColumnsToDataTable(CSVDataTable, LatColumnName, LonColumnName)
+    '                'Add WKT and Geography columns and data to the data table
+    '                AddWKTAndGeographyColumnsToDataTable(CSVDataTable, LatColumnName, LonColumnName)
 
-                'Create a VectorItemsLayer to show the spatial data
-                Dim LabelLayer As New VectorItemsLayer
-                Dim Color As Color = Color.Gray
-                Dim PtSize As Integer = 4
-                Dim Marker As MarkerType = MarkerType.Circle
+    '                'Create a VectorItemsLayer to show the spatial data
+    '                Dim LabelLayer As New VectorItemsLayer
+    '                Dim Color As Color = Color.Gray
+    '                Dim PtSize As Integer = 4
+    '                Dim Marker As MarkerType = MarkerType.Circle
 
-                'Mix up the marker symbols
-                If CSVDataTableCounter = 2 Then
-                    Marker = MarkerType.Cross
-                ElseIf CSVDataTableCounter = 2 Then
-                    Marker = MarkerType.Diamond
-                ElseIf CSVDataTableCounter = 3 Then
-                    Marker = MarkerType.Hexagon
-                ElseIf CSVDataTableCounter = 4 Then
-                    Marker = MarkerType.InvertedTriangle
-                ElseIf CSVDataTableCounter = 5 Then
-                    Marker = MarkerType.Pentagon
-                ElseIf CSVDataTableCounter = 6 Then
-                    Marker = MarkerType.Plus
-                ElseIf CSVDataTableCounter = 7 Then
-                    Marker = MarkerType.Square
-                ElseIf CSVDataTableCounter = 8 Then
-                    Marker = MarkerType.Star5
-                ElseIf CSVDataTableCounter = 9 Then
-                    Marker = MarkerType.Star6
-                ElseIf CSVDataTableCounter = 10 Then
-                    Marker = MarkerType.Star8
-                ElseIf CSVDataTableCounter = 11 Then
-                    Marker = MarkerType.Triangle
-                End If
+    '                'Mix up the marker symbols
+    '                If CSVDataTableCounter = 2 Then
+    '                    Marker = MarkerType.Cross
+    '                ElseIf CSVDataTableCounter = 2 Then
+    '                    Marker = MarkerType.Diamond
+    '                ElseIf CSVDataTableCounter = 3 Then
+    '                    Marker = MarkerType.Hexagon
+    '                ElseIf CSVDataTableCounter = 4 Then
+    '                    Marker = MarkerType.InvertedTriangle
+    '                ElseIf CSVDataTableCounter = 5 Then
+    '                    Marker = MarkerType.Pentagon
+    '                ElseIf CSVDataTableCounter = 6 Then
+    '                    Marker = MarkerType.Plus
+    '                ElseIf CSVDataTableCounter = 7 Then
+    '                    Marker = MarkerType.Square
+    '                ElseIf CSVDataTableCounter = 8 Then
+    '                    Marker = MarkerType.Star5
+    '                ElseIf CSVDataTableCounter = 9 Then
+    '                    Marker = MarkerType.Star6
+    '                ElseIf CSVDataTableCounter = 10 Then
+    '                    Marker = MarkerType.Star8
+    '                ElseIf CSVDataTableCounter = 11 Then
+    '                    Marker = MarkerType.Triangle
+    '                End If
 
 
-                'Add the tracklog to the map
-                If CSVDataTable.TableName.ToLower = "gpspoints" Then
-                    'Draw a tracklog as a line vector items layer
-                    Dim TrackLogVectorItemsLayer As VectorItemsLayer = GetLineVectorItemsLayer(CSVDataTable, "Latitude", "Longitude", "Timestamp", Color.Gray, 1)
-                    TrackLogVectorItemsLayer.Name = CSVDataTable.TableName
-                    Me.MapControl.Layers.Add(TrackLogVectorItemsLayer)
-                    Me.MapControl.ZoomToFitLayerItems()
-                Else
-                    'Draw the the layer as a points vector items layer
-                    Color = Color.FromArgb(CInt(Int((255 * Rnd()) + 1)), CInt(Int((255 * Rnd()) + 1)), CInt(Int((255 * Rnd()) + 1)))
-                    PtSize = 8
-                    Dim CSVLayer As VectorItemsLayer = GetBubbleVectorItemsLayerFromPointsDataTable(CSVDataTable, LatColumnName, LonColumnName, PtSize, Marker, Color)
-                    CSVLayer.Name = CSVDataTable.TableName
-                    Me.MapControl.Layers.Add(CSVLayer)
-                End If
-#End Region
-                CSVDataTableCounter = CSVDataTableCounter + 1
-            Next
+    '                'Add the tracklog to the map
+    '                If CSVDataTable.TableName.ToLower = "gpspoints" Then
+    '                    'Draw a tracklog as a line vector items layer
+    '                    Dim TrackLogVectorItemsLayer As VectorItemsLayer = GetLineVectorItemsLayer(CSVDataTable, "Latitude", "Longitude", "Timestamp", Color.Gray, 1)
+    '                    TrackLogVectorItemsLayer.Name = CSVDataTable.TableName
+    '                    Me.MapControl.Layers.Add(TrackLogVectorItemsLayer)
+    '                    Me.MapControl.ZoomToFitLayerItems()
+    '                Else
+    '                    'Draw the the layer as a points vector items layer
+    '                    Color = Color.FromArgb(CInt(Int((255 * Rnd()) + 1)), CInt(Int((255 * Rnd()) + 1)), CInt(Int((255 * Rnd()) + 1)))
+    '                    PtSize = 8
+    '                    Dim CSVLayer As VectorItemsLayer = GetBubbleVectorItemsLayerFromPointsDataTable(CSVDataTable, LatColumnName, LonColumnName, PtSize, Marker, Color)
+    '                    CSVLayer.Name = CSVDataTable.TableName
+    '                    Me.MapControl.Layers.Add(CSVLayer)
+    '                End If
+    '#End Region
+    '                CSVDataTableCounter = CSVDataTableCounter + 1
+    '            Next
 
-            'DevEx assigns all new layers a Z index of 100, not so useful for promoting and demoting layers later
-            'Assign all the layers a reasonably z index to start with
-            For i As Integer = 0 To Me.MapControl.Layers.Count - 1
-                Dim VIL As VectorItemsLayer = Me.MapControl.Layers(i)
-                VIL.ZIndex = i
-            Next
-        Catch ex As Exception
-            MsgBox(ex.Message & " (" & System.Reflection.MethodBase.GetCurrentMethod.Name & ").")
-        End Try
-    End Sub
+    '            'DevEx assigns all new layers a Z index of 100, not so useful for promoting and demoting layers later
+    '            'Assign all the layers a reasonably z index to start with
+    '            For i As Integer = 0 To Me.MapControl.Layers.Count - 1
+    '                Dim VIL As VectorItemsLayer = Me.MapControl.Layers(i)
+    '                VIL.ZIndex = i
+    '            Next
+    '        Catch ex As Exception
+    '            MsgBox(ex.Message & " (" & System.Reflection.MethodBase.GetCurrentMethod.Name & ").")
+    '        End Try
+    '    End Sub
 
     ''' <summary>
     ''' Unzips a Park Observer file archive (.poz) into the same directory and loads each .csv file within into the returned Dataset
     ''' </summary>
     ''' <param name="POZFile">Park Observer archive (.poz). String.</param>
-    ''' <returns>Dataset.</returns>
-    Private Function GetDatasetFromPOZFile(POZFile As String) As DataSet
-        Dim POZDataset As New DataSet("Park Observer Dataset")
+    Private Sub LoadPOZArchive(POZFile As String)
+        'Dim POZDataset As New DataSet("Park Observer Dataset")
         Try
             If My.Computer.FileSystem.FileExists(POZFile) Then
                 'Get the POZ file into a FileInfo to get at more information about it
@@ -286,13 +287,16 @@ Public Class Form1
 
                         'Make sure the file is a CSV file
                         If CSVFileInfo.Extension = ".csv" Then
+
+                            LoadCSVFile(CSVFileInfo)
+
                             'Create a DataTable to hold the CSV data
-                            Dim CSVDataTable As DataTable = GetDataTableFromCSV(CSVFileInfo, True, Format.Delimited)
-                            CSVDataTable.TableName = CSVName
+                            ' Dim CSVDataTable As DataTable = GetDataTableFromCSV(CSVFileInfo, True, Format.Delimited)
+                            'CSVDataTable.TableName = CSVName
 
 
                             'Add the DataTable above to the POZDataset
-                            POZDataset.Tables.Add(CSVDataTable)
+                            'POZDataset.Tables.Add(CSVDataTable)
                         End If
                     Next
                 End If
@@ -302,8 +306,7 @@ Public Class Form1
         Catch ex As Exception
             MsgBox(ex.Message & " (" & System.Reflection.MethodBase.GetCurrentMethod.Name & ").")
         End Try
-        Return POZDataset
-    End Function
+    End Sub
 
 
 
@@ -469,12 +472,11 @@ Public Class Form1
     ''' </summary>
     ''' <param name="Shapefile">Path to the shapefile to load into MapControl. String.</param>
     ''' <param name="MapControl">MapControl into which to load Shapefile. DevExpress XtraMap MapControl.</param>
-    Private Sub LoadShapefile(Shapefile As String, MapControl As MapControl)
+    Public Sub LoadShapefile(Shapefile As String, MapControl As MapControl)
         'Imports DevExpress.XtraMap
         Try
             'Test shapefile existence.
             If My.Computer.FileSystem.FileExists(Shapefile) = True Then
-
 
                 'Create a new shapefile VectorItemsLayer using Shapefile
                 Dim ShapefileVectorItemsLayer As VectorItemsLayer = GetShapefileVectorItemsLayer(Shapefile)
@@ -483,6 +485,7 @@ Public Class Form1
 
                 'Add the shapefile to the map.
                 MapControl.Layers.Add(ShapefileVectorItemsLayer)
+                LoadMapLayersListBox()
 
             Else
                 MsgBox("Error loading the requested shapefile: " & Shapefile & " does not exist at the path submitted.")
@@ -654,59 +657,21 @@ Public Class Form1
             Dim MapLayer As VectorItemsLayer = MapControl.Layers(LayerName)
 
             'Show the data in the map layer grid control
-            'Dim DT As DataTable
-            'Dim GV As GridView = TryCast(MapLayerGridControl.MainView, GridView)
-            'GV.Columns.Clear()
-            'Me.MapLayerGridControl.DataSource = Nothing
-            'If Not POZDataSet.Tables(LayerName) Is Nothing Then
-            '    DT = POZDataSet.Tables(LayerName)
-            '    With Me.MapLayerGridControl
-            '        .DataSource = DT
-            '        .Refresh()
-            '        .RefreshDataSource()
-            '    End With
-            '    SetUpGridControl(Me.MapLayerGridControl)
-            'End If
-
-
-
+            Dim DT As DataTable = GetDataTableFromVectorItemsLayer(MapLayer, LayerName)
+            Dim GV As GridView = TryCast(MapLayerGridControl.MainView, GridView)
+            GV.Columns.Clear()
+            Me.MapLayerGridControl.DataSource = Nothing
+            If Not DT Is Nothing Then
+                With Me.MapLayerGridControl
+                    .DataSource = DT
+                    .Refresh()
+                    .RefreshDataSource()
+                End With
+                SetUpGridControl(Me.MapLayerGridControl)
+            End If
         Catch ex As Exception
             MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
         End Try
-    End Sub
-
-    'Private Sub LayerLabelCheckedListBoxControl_ItemCheck(sender As Object, e As DevExpress.XtraEditors.Controls.ItemCheckEventArgs)
-    '    'Loop through the column names in the LayerLabelCheckedListBoxControl's CheckedItems collection
-    '    'create a labeling pattern and label the points in the map layer referenced by LayerName
-    '    Try
-    '        'Get the name of the layer from the MapLayersCheckedListBoxControl
-    '        Dim LayerName As String = MapLayersCheckedListBoxControl.Text
-
-    '        'Make a labeling pattern based on the columns selected in the child LayerLabelCheckedListBoxControl
-    '        Dim LabelPattern As String = ""
-    '        For Each SelectedItem As Object In Me.LayerLabelCheckedListBoxControl.CheckedItems
-    '            'Append each column name to the pattern
-    '            LabelPattern = LabelPattern & "{" & SelectedItem.ToString & "} "
-    '        Next
-
-    '        'Get a reference to the map layer referenced by LayerName
-    '        Dim BubblesLayer As VectorItemsLayer = Me.MapControl.Layers(LayerName)
-
-    '        'Submit the label pattern for labeling the points.
-    '        If Not BubblesLayer Is Nothing Then
-    '            With BubblesLayer
-    '                .ShapeTitlesPattern = LabelPattern.Trim
-    '                .ShapeTitlesVisibility = True
-    '            End With
-    '        End If
-    '    Catch ex As Exception
-    '        MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
-    '    End Try
-    'End Sub
-
-    Private Sub MapControl_DrawMapItem(sender As Object, e As DrawMapItemEventArgs) Handles MapControl.DrawMapItem
-        'e.StrokeWidth = InputBox("Stroke", "Stroke", 10)
-        'e.Layer.ShapeTitlesPattern = "{SpeciesAcronym}"
     End Sub
 
     Private Sub ZoomToFitAllLayersToolStripButton_Click(sender As Object, e As EventArgs) Handles ZoomToFitAllLayersToolStripButton.Click
