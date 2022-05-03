@@ -19,7 +19,7 @@ Public Class Form1
         For Each Shp As String In My.Settings.BackgroundLayers
             'If Shp <> "Placeholder" Then 'For some reason the setting had to be initalized with something so I put in 'Placeholder'
             Debug.Print(Shp)
-                'LoadShapefile(Shp, Me.MapControl)
+            'LoadShapefile(Shp, Me.MapControl)
             'End If
         Next
 
@@ -1069,7 +1069,7 @@ Public Class Form1
     Private Sub MapControl_MapItemClick(sender As Object, e As MapItemClickEventArgs) Handles MapControl.MapItemClick
         If Not e.Item Is Nothing Then
             'Show the selected item in a form
-            Dim ItemForm As Form = GetObjectPropertiesInForm(e.Item)
+            Dim ItemForm As Form = GetObjectPropertiesForm(e.Item)
             ItemForm.ShowDialog()
         End If
     End Sub
@@ -1080,7 +1080,7 @@ Public Class Form1
     ''' <param name="ObjectToShow">Object whose properties should be shown. Object.</param>
     ''' <param name="Title">A title for the form. String. Optional</param>
     ''' <returns></returns>
-    Private Function GetObjectPropertiesInForm(ObjectToShow As Object, Optional Title As String = "") As Form
+    Private Function GetObjectPropertiesForm(ObjectToShow As Object, Optional Title As String = "") As Form
         Dim ObjectForm As New Form
         Try
             Dim PG As New PropertyGrid
@@ -1136,6 +1136,7 @@ Public Class Form1
     Private Sub RemoveAllLayersToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RemoveAllLayersToolStripMenuItem.Click
         Try
             Me.MapControl.Layers.Clear()
+            POZDataSet.Tables.Clear()
             LoadMapLayersListBox()
         Catch ex As Exception
             MsgBox(ex.Message & " " & System.Reflection.MethodBase.GetCurrentMethod.Name)
@@ -1149,6 +1150,7 @@ Public Class Form1
             Dim CurrentLayer As VectorItemsLayer = Me.MapControl.Layers(CurrentLayerName)
             If Not CurrentLayer Is Nothing Then
                 Me.MapControl.Layers.Remove(CurrentLayer)
+                POZDataSet.Tables.Remove(POZDataSet.Tables(CurrentLayerName))
             End If
             LoadMapLayersListBox()
         Catch ex As Exception
@@ -1157,6 +1159,14 @@ Public Class Form1
     End Sub
 
     Private Sub CreatePivotTableToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreatePivotTableToolStripMenuItem.Click
-
+        Try
+            Dim CurrentLayer As VectorItemsLayer = Me.MapControl.Layers(Me.MapLayersCheckedListBoxControl.Text.Trim)
+            Dim DT As DataTable = GetDataTableFromVectorItemsLayer(CurrentLayer, Me.MapLayersCheckedListBoxControl.Text)
+            Dim PivotGridForm As New PivotGridForm(DT)
+            PivotGridForm.Show()
+        Catch ex As Exception
+            MsgBox(ex.Message & " " & System.Reflection.MethodBase.GetCurrentMethod.Name)
+        End Try
     End Sub
+
 End Class
