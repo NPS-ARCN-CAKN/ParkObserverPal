@@ -14,14 +14,8 @@ Public Class Form1
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
 
-        My.Settings.BackgroundLayers.Add("C:\Work\GIS Common Layers\AlaskaSimplified_1km.shp")
-        My.Settings.BackgroundLayers.Remove("Placeholder")
-        For Each Shp As String In My.Settings.BackgroundLayers
-            'If Shp <> "Placeholder" Then 'For some reason the setting had to be initalized with something so I put in 'Placeholder'
-            Debug.Print(Shp)
-            'LoadShapefile(Shp, Me.MapControl)
-            'End If
-        Next
+        My.Settings.BackgroundLayers = "C:\Work\GIS Common Layers\AlaskaSimplified_1km.shp"
+        LoadBackgroundLayers()
 
         'Dim Filepath As String = "C:\temp\zspatialdata.csv"
         'Filepath = "C:\temp\zSpatialData - invalid.csv"
@@ -52,6 +46,29 @@ Public Class Form1
     End Sub
 
     ''' <summary>
+    ''' Loads the background shapefiles in My.Settings.BackgroundLayers into the application
+    ''' </summary>
+    Private Sub LoadBackgroundLayers()
+        Try
+            Dim BackgroundShapefiles As String() = My.Settings.BackgroundLayers.Split("|")
+            For Each ShpFile As String In BackgroundShapefiles
+                If My.Computer.FileSystem.FileExists(ShpFile) Then
+                    LoadShapefile(ShpFile, Me.MapControl)
+                Else
+                    If MsgBox(ShpFile & " no longer exists. Remove it from the list of background layers?", MsgBoxStyle.YesNo, "Error") = MsgBoxResult.Yes Then
+                        'Get rid of the shapefile from the list of pipe | separated values.
+                        Debug.Print("current bg layers: " & My.Settings.BackgroundLayers)
+                        My.Settings.BackgroundLayers = My.Settings.BackgroundLayers.Replace(ShpFile, "")
+                        Debug.Print("got rid of " & ShpFile & " now it's " & My.Settings.BackgroundLayers)
+                    End If
+                End If
+            Next
+        Catch ex As Exception
+            MsgBox(ex.Message & " (" & System.Reflection.MethodBase.GetCurrentMethod.Name & ").")
+        End Try
+    End Sub
+
+    ''' <summary>
     ''' Converts a VectorItemsLayer.Data.Items name/value pair collection items into a DataTable.
     ''' </summary>
     ''' <param name="VIL">VectorItemsLayer to convert to DataTable. VectorItemsLayer.</param>
@@ -62,7 +79,9 @@ Public Class Form1
         Dim DT As New DataTable()
 
         Try
+            'Make sure we have a VectorItemsLayer
             If Not VIL Is Nothing Then
+
                 'Set the returned DataTable's name.
                 If TableName.Trim <> "" Then
                     DT.TableName = TableName
@@ -76,22 +95,51 @@ Public Class Form1
                     'Get a handle on the first item in the list so we can use it as a model to create DataColumns for DT.
                     Dim FirstMapItem As MapItem = VIL.Data.Items(0)
 
-                    'Create a DataColumn for each map item's Name attribute and add it to the data table.
-                    For Each FirstMapItemAttributes As MapItemAttribute In FirstMapItem.Attributes
-                        Dim ColumnName As String = FirstMapItemAttributes.Name
-                        Dim NewColumn As New DataColumn(ColumnName, FirstMapItemAttributes.Value.GetType)
-                        DT.Columns.Add(NewColumn)
-                    Next
+                    'Make sure the first map item is something
+                    If Not FirstMapItem Is Nothing Then
 
-                    'Now go through each item, create an equivalent DataRow and add it to DT.Rows.
-                    For Each MI As MapItem In VIL.Data.Items
-                        Dim NewRow As DataRow = DT.NewRow
-                        For Each Mapitemattribute In MI.Attributes
-                            NewRow.Item(Mapitemattribute.Name) = Mapitemattribute.Value
-                        Next
-                        DT.Rows.Add(NewRow)
-                    Next
+                        'Make sure the first map item has attributes
+                        If FirstMapItem.Attributes.Count > 0 Then
 
+                            'Create a DataColumn for each map item's Name attribute and add it to the data table.
+                            For Each FirstMapItemAttributes As MapItemAttribute In FirstMapItem.Attributes
+                                Dim ColumnName As String = FirstMapItemAttributes.Name
+
+                                'Create a new DataColumn based on the map item's name and value
+                                Dim NewColumn As New DataColumn(ColumnName)
+
+                                'MapItem attribute's data type is set to DBNull for NULL or empty rows. In such cases the equivalent DataColumn DataType cannot be determined.
+                                'This problem led to errors when the DataTable.NewRow function was called to create a new row.
+                                'Set such columns data type to String since it doesn't really matter anyway because there is no data for those cells
+                                If FirstMapItemAttributes.Value.GetType.Name = "DBNull" Then
+                                    NewColumn.DataType = GetType(String)
+                                Else
+                                    NewColumn.DataType = FirstMapItemAttributes.Value.GetType
+                                End If
+
+                                'Add the new column to DT DataTable
+                                DT.Columns.Add(NewColumn)
+                            Next
+
+                            'Now go through each item, create an equivalent DataRow and add it to DT.Rows.
+                            If VIL.Data.Items.Count > 0 Then
+                                For Each MapItem As MapItem In VIL.Data.Items
+
+                                    'Create a new DataRow and populate it with the map item's attributes
+                                    Dim NewRow As DataRow = DT.NewRow
+                                    For Each Mapitemattribute In MapItem.Attributes
+                                        'If the value is not null, add it to the new row
+                                        If Not IsDBNull(Mapitemattribute.Value) = True Then
+                                            Dim AttributeName As String = Mapitemattribute.Name
+                                            Dim AttributeValue As String = Mapitemattribute.Value
+                                            NewRow.Item(AttributeName) = AttributeValue
+                                        End If
+                                    Next
+                                    DT.Rows.Add(NewRow)
+                                Next
+                            End If
+                        End If
+                    End If
                 End If
             End If
         Catch ex As Exception
@@ -135,7 +183,7 @@ Public Class Form1
             ZIndex = ZIndex + 1
         Next
 
-
+        'Get the currently selected item so we can come back to it later
         Dim CurrentItem As String = Me.MapLayersCheckedListBoxControl.Text
 
         'Loop through the map layers and add them as listbox items
@@ -150,6 +198,7 @@ Public Class Form1
             Me.MapLayersCheckedListBoxControl.Items.Add(MapLayerCheckedListBoxItem)
         Next
 
+        'Reset the currently selected layer
         Me.MapLayersCheckedListBoxControl.SelectedItem = CurrentItem
     End Sub
 
@@ -377,7 +426,7 @@ Public Class Form1
     ''' <param name="PointsDataTable">DataTable containing points spatial data. DataTable</param>
     ''' <param name="LatitudeColumnName">Name of the latitude column. String.</param>
     ''' <param name="LongitudeColumnName">Name of the longitude column. String.</param>
-    ''' <returns>VectorItemLayer of points from WKT.</returns>
+    ''' <returns>VectorItemLayer of points.</returns>
     Public Function GetBubbleVectorItemsLayerFromPointsDataTable(PointsDataTable As DataTable, LatitudeColumnName As String, LongitudeColumnName As String, FeatureSize As Integer, MarkerType As MarkerType, FillColor As Color) As DevExpress.XtraMap.VectorItemsLayer
 
         'Create a new VectorItemsLayer which is essentially a map layer
@@ -693,6 +742,7 @@ Public Class Form1
     Private Sub PromoteLayerToolStripButton_Click(sender As Object, e As EventArgs) Handles PromoteLayerToolStripButton.Click
 
         If Me.MapLayersCheckedListBoxControl.Text.Trim <> "" Then
+
             'Get a handle on the current layer name
             Dim LayerName As String = Me.MapLayersCheckedListBoxControl.Text.Trim
             Dim Lyr As VectorItemsLayer = Me.MapControl.Layers(LayerName)

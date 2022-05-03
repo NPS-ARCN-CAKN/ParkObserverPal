@@ -36,6 +36,9 @@ Partial Class Form1
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.KMLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShapefileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RemoveAllLayersToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RemoveCurrentLayerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CreatePivotTableToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MapLayersToolStrip = New System.Windows.Forms.ToolStrip()
         Me.ToolStripLabel1 = New System.Windows.Forms.ToolStripLabel()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
@@ -51,9 +54,6 @@ Partial Class Form1
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.MapLayerGridControl = New DevExpress.XtraGrid.GridControl()
         Me.GridView1 = New DevExpress.XtraGrid.Views.Grid.GridView()
-        Me.RemoveAllLayersToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.RemoveCurrentLayerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CreatePivotTableToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         CType(Me.MapSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MapSplitContainer.Panel1.SuspendLayout()
         Me.MapSplitContainer.Panel2.SuspendLayout()
@@ -103,13 +103,13 @@ Partial Class Form1
         '
         Me.MapLayerContextMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AddSpatialDataToolStripMenuItem, Me.ZoomToLayerToolStripMenuItem, Me.LayerPropertiesToolStripMenuItem, Me.ToolStripMenuItem1, Me.RemoveAllLayersToolStripMenuItem, Me.RemoveCurrentLayerToolStripMenuItem, Me.CreatePivotTableToolStripMenuItem})
         Me.MapLayerContextMenuStrip.Name = "MapLayerContextMenuStrip"
-        Me.MapLayerContextMenuStrip.Size = New System.Drawing.Size(187, 180)
+        Me.MapLayerContextMenuStrip.Size = New System.Drawing.Size(187, 158)
         '
         'AddSpatialDataToolStripMenuItem
         '
         Me.AddSpatialDataToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CSVToolStripMenuItem, Me.ShapefileToolStripMenuItem1, Me.ParkObserverArchivepozToolStripMenuItem})
         Me.AddSpatialDataToolStripMenuItem.Name = "AddSpatialDataToolStripMenuItem"
-        Me.AddSpatialDataToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.AddSpatialDataToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
         Me.AddSpatialDataToolStripMenuItem.Text = "Add data"
         '
         'CSVToolStripMenuItem
@@ -133,20 +133,20 @@ Partial Class Form1
         'ZoomToLayerToolStripMenuItem
         '
         Me.ZoomToLayerToolStripMenuItem.Name = "ZoomToLayerToolStripMenuItem"
-        Me.ZoomToLayerToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ZoomToLayerToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
         Me.ZoomToLayerToolStripMenuItem.Text = "Zoom to layer"
         '
         'LayerPropertiesToolStripMenuItem
         '
         Me.LayerPropertiesToolStripMenuItem.Name = "LayerPropertiesToolStripMenuItem"
-        Me.LayerPropertiesToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.LayerPropertiesToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
         Me.LayerPropertiesToolStripMenuItem.Text = "Layer properties..."
         '
         'ToolStripMenuItem1
         '
         Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.KMLToolStripMenuItem, Me.ShapefileToolStripMenuItem})
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(180, 22)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(186, 22)
         Me.ToolStripMenuItem1.Text = "Export data"
         '
         'KMLToolStripMenuItem
@@ -160,6 +160,24 @@ Partial Class Form1
         Me.ShapefileToolStripMenuItem.Name = "ShapefileToolStripMenuItem"
         Me.ShapefileToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
         Me.ShapefileToolStripMenuItem.Text = "Shapefile"
+        '
+        'RemoveAllLayersToolStripMenuItem
+        '
+        Me.RemoveAllLayersToolStripMenuItem.Name = "RemoveAllLayersToolStripMenuItem"
+        Me.RemoveAllLayersToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
+        Me.RemoveAllLayersToolStripMenuItem.Text = "Remove all layers"
+        '
+        'RemoveCurrentLayerToolStripMenuItem
+        '
+        Me.RemoveCurrentLayerToolStripMenuItem.Name = "RemoveCurrentLayerToolStripMenuItem"
+        Me.RemoveCurrentLayerToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
+        Me.RemoveCurrentLayerToolStripMenuItem.Text = "Remove current layer"
+        '
+        'CreatePivotTableToolStripMenuItem
+        '
+        Me.CreatePivotTableToolStripMenuItem.Name = "CreatePivotTableToolStripMenuItem"
+        Me.CreatePivotTableToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
+        Me.CreatePivotTableToolStripMenuItem.Text = "Create pivot table..."
         '
         'MapLayersToolStrip
         '
@@ -224,7 +242,7 @@ Partial Class Form1
         '
         Me.MapPanelSplitContainer.Panel2.Controls.Add(Me.MapLayerGridControl)
         Me.MapPanelSplitContainer.Size = New System.Drawing.Size(922, 716)
-        Me.MapPanelSplitContainer.SplitterDistance = 549
+        Me.MapPanelSplitContainer.SplitterDistance = 463
         Me.MapPanelSplitContainer.TabIndex = 1
         '
         'MapControl
@@ -234,7 +252,7 @@ Partial Class Form1
         Me.MapControl.Dock = System.Windows.Forms.DockStyle.Fill
         Me.MapControl.Location = New System.Drawing.Point(0, 25)
         Me.MapControl.Name = "MapControl"
-        Me.MapControl.Size = New System.Drawing.Size(922, 524)
+        Me.MapControl.Size = New System.Drawing.Size(922, 438)
         Me.MapControl.TabIndex = 0
         '
         'MapContextMenuStrip
@@ -279,7 +297,7 @@ Partial Class Form1
         Me.MapLayerGridControl.Location = New System.Drawing.Point(0, 0)
         Me.MapLayerGridControl.MainView = Me.GridView1
         Me.MapLayerGridControl.Name = "MapLayerGridControl"
-        Me.MapLayerGridControl.Size = New System.Drawing.Size(922, 163)
+        Me.MapLayerGridControl.Size = New System.Drawing.Size(922, 249)
         Me.MapLayerGridControl.TabIndex = 0
         Me.MapLayerGridControl.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.GridView1})
         '
@@ -288,24 +306,6 @@ Partial Class Form1
         Me.GridView1.GridControl = Me.MapLayerGridControl
         Me.GridView1.Name = "GridView1"
         Me.GridView1.OptionsView.ShowFooter = True
-        '
-        'RemoveAllLayersToolStripMenuItem
-        '
-        Me.RemoveAllLayersToolStripMenuItem.Name = "RemoveAllLayersToolStripMenuItem"
-        Me.RemoveAllLayersToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.RemoveAllLayersToolStripMenuItem.Text = "Remove all layers"
-        '
-        'RemoveCurrentLayerToolStripMenuItem
-        '
-        Me.RemoveCurrentLayerToolStripMenuItem.Name = "RemoveCurrentLayerToolStripMenuItem"
-        Me.RemoveCurrentLayerToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
-        Me.RemoveCurrentLayerToolStripMenuItem.Text = "Remove current layer"
-        '
-        'CreatePivotTableToolStripMenuItem
-        '
-        Me.CreatePivotTableToolStripMenuItem.Name = "CreatePivotTableToolStripMenuItem"
-        Me.CreatePivotTableToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
-        Me.CreatePivotTableToolStripMenuItem.Text = "Create pivot table..."
         '
         'Form1
         '

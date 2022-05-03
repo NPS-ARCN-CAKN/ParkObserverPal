@@ -57,6 +57,9 @@
         ' This call is required by the designer.
         InitializeComponent()
 
+        'Show the data source in the data source label
+        Me.DataSourceLabel.Text = CSVDataTable.TableName
+
         ' Add any initialization after the InitializeComponent() call.
         Me.LatitudeColumnName = ""
         Me.LongitudeColumnName = ""
