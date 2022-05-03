@@ -13,15 +13,31 @@ Public Class Form1
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        LoadShapefile("C:\Work\GIS Common Layers\AlaskaSimplified_1km.shp", Me.MapControl)
-        Dim Filepath As String = "C:\temp\zspatialdata.csv"
-        Filepath = "C:\temp\zSpatialData - invalid.csv"
-        Filepath = "C:\temp\zLakesMonuments.csv"
-        Dim CSVFileInfo As New FileInfo(Filepath)
 
-        LoadCSVFile(CSVFileInfo)
+        My.Settings.BackgroundLayers.Add("C:\Work\GIS Common Layers\AlaskaSimplified_1km.shp")
+        My.Settings.BackgroundLayers.Remove("Placeholder")
+        For Each Shp As String In My.Settings.BackgroundLayers
+            'If Shp <> "Placeholder" Then 'For some reason the setting had to be initalized with something so I put in 'Placeholder'
+            Debug.Print(Shp)
+                'LoadShapefile(Shp, Me.MapControl)
+            'End If
+        Next
 
+        'Dim Filepath As String = "C:\temp\zspatialdata.csv"
+        'Filepath = "C:\temp\zSpatialData - invalid.csv"
+        'Filepath = "C:\temp\zLakesMonuments.csv"
+        'Dim CSVFileInfo As New FileInfo(Filepath)
 
+        'LoadCSVFile(CSVFileInfo)
+
+        'Dim x As VectorItemsLayer = Me.MapControl.Layers(0)
+        'Dim DT As DataTable = GetDataTableFromVectorItemsLayer(x, "test")
+        'Dim dtform As New Form
+        'Dim DGV As New DataGridView
+        'DGV.DataSource = DT
+        'DGV.Dock = DockStyle.Fill
+        'dtform.Controls.Add(DGV)
+        'dtform.Show()
 
         'Dim GV As GridView = TryCast(Me.MapLayerGridControl.MainView, GridView)
 
@@ -34,6 +50,53 @@ Public Class Form1
         '    'GV.GroupSummary.Add(GGSI)
         'Next
     End Sub
+
+    ''' <summary>
+    ''' Converts a VectorItemsLayer.Data.Items name/value pair collection items into a DataTable.
+    ''' </summary>
+    ''' <param name="VIL">VectorItemsLayer to convert to DataTable. VectorItemsLayer.</param>
+    ''' <param name="TableName">TableName. String. Optional. Defaults to the name of VectorItemsLayer.</param>
+    ''' <returns></returns>
+    Private Function GetDataTableFromVectorItemsLayer(VIL As VectorItemsLayer, Optional TableName As String = "") As DataTable
+        'Make a DataTable
+        Dim DT As New DataTable()
+
+        Try
+            'Set the returned DataTable's name.
+            If TableName.Trim <> "" Then
+                DT.TableName = TableName
+            Else
+                DT.TableName = VIL.Name
+            End If
+
+            'The data in a VectorItemsLayer are stored as Name/Value pairs, we need to convert them to a DataTable.
+            If VIL.Data.Items.Count > 0 Then
+
+                'Get a handle on the first item in the list so we can use it as a model to create DataColumns for DT.
+                Dim FirstMapItem As MapItem = VIL.Data.Items(0)
+
+                'Create a DataColumn for each map item's Name attribute and add it to the data table.
+                For Each FirstMapItemAttributes As MapItemAttribute In FirstMapItem.Attributes
+                    Dim ColumnName As String = FirstMapItemAttributes.Name
+                    Dim NewColumn As New DataColumn(ColumnName, FirstMapItemAttributes.Value.GetType)
+                    DT.Columns.Add(NewColumn)
+                Next
+
+                'Now go through each item, create an equivalent DataRow and add it to DT.Rows.
+                For Each MI As MapItem In VIL.Data.Items
+                    Dim NewRow As DataRow = DT.NewRow
+                    For Each Mapitemattribute In MI.Attributes
+                        NewRow.Item(Mapitemattribute.Name) = Mapitemattribute.Value
+                    Next
+                    DT.Rows.Add(NewRow)
+                Next
+
+            End If
+        Catch ex As Exception
+            MsgBox(ex.Message & " (" & System.Reflection.MethodBase.GetCurrentMethod.Name & ").")
+        End Try
+        Return DT
+    End Function
 
     Private Sub OpenPOZArchive(POZArchive As FileInfo)
         'Temporary holder for poz file
@@ -475,7 +538,7 @@ Public Class Form1
             TableName = FI.Name
             DT.TableName = TableName
 
-            'The data in a VectorItemsLayer are stored as Name/Value pairs, we need to convert them to a DataTable
+            'The Data In a VectorItemsLayer are stored As Name/Value pairs, we need to convert them to a DataTable
             If e.Items.Count > 0 Then
                 'Get a handle on the first item in the list
                 Dim FirstMapItem As MapItem = e.Items(0)
@@ -487,7 +550,6 @@ Public Class Form1
                     DT.Columns.Add(NewColumn)
                 Next
 
-
                 'Now go through each item and transfer the values to the datatable
                 For Each MI As MapItem In e.Items
                     Dim NewRow As DataRow = DT.NewRow
@@ -498,7 +560,6 @@ Public Class Form1
                 Next
 
             End If
-
             'Add the DataTable to a Dataset
             If POZDataSet.Tables(TableName) Is Nothing Then
                 POZDataSet.Tables.Add(DT)
@@ -506,7 +567,6 @@ Public Class Form1
                 POZDataSet.Tables.Remove(POZDataSet.Tables(TableName))
                 POZDataSet.Tables.Add(DT)
             End If
-
 
             Me.MapLayerGridControl.DataSource = DT
         Catch ex As Exception
@@ -1009,12 +1069,94 @@ Public Class Form1
     Private Sub MapControl_MapItemClick(sender As Object, e As MapItemClickEventArgs) Handles MapControl.MapItemClick
         If Not e.Item Is Nothing Then
             'Show the selected item in a form
-            Dim ItemForm As New Form
+            Dim ItemForm As Form = GetObjectPropertiesInForm(e.Item)
+            ItemForm.ShowDialog()
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' Returns a Form with OjectToShow in a PropertyGrid.
+    ''' </summary>
+    ''' <param name="ObjectToShow">Object whose properties should be shown. Object.</param>
+    ''' <param name="Title">A title for the form. String. Optional</param>
+    ''' <returns></returns>
+    Private Function GetObjectPropertiesInForm(ObjectToShow As Object, Optional Title As String = "") As Form
+        Dim ObjectForm As New Form
+        Try
             Dim PG As New PropertyGrid
             PG.Dock = DockStyle.Fill
-            PG.SelectedObject = e.Item
-            ItemForm.Controls.Add(PG)
-            ItemForm.Show()
-        End If
+            PG.SelectedObject = ObjectToShow
+            With ObjectForm
+                .Controls.Add(PG)
+                .Text = Title
+                .FormBorderStyle = FormBorderStyle.SizableToolWindow
+            End With
+        Catch ex As Exception
+            MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
+        End Try
+        Return ObjectForm
+    End Function
+
+    Private Sub AddDatasetToolStripButton_Click(sender As Object, e As EventArgs) Handles AddDatasetToolStripButton.Click
+        Try
+            Dim Filter As String = "Spatial data file|*.poz;*.csv;*.shp" 'Filter to multiple file types
+            Dim OFD As New OpenFileDialog
+            With OFD
+                '.ShowHelp = True
+                '.AddExtension = True
+                '.CheckFileExists = True
+                .Filter = Filter
+                .Multiselect = True
+                .Title = "Select a spatial dataset"
+            End With
+
+            'show the ofd and get the filename and path
+            If OFD.ShowDialog = DialogResult.OK Then
+                For Each SelectedFile In OFD.FileNames
+                    Dim SelectedFileInfo As New FileInfo(SelectedFile)
+                    If SelectedFileInfo.Extension = ".shp" Then
+                        LoadShapefile(SelectedFileInfo.FullName, Me.MapControl)
+                    ElseIf SelectedFileInfo.Extension = ".poz" Then
+                        OpenPOZArchive(SelectedFileInfo)
+                    ElseIf SelectedFileInfo.Extension = ".csv" Then
+                        LoadCSVFile(SelectedFileInfo)
+                    End If
+                Next
+                'Dim SelectedFile As String = OFD.FileName
+                'Debug.Print(SelectedFile)
+                'add clear datasets and clear dataset button/checkbockxes
+                'add tabcontrol and pivot table
+            End If
+
+        Catch ex As Exception
+            MsgBox(ex.Message & " " & System.Reflection.MethodBase.GetCurrentMethod.Name)
+        End Try
+    End Sub
+
+    Private Sub RemoveAllLayersToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RemoveAllLayersToolStripMenuItem.Click
+        Try
+            Me.MapControl.Layers.Clear()
+            LoadMapLayersListBox()
+        Catch ex As Exception
+            MsgBox(ex.Message & " " & System.Reflection.MethodBase.GetCurrentMethod.Name)
+        End Try
+
+    End Sub
+
+    Private Sub RemoveCurrentLayerToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RemoveCurrentLayerToolStripMenuItem.Click
+        Try
+            Dim CurrentLayerName As String = Me.MapLayersCheckedListBoxControl.Text.Trim
+            Dim CurrentLayer As VectorItemsLayer = Me.MapControl.Layers(CurrentLayerName)
+            If Not CurrentLayer Is Nothing Then
+                Me.MapControl.Layers.Remove(CurrentLayer)
+            End If
+            LoadMapLayersListBox()
+        Catch ex As Exception
+            MsgBox(ex.Message & " " & System.Reflection.MethodBase.GetCurrentMethod.Name)
+        End Try
+    End Sub
+
+    Private Sub CreatePivotTableToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreatePivotTableToolStripMenuItem.Click
+
     End Sub
 End Class

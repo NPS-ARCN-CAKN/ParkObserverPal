@@ -224,7 +224,7 @@ Public Class MapLayerPropertiesForm
                 If MapLayer.Data.Items.Count > 0 Then
 
                     Dim ItemType As String = MapLayer.Data.Items(0).GetType.Name
-                    MsgBox("itemtype: " & ItemType & " (ChangeSymbology)")
+                    Debug.Print("itemtype: " & ItemType & " (ChangeSymbology)")
 
                     'Get the selected marker type
                     Dim CurrentMarkerType As MarkerType = GetCurrentMarker()
