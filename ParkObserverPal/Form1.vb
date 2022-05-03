@@ -9,7 +9,7 @@ Imports DevExpress.XtraPivotGrid
 Public Class Form1
 
     Dim MapLayersDataTable As New DataTable("Layers") 'The data table that will show the current layer's data
-    Dim POZDataSet As New DataSet 'Park Observer data set
+    'Dim POZDataSet As New DataSet 'Park Observer data set
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -103,12 +103,13 @@ Public Class Form1
         Dim POZZipFile As String = POZArchive.FullName '"C:\Temp\Loons 2022-03-29.poz"
 
         'Create a Dataset into which to dump the contents of all the CSV files in POZZipFile
-        POZDataSet.Clear()
-        POZDataSet = GetDatasetFromPOZFile(POZZipFile)
-        POZDataSet.DataSetName = POZZipFile
+        'POZDataSet.Clear()
+        'POZDataSet = GetDatasetFromPOZFile(POZZipFile)
+        'POZDataSet.DataSetName = POZZipFile
 
         'Load up the various grids and map with poz data
-        LoadPOZDataset(POZDataSet)
+        'LoadPOZDataset(POZDataSet)
+        MsgBox("fix OpenPOZArchive")
 
         Me.MapControl.ZoomToFitLayerItems()
         With Me.MapControl
@@ -561,12 +562,12 @@ Public Class Form1
 
             End If
             'Add the DataTable to a Dataset
-            If POZDataSet.Tables(TableName) Is Nothing Then
-                POZDataSet.Tables.Add(DT)
-            Else
-                POZDataSet.Tables.Remove(POZDataSet.Tables(TableName))
-                POZDataSet.Tables.Add(DT)
-            End If
+            'If POZDataSet.Tables(TableName) Is Nothing Then
+            '    POZDataSet.Tables.Add(DT)
+            'Else
+            '    POZDataSet.Tables.Remove(POZDataSet.Tables(TableName))
+            '    POZDataSet.Tables.Add(DT)
+            'End If
 
             Me.MapLayerGridControl.DataSource = DT
         Catch ex As Exception
@@ -653,19 +654,19 @@ Public Class Form1
             Dim MapLayer As VectorItemsLayer = MapControl.Layers(LayerName)
 
             'Show the data in the map layer grid control
-            Dim DT As DataTable
-            Dim GV As GridView = TryCast(MapLayerGridControl.MainView, GridView)
-            GV.Columns.Clear()
-            Me.MapLayerGridControl.DataSource = Nothing
-            If Not POZDataSet.Tables(LayerName) Is Nothing Then
-                DT = POZDataSet.Tables(LayerName)
-                With Me.MapLayerGridControl
-                    .DataSource = DT
-                    .Refresh()
-                    .RefreshDataSource()
-                End With
-                SetUpGridControl(Me.MapLayerGridControl)
-            End If
+            'Dim DT As DataTable
+            'Dim GV As GridView = TryCast(MapLayerGridControl.MainView, GridView)
+            'GV.Columns.Clear()
+            'Me.MapLayerGridControl.DataSource = Nothing
+            'If Not POZDataSet.Tables(LayerName) Is Nothing Then
+            '    DT = POZDataSet.Tables(LayerName)
+            '    With Me.MapLayerGridControl
+            '        .DataSource = DT
+            '        .Refresh()
+            '        .RefreshDataSource()
+            '    End With
+            '    SetUpGridControl(Me.MapLayerGridControl)
+            'End If
 
 
 
@@ -963,10 +964,10 @@ Public Class Form1
 
                             Dim CSVLayer As VectorItemsLayer = GetBubbleVectorItemsLayerFromPointsDataTable(CSVDataTable, LatColumnName, LonColumnName, 12, MarkerType.Circle, Color.GreenYellow)
                             Me.MapControl.Layers.Add(CSVLayer)
-                            POZDataSet.Tables.Add(CSVDataTable)
+                            'POZDataSet.Tables.Add(CSVDataTable)
                         Else
                             'User didn't supply column names, add as a non-spatial data table
-                            POZDataSet.Tables.Add(CSVDataTable)
+                            'POZDataSet.Tables.Add(CSVDataTable)
 
 
                         End If
@@ -1136,7 +1137,7 @@ Public Class Form1
     Private Sub RemoveAllLayersToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RemoveAllLayersToolStripMenuItem.Click
         Try
             Me.MapControl.Layers.Clear()
-            POZDataSet.Tables.Clear()
+            'POZDataSet.Tables.Clear()
             LoadMapLayersListBox()
         Catch ex As Exception
             MsgBox(ex.Message & " " & System.Reflection.MethodBase.GetCurrentMethod.Name)
@@ -1150,7 +1151,7 @@ Public Class Form1
             Dim CurrentLayer As VectorItemsLayer = Me.MapControl.Layers(CurrentLayerName)
             If Not CurrentLayer Is Nothing Then
                 Me.MapControl.Layers.Remove(CurrentLayer)
-                POZDataSet.Tables.Remove(POZDataSet.Tables(CurrentLayerName))
+                'POZDataSet.Tables.Remove(POZDataSet.Tables(CurrentLayerName))
             End If
             LoadMapLayersListBox()
         Catch ex As Exception
