@@ -6,6 +6,35 @@ Imports DevExpress.XtraPivotGrid
 
 Module Utilities
 
+    Public Class VectorItemsLayer_NPS
+        Inherits VectorItemsLayer
+
+        ''' <summary>
+        ''' Park Observer protocol file (obsprot) used to generate the dataset.
+        ''' </summary>
+        Private ProtocolFileValue As FileInfo
+        Public Property ProtocolFile() As FileInfo
+            Get
+                Return ProtocolFileValue
+            End Get
+            Set(ByVal value As FileInfo)
+                ProtocolFileValue = value
+            End Set
+        End Property
+
+        ''' <summary>
+        ''' DataTable of the VectorItemLayer
+        ''' </summary>
+        Private newDataTable As DataTable
+        Public Property DataTable() As DataTable
+            Get
+                Return newDataTable
+            End Get
+            Set(ByVal value As DataTable)
+                newDataTable = value
+            End Set
+        End Property
+    End Class
 
 
     ''' <summary>

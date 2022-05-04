@@ -301,7 +301,6 @@ Public Class Form1
     ''' </summary>
     ''' <param name="POZFile">Park Observer archive (.poz). String.</param>
     Private Sub LoadPOZArchive(POZFile As String)
-        'Dim POZDataset As New DataSet("Park Observer Dataset")
         Try
             If My.Computer.FileSystem.FileExists(POZFile) Then
                 'Get the POZ file into a FileInfo to get at more information about it
@@ -329,26 +328,22 @@ Public Class Form1
 
                 'If the POZ files directory is cleared out and ready to use then extract the POZ files into it
                 If OKToProceed = True Then
+
                     'Extract the files into the POZ files directory from above
                     System.IO.Compression.ZipFile.ExtractToDirectory(POZFile, POZFilesDirectory)
 
                     'Now cycle through the .csv files and load the contents into DataTables
                     For Each CSVFIle As String In My.Computer.FileSystem.GetFiles(POZFilesDirectory)
+
                         Dim CSVFileInfo As New FileInfo(CSVFIle)
                         Dim CSVName As String = CSVFileInfo.Name.Trim.Replace(".csv", "")
 
                         'Make sure the file is a CSV file
                         If CSVFileInfo.Extension = ".csv" Then
 
+                            'Load the CSV into the application
                             LoadCSVFile(CSVFileInfo)
 
-                            'Create a DataTable to hold the CSV data
-                            ' Dim CSVDataTable As DataTable = GetDataTableFromCSV(CSVFileInfo, True, Format.Delimited)
-                            'CSVDataTable.TableName = CSVName
-
-
-                            'Add the DataTable above to the POZDataset
-                            'POZDataset.Tables.Add(CSVDataTable)
                         End If
                     Next
                 End If
@@ -359,8 +354,6 @@ Public Class Form1
             MsgBox(ex.Message & " (" & System.Reflection.MethodBase.GetCurrentMethod.Name & ").")
         End Try
     End Sub
-
-
 
 
     ''' <summary>
@@ -926,18 +919,38 @@ Public Class Form1
                             Dim LatColumnName As String = ImportForm.LatitudeColumnName.Trim
                             Dim LonColumnName As String = ImportForm.LongitudeColumnName.Trim
 
+                            'Add WKT and Geography columns to the CSVDataTable and generate the values
                             AddWKTAndGeographyColumnsToDataTable(CSVDataTable, LatColumnName, LonColumnName)
+
+                            'Add SourceFile column to the data table
+                            Dim SourceFileColumn As New DataColumn("SourceFile", GetType(String))
+                            CSVDataTable.Columns.Add(SourceFileColumn)
+                            For Each Row As DataRow In CSVDataTable.Rows
+                                Row.Item("SourceFile") = CSVFileInfo.Name
+                            Next
+
+                            Dim ProtocolFile As String = CSVFileInfo.DirectoryName & "\protocol.obsprot"
+                            Debug.Print("Protocol: " & ProtocolFile)
+                            If My.Computer.FileSystem.FileExists(ProtocolFile) Then
+                                'Add ProtocolFile column to the data table
+                                Dim ProtocolFileColumn As New DataColumn("ProtocolFile", GetType(String))
+                                CSVDataTable.Columns.Add(ProtocolFileColumn)
+                                For Each Row As DataRow In CSVDataTable.Rows
+                                    Row.Item("ProtocolFile") = ProtocolFile
+                                Next
+                            End If
+
 
 
                             Dim CSVLayer As VectorItemsLayer = GetBubbleVectorItemsLayerFromPointsDataTable(CSVDataTable, LatColumnName, LonColumnName, 12, MarkerType.Circle, Color.GreenYellow)
-                            Me.MapControl.Layers.Add(CSVLayer)
-                            'POZDataSet.Tables.Add(CSVDataTable)
-                        Else
-                            'User didn't supply column names, add as a non-spatial data table
-                            'POZDataSet.Tables.Add(CSVDataTable)
+                                Me.MapControl.Layers.Add(CSVLayer)
+                                'POZDataSet.Tables.Add(CSVDataTable)
+                            Else
+                                'User didn't supply column names, add as a non-spatial data table
+                                'POZDataSet.Tables.Add(CSVDataTable)
 
 
-                        End If
+                            End If
                         'Refresh the map layers list box
                         LoadMapLayersListBox()
                     End If
