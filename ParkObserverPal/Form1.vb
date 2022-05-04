@@ -879,61 +879,66 @@ Public Class Form1
 
                             'If an obsprot exists
                             If My.Computer.FileSystem.FileExists(ProtocolFile) Then
+                                Try
+                                    'Variables to hold obsprot attributes
+                                    Dim ProtocolName As String = ""
+                                    Dim ProtocolVersion As String = ""
+                                    Dim ProtocolDate As String = ""
+                                    Dim ProtocolDescription As String = ""
 
-                                'Variables to hold obsprot attributes
-                                Dim ProtocolName As String = ""
-                                Dim ProtocolVersion As String = ""
-                                Dim ProtocolDate As String = ""
-                                Dim ProtocolDescription As String = ""
+                                    'Get the protocol attributes out of the obsprot's json
+                                    Dim ProtocolText As String = My.Computer.FileSystem.ReadAllText(ProtocolFile)
+                                    ProtocolName = GetJSONValue(ProtocolText, "name")
+                                    ProtocolVersion = GetJSONValue(ProtocolText, "version")
+                                    ProtocolDate = GetJSONValue(ProtocolText, "date")
+                                    ProtocolDescription = GetJSONValue(ProtocolText, "description")
 
-                                'Get the protocol attributes out of the obsprot's json
-                                Dim ProtocolText As String = My.Computer.FileSystem.ReadAllText(ProtocolFile)
-                                ProtocolName = GetJSONValue(ProtocolText, "name")
-                                ProtocolVersion = GetJSONValue(ProtocolText, "version")
-                                ProtocolDate = GetJSONValue(ProtocolText, "date")
-                                ProtocolDescription = GetJSONValue(ProtocolText, "description")
+                                    'Get the obsprot into a fileinfo
+                                    Dim ProtocolFileInfo As New FileInfo(ProtocolFile)
 
-                                'Get the obsprot into a fileinfo
-                                Dim ProtocolFileInfo As New FileInfo(ProtocolFile)
+                                    'Add ProtocolFile column to the data table
+                                    Dim ProtocolFileColumn As New DataColumn("ProtocolFile", GetType(String))
+                                    CSVDataTable.Columns.Add(ProtocolFileColumn)
 
-                                'Add ProtocolFile column to the data table
-                                Dim ProtocolFileColumn As New DataColumn("ProtocolFile", GetType(String))
-                                CSVDataTable.Columns.Add(ProtocolFileColumn)
+                                    'Add ProtocolName column to the data table
+                                    Dim ProtocolNameColumn As New DataColumn("ProtocolName", GetType(String))
+                                    CSVDataTable.Columns.Add(ProtocolNameColumn)
 
-                                'Add ProtocolName column to the data table
-                                Dim ProtocolNameColumn As New DataColumn("ProtocolName", GetType(String))
-                                CSVDataTable.Columns.Add(ProtocolNameColumn)
+                                    'Add ProtocolVersion column to the data table
+                                    Dim ProtocolVersionColumn As New DataColumn("ProtocolVersion", GetType(Double))
+                                    CSVDataTable.Columns.Add(ProtocolVersionColumn)
 
-                                'Add ProtocolVersion column to the data table
-                                Dim ProtocolVersionColumn As New DataColumn("ProtocolVersion", GetType(Double))
-                                CSVDataTable.Columns.Add(ProtocolVersionColumn)
+                                    'Add ProtocolDate column to the data table
+                                    Dim ProtocolDateColumn As New DataColumn("ProtocolDate", GetType(Date))
+                                    CSVDataTable.Columns.Add(ProtocolDateColumn)
 
-                                'Add ProtocolDate column to the data table
-                                Dim ProtocolDateColumn As New DataColumn("ProtocolDate", GetType(Date))
-                                CSVDataTable.Columns.Add(ProtocolDateColumn)
+                                    'Add ProtocolDescription column to the data table
+                                    Dim ProtocolDescriptionColumn As New DataColumn("ProtocolDescription", GetType(String))
+                                    CSVDataTable.Columns.Add(ProtocolDescriptionColumn)
 
-                                'Add ProtocolDescription column to the data table
-                                Dim ProtocolDescriptionColumn As New DataColumn("ProtocolDescription", GetType(String))
-                                CSVDataTable.Columns.Add(ProtocolDescriptionColumn)
+                                    'Add the protocol attributes to the data table
+                                    For Each Row As DataRow In CSVDataTable.Rows
+                                        Try
+                                            Row.Item("ProtocolFile") = ProtocolFileInfo.FullName
+                                            Row.Item("ProtocolName") = ProtocolName
+                                            If IsNumeric(ProtocolVersion) = True Then Row.Item("ProtocolVersion") = CDbl(ProtocolVersion)
+                                            If IsDate(ProtocolDate) Then Row.Item("ProtocolDate") = CDate(ProtocolDate)
+                                            Row.Item("ProtocolDescription") = ProtocolDescription
+                                        Catch RowUpdateException As Exception
+                                            Debug.Print(RowUpdateException.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
+                                        End Try
 
-                                'Add the protocol attributes to the data table
-                                For Each Row As DataRow In CSVDataTable.Rows
-                                    Try
-                                        Row.Item("ProtocolFile") = ProtocolFileInfo.FullName
-                                        Row.Item("ProtocolName") = ProtocolName
-                                        If IsNumeric(ProtocolVersion) = True Then Row.Item("ProtocolVersion") = CDbl(ProtocolVersion)
-                                        If IsDate(ProtocolDate) Then Row.Item("ProtocolDate") = CDate(ProtocolDate)
-                                        Row.Item("ProtocolDescription") = ProtocolDescription
-                                    Catch RowUpdateException As Exception
-                                        Debug.Print(RowUpdateException.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
-                                    End Try
-
-                                Next
+                                    Next
+                                Catch ProtocolProcessingException As Exception
+                                    MsgBox(ProtocolProcessingException.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
+                                End Try
                             End If
 
 
                             'Create a VectorItemsLayer_NPS for the CSVDataTable
                             Dim CSVLayer As VectorItemsLayer_NPS = GetBubbleVectorItemsLayerFromPointsDataTable(CSVDataTable, LatColumnName, LonColumnName, 12, MarkerType.Circle, Color.GreenYellow)
+                            CSVLayer.ProtocolFile = New FileInfo(ProtocolFile)
+                            CSVLayer.DataTable = CSVDataTable
 
                             'Load the Protocol file into the VectorItemsLayer_NPS.ProtocolFile
 
