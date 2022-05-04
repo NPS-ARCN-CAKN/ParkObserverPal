@@ -4,7 +4,8 @@ Imports SkeeterUtilities.DataFileToDataTableConverters.DataFileToDataTableConver
 Imports System.IO
 Imports DevExpress.XtraGrid.Views.Grid
 Imports DevExpress.XtraPivotGrid
-
+Imports System.Web.Script.Serialization
+Imports Newtonsoft.Json
 
 Public Class Form1
 
@@ -14,10 +15,14 @@ Public Class Form1
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
 
-        My.Settings.BackgroundLayers = "C:\Work\GIS Common Layers\AlaskaSimplified_1km.shp"
-        LoadBackgroundLayers()
+
+
+        'My.Settings.BackgroundLayers = "C:\Work\GIS Common Layers\AlaskaSimplified_1km.shp"
+        'LoadBackgroundLayers()
 
     End Sub
+
+
 
     ''' <summary>
     ''' Loads the background shapefiles in My.Settings.BackgroundLayers into the application
@@ -28,13 +33,13 @@ Public Class Form1
             For Each ShpFile As String In BackgroundShapefiles
                 If My.Computer.FileSystem.FileExists(ShpFile) Then
                     LoadShapefile(ShpFile, Me.MapControl)
-                Else
-                    If MsgBox(ShpFile & " no longer exists. Remove it from the list of background layers?", MsgBoxStyle.YesNo, "Error") = MsgBoxResult.Yes Then
-                        'Get rid of the shapefile from the list of pipe | separated values.
-                        Debug.Print("current bg layers: " & My.Settings.BackgroundLayers)
-                        My.Settings.BackgroundLayers = My.Settings.BackgroundLayers.Replace(ShpFile, "")
-                        Debug.Print("got rid of " & ShpFile & " now it's " & My.Settings.BackgroundLayers)
-                    End If
+                    'Else
+                    '    If MsgBox(ShpFile & " no longer exists. Remove it from the list of background layers?", MsgBoxStyle.YesNo, "Error") = MsgBoxResult.Yes Then
+                    '        'Get rid of the shapefile from the list of pipe | separated values.
+                    '        Debug.Print("current bg layers: " & My.Settings.BackgroundLayers)
+                    '        My.Settings.BackgroundLayers = My.Settings.BackgroundLayers.Replace(ShpFile, "")
+                    '        Debug.Print("got rid of " & ShpFile & " now it's " & My.Settings.BackgroundLayers)
+                    '    End If
                 End If
             Next
         Catch ex As Exception
@@ -852,29 +857,95 @@ Public Class Form1
                                 Row.Item("SourceFile") = CSVFileInfo.Name
                             Next
 
+
+
+                            'Add DataExtractedDate column to the data table
+                            Dim DataExtractedDateColumn As New DataColumn("DateRecordExtracted", GetType(DateTime))
+                            CSVDataTable.Columns.Add(DataExtractedDateColumn)
+
+                            'Add DataExtractedBy column to the data table
+                            Dim DataExtractedByColumn As New DataColumn("DataExtractedBy", GetType(String))
+                            CSVDataTable.Columns.Add(DataExtractedByColumn)
+
+                            'Load the metadata columns from above
+                            For Each Row As DataRow In CSVDataTable.Rows
+                                Debug.Print(Now)
+                                Row.Item("DateRecordExtracted") = Now
+                                Row.Item("DataExtractedBy") = My.User.Name
+                            Next
+
+                            'Add Park Observer - specific columns to the dataset
                             Dim ProtocolFile As String = CSVFileInfo.DirectoryName & "\protocol.obsprot"
-                            Debug.Print("Protocol: " & ProtocolFile)
+
+                            'If an obsprot exists
                             If My.Computer.FileSystem.FileExists(ProtocolFile) Then
+
+                                'Variables to hold obsprot attributes
+                                Dim ProtocolName As String = ""
+                                Dim ProtocolVersion As String = ""
+                                Dim ProtocolDate As String = ""
+                                Dim ProtocolDescription As String = ""
+
+                                'Get the protocol attributes out of the obsprot's json
+                                Dim ProtocolText As String = My.Computer.FileSystem.ReadAllText(ProtocolFile)
+                                ProtocolName = GetJSONValue(ProtocolText, "name")
+                                ProtocolVersion = GetJSONValue(ProtocolText, "version")
+                                ProtocolDate = GetJSONValue(ProtocolText, "date")
+                                ProtocolDescription = GetJSONValue(ProtocolText, "description")
+
+                                'Get the obsprot into a fileinfo
+                                Dim ProtocolFileInfo As New FileInfo(ProtocolFile)
+
                                 'Add ProtocolFile column to the data table
                                 Dim ProtocolFileColumn As New DataColumn("ProtocolFile", GetType(String))
                                 CSVDataTable.Columns.Add(ProtocolFileColumn)
+
+                                'Add ProtocolName column to the data table
+                                Dim ProtocolNameColumn As New DataColumn("ProtocolName", GetType(String))
+                                CSVDataTable.Columns.Add(ProtocolNameColumn)
+
+                                'Add ProtocolVersion column to the data table
+                                Dim ProtocolVersionColumn As New DataColumn("ProtocolVersion", GetType(Double))
+                                CSVDataTable.Columns.Add(ProtocolVersionColumn)
+
+                                'Add ProtocolDate column to the data table
+                                Dim ProtocolDateColumn As New DataColumn("ProtocolDate", GetType(Date))
+                                CSVDataTable.Columns.Add(ProtocolDateColumn)
+
+                                'Add ProtocolDescription column to the data table
+                                Dim ProtocolDescriptionColumn As New DataColumn("ProtocolDescription", GetType(String))
+                                CSVDataTable.Columns.Add(ProtocolDescriptionColumn)
+
+                                'Add the protocol attributes to the data table
                                 For Each Row As DataRow In CSVDataTable.Rows
-                                    Row.Item("ProtocolFile") = ProtocolFile
+                                    Try
+                                        Row.Item("ProtocolFile") = ProtocolFileInfo.FullName
+                                        Row.Item("ProtocolName") = ProtocolName
+                                        If IsNumeric(ProtocolVersion) = True Then Row.Item("ProtocolVersion") = CDbl(ProtocolVersion)
+                                        If IsDate(ProtocolDate) Then Row.Item("ProtocolDate") = CDate(ProtocolDate)
+                                        Row.Item("ProtocolDescription") = ProtocolDescription
+                                    Catch RowUpdateException As Exception
+                                        Debug.Print(RowUpdateException.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
+                                    End Try
+
                                 Next
                             End If
 
 
-
+                            'Create a VectorItemsLayer_NPS for the CSVDataTable
                             Dim CSVLayer As VectorItemsLayer_NPS = GetBubbleVectorItemsLayerFromPointsDataTable(CSVDataTable, LatColumnName, LonColumnName, 12, MarkerType.Circle, Color.GreenYellow)
 
-                            Me.MapControl.Layers.Add(CSVLayer)
-                            'POZDataSet.Tables.Add(CSVDataTable)
-                        Else
-                                'User didn't supply column names, add as a non-spatial data table
-                                'POZDataSet.Tables.Add(CSVDataTable)
+                            'Load the Protocol file into the VectorItemsLayer_NPS.ProtocolFile
 
-
+                            If My.Computer.FileSystem.FileExists(ProtocolFile) Then
+                                CSVLayer.ProtocolFile = New FileInfo(ProtocolFile)
                             End If
+
+
+                            Me.MapControl.Layers.Add(CSVLayer)
+
+                        End If
+
                         'Refresh the map layers list box
                         LoadMapLayersListBox()
                     End If
@@ -886,6 +957,8 @@ Public Class Form1
             MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
         End Try
     End Sub
+
+
 
     ''' <summary>
     ''' Adds a WKT and a Geography DataColumn to the submitted DataTable, then populates these new columns with the Well-Known Text and Geography representations of the submitted

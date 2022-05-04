@@ -3,6 +3,7 @@ Imports DevExpress.XtraGrid
 Imports DevExpress.XtraGrid.Views.Grid
 Imports DevExpress.XtraMap
 Imports DevExpress.XtraPivotGrid
+Imports Newtonsoft.Json
 
 Module Utilities
 
@@ -35,6 +36,25 @@ Module Utilities
             End Set
         End Property
     End Class
+
+    ''' <summary>
+    ''' Returns the first occurrence of TagName in JSONToLookIn as a String.
+    ''' </summary>
+    ''' <param name="JSONToLookIn">The JSON text in which to look. String.</param>
+    ''' <param name="TagName">JSON tag name to look for. String.</param>
+    ''' <returns>String.</returns>
+    Public Function GetJSONValue(JSONToLookIn As String, TagName As String) As String
+        'Imports Newtonsoft.Json
+        Dim ReturnValue As String = ""
+        Try
+            Dim jsonResulttodict = JsonConvert.DeserializeObject(Of Dictionary(Of String, Object))(JSONToLookIn)
+            ReturnValue = jsonResulttodict.Item(TagName)
+        Catch ex As Exception
+            Dim Msg As String = "Warning: " & TagName & " not found in the submitted JSON"
+            MsgBox(Msg & ex.Message & " (" & System.Reflection.MethodBase.GetCurrentMethod.Name & ").")
+        End Try
+        Return ReturnValue
+    End Function
 
 
     ''' <summary>
