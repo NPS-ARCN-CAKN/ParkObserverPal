@@ -6,6 +6,7 @@ Imports DevExpress.XtraGrid.Views.Grid
 Imports DevExpress.XtraPivotGrid
 Imports System.Web.Script.Serialization
 Imports Newtonsoft.Json
+Imports DevExpress.XtraEditors
 
 Public Class Form1
 
@@ -15,10 +16,15 @@ Public Class Form1
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
 
-
+        LoadCSVFile(New FileInfo("C:\temp\zspatialdata.csv"))
 
         'My.Settings.BackgroundLayers = "C:\Work\GIS Common Layers\AlaskaSimplified_1km.shp"
         'LoadBackgroundLayers()
+
+
+        For Each GV As GridView In Me.MapLayerGridControl.Views
+            GV.OptionsBehavior.ReadOnly = True
+        Next
 
     End Sub
 
@@ -365,6 +371,7 @@ Public Class Form1
             If LatitudeColumnName.Trim <> "" And LongitudeColumnName.Trim <> "" Then
 
                 'Convert .NET DataRows to MapBubbles
+                Dim i As Double = 1 'i will be used as an identifier
                 For Each MyPointDataRow As DataRow In PointsDataTable.Rows
                     'Make sure we have a valid row
                     If Not MyPointDataRow Is Nothing Then
@@ -384,6 +391,9 @@ Public Class Form1
                                 With MyMapPoint
                                     'Give the bubble a geo-location
                                     .Location = New GeoPoint(Lat, Lon)
+                                    .Argument = "NPSDR_ID"
+                                    .Value = i
+                                    .Tag = MyPointDataRow.Item("UID")
 
                                     'Make the MapBubble object the same as the source DataRow (transfer DataTable model)
                                     For Each Col As DataColumn In PointsDataTable.Columns
@@ -402,6 +412,9 @@ Public Class Form1
                                     .Size = 20
                                     .MarkerType = MarkerType
                                     .Fill = FillColor
+                                    '.SelectedFill = Color.AliceBlue
+                                    .SelectedStroke = Color.AliceBlue
+                                    .SelectedStrokeWidth = 4
                                 End With
 
                                 'Add the MapBubble to the MapItemStorage 
@@ -416,6 +429,7 @@ Public Class Form1
                             NullSpatialRowsCount = NullSpatialRowsCount + 1
                         End If
                     End If
+                    i = i + 1
                 Next
 
                 'Configure the map layer from above
@@ -868,9 +882,13 @@ Public Class Form1
                             Dim DataExtractedByColumn As New DataColumn("DataExtractedBy", GetType(String))
                             CSVDataTable.Columns.Add(DataExtractedByColumn)
 
+                            'Add Unique ID column to the data table
+                            Dim UIDColumn As New DataColumn("UID", GetType(String))
+                            CSVDataTable.Columns.Add(UIDColumn)
+
                             'Load the metadata columns from above
                             For Each Row As DataRow In CSVDataTable.Rows
-                                Debug.Print(Now)
+                                Row.Item("UID") = Guid.NewGuid.ToString
                                 Row.Item("DateRecordExtracted") = Now
                                 Row.Item("DataExtractedBy") = My.User.Name
                             Next
@@ -916,6 +934,8 @@ Public Class Form1
                                     'Add ProtocolDescription column to the data table
                                     Dim ProtocolDescriptionColumn As New DataColumn("ProtocolDescription", GetType(String))
                                     CSVDataTable.Columns.Add(ProtocolDescriptionColumn)
+
+
 
                                     'Add the protocol attributes to the data table
                                     For Each Row As DataRow In CSVDataTable.Rows
@@ -1052,9 +1072,31 @@ Public Class Form1
 
     Private Sub MapControl_MapItemClick(sender As Object, e As MapItemClickEventArgs) Handles MapControl.MapItemClick
         If Not e.Item Is Nothing Then
+
+            Me.GridView1.FormatRules.Clear()
             'Show the selected item in a form
-            Dim ItemForm As Form = GetObjectPropertiesForm(e.Item)
-            ItemForm.ShowDialog()
+            'Dim ItemForm As Form = GetObjectPropertiesForm(e.Item)
+            'ItemForm.ShowDialog()
+
+
+            Dim ClickedItem As MapItem = e.Item
+            Dim Filter As String = "UID = '" & ClickedItem.Tag.ToString.Trim & "'"
+            Debug.Print(Filter)
+            'Me.GridView1.Columns("UID").FilterInfo = New Columns.ColumnFilterInfo(Filter)
+
+            ' GridView.FormatRules[0].Rule As FormatConditionRuleExpression).Expression = "StartsWith([State], \'M\')";
+            ' GridView.FormatRules[0].ApplyToRow = True;
+
+            Dim MyFormatConditionRuleExpression As New FormatConditionRuleExpression
+            MyFormatConditionRuleExpression.Expression = Filter
+            MyFormatConditionRuleExpression.Appearance.BackColor = Color.AliceBlue
+            Me.GridView1.FormatRules.Add(Me.GridView1.Columns("UID"), MyFormatConditionRuleExpression)
+            Me.GridView1.FormatRules(0).ApplyToRow = True
+
+            'For Each Itm In ClickedItem.Attributes
+            '    Debug.Print(vbTab & Itm.Name & vbTab & Itm.Value)
+            'Next
+
         End If
     End Sub
 
@@ -1106,10 +1148,6 @@ Public Class Form1
                         LoadCSVFile(SelectedFileInfo)
                     End If
                 Next
-                'Dim SelectedFile As String = OFD.FileName
-                'Debug.Print(SelectedFile)
-                'add clear datasets and clear dataset button/checkbockxes
-                'add tabcontrol and pivot table
             End If
 
         Catch ex As Exception
