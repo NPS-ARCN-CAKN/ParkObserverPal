@@ -578,18 +578,19 @@ Public Class Form1
             'Get a handle on the map layer with the name from above
             Dim MapLayer As VectorItemsLayer_NPS = MapControl.Layers(LayerName)
 
-            'Show the data in the map layer grid control
-            Dim DT As DataTable = GetDataTableFromVectorItemsLayer_NPS(MapLayer, LayerName)
-            Dim GV As GridView = TryCast(MapLayerGridControl.MainView, GridView)
-            GV.Columns.Clear()
-            Me.MapLayerGridControl.DataSource = Nothing
-            If Not DT Is Nothing Then
-                With Me.MapLayerGridControl
-                    .DataSource = DT
-                    .Refresh()
-                    .RefreshDataSource()
-                End With
-                SetUpGridControl(Me.MapLayerGridControl)
+            If Not MapLayer Is Nothing Then
+                'Show the data in the map layer grid control
+                Dim GV As GridView = TryCast(MapLayerGridControl.MainView, GridView)
+                GV.Columns.Clear()
+                Me.MapLayerGridControl.DataSource = Nothing
+                If Not MapLayer.DataTable Is Nothing Then
+                    With Me.MapLayerGridControl
+                        .DataSource = MapLayer.DataTable
+                        .Refresh()
+                        .RefreshDataSource()
+                    End With
+                    SetUpGridControl(Me.MapLayerGridControl)
+                End If
             End If
         Catch ex As Exception
             MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
