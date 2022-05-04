@@ -315,7 +315,10 @@ Public Class Form1
                 'If the directory exists already blow away everything in it with permission
                 Dim OKToProceed As Boolean = True
                 If My.Computer.FileSystem.DirectoryExists(POZFilesDirectory) Then
-                    If MsgBox("The application needs to delete all the files in directory " & POZFilesDirectory & ". Proceed?", MsgBoxStyle.YesNo, "Delete existing POZ files?") = MsgBoxResult.Yes Then
+
+                    'The directory where the app should decompress the .poz archive exists, ask user to clear it 
+                    Dim Result As MsgBoxResult = MsgBox("In order to decompress the Park Observer archive you have selected the application needs to delete the existing files in " & POZFilesDirectory & ". Proceed?", MsgBoxStyle.Information, "Directory exists")
+                    If Result = MsgBoxResult.Ok Then
                         My.Computer.FileSystem.DeleteDirectory(POZFilesDirectory, FileIO.DeleteDirectoryOption.DeleteAllContents)
                     Else
                         'I can't proceed
@@ -627,58 +630,7 @@ Public Class Form1
         End Try
     End Sub
 
-    ''' <summary>
-    ''' Sets up a GridControl the way I like it
-    ''' </summary>
-    ''' <param name="GC">GridControl to configure. DevExpress GridControl.</param>
-    Private Sub SetUpGridControl(GC As GridControl)
-        Try
-            GC.UseEmbeddedNavigator = True
-            Dim GV As GridView = TryCast(GC.MainView, GridView)
-            If Not GV Is Nothing Then
-                GV.OptionsBehavior.AllowAddRows = True
-                GV.OptionsBehavior.AllowDeleteRows = True
-                GV.BestFitColumns(True)
-                GV.OptionsView.BestFitMode = GridBestFitMode.Fast
-                GV.OptionsView.ColumnAutoWidth = False
-                GV.OptionsView.ShowFooter = True
-                GV.OptionsDetail.EnableMasterViewMode = False 'True to show sub-tables                
-            End If
-        Catch ex As Exception
-            MsgBox(ex.Message & " (" & System.Reflection.MethodBase.GetCurrentMethod.Name & ").")
-        End Try
-    End Sub
 
-    ''' <summary>
-    ''' Sets up a PivotGridControl the way I like it
-    ''' </summary>
-    ''' <param name="PGC">PivotGridControl to set up.</param>
-    Public Sub SetUpPivotGridControl(PGC As PivotGridControl)
-        Try
-            With PGC
-                .RetrieveFields()
-                .BestFit()
-                .BestFitColumnArea()
-                .BestFitDataHeaders(True)
-                .BestFitRowArea()
-                .OptionsBehavior.BestFitMode = PivotGridBestFitMode.FieldValue
-                .OptionsMenu.EnableFieldValueMenu = True
-                .OptionsMenu.EnableFormatRulesMenu = True
-                .OptionsMenu.EnableHeaderAreaMenu = True
-                .Text = "Pivot grid text"
-            End With
-
-            'Allow the user to change the summary they get; sum, avg, etc.
-            For Each PGField As PivotGridField In PGC.Fields
-                With PGField
-                    .Options.AllowRunTimeSummaryChange = True
-                    .BestFit()
-                End With
-            Next
-        Catch ex As Exception
-            MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
-        End Try
-    End Sub
 
     Private Sub MapLayersCheckedListBoxControl_ItemCheck(sender As Object, e As DevExpress.XtraEditors.Controls.ItemCheckEventArgs) Handles MapLayersCheckedListBoxControl.ItemCheck
         Try

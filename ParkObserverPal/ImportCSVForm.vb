@@ -58,7 +58,8 @@
         InitializeComponent()
 
         'Show the data source in the data source label
-        Me.DataSourceLabel.Text = CSVDataTable.TableName
+        Me.DataSourceLabel.Text = "Import spatial data from " & CSVDataTable.TableName
+        Me.DataGridLabel.Text = CSVDataTable.TableName
 
         ' Add any initialization after the InitializeComponent() call.
         Me.LatitudeColumnName = ""
@@ -280,5 +281,6 @@
         Me.LatitudeColumnName = Me.LatitudeColumnNameListBox.Text
         ValidateForm()
     End Sub
+
 
 End Class

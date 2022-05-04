@@ -19,6 +19,6 @@
         Me.DataTable = DT
         Me.PivotGridControl1.DataSource = Me.DataTable
         Me.PivotGridControl1.RetrieveFields()
-
+        SetUpPivotGridControl(Me.PivotGridControl1)
     End Sub
 End Class
