@@ -387,6 +387,7 @@ Public Class Form1
                                             .Name = Col.ColumnName 'The name of the column
                                             .Value = MyPointDataRow.Item(Col.ColumnName) 'The value at the Row/Column intersection
                                         End With
+
                                         'Add the attribute to the MapBubble
                                         .Attributes.Add(MIA)
 
@@ -416,6 +417,7 @@ Public Class Form1
                 With MyPointsVectorItemsLayer_NPS
                     .Data = MyMapItemStorage
                     .Name = PointsDataTable.TableName
+                    .DataTable = PointsDataTable
                 End With
 
                 'Alert user if they don't have a full dataset
@@ -479,6 +481,7 @@ Public Class Form1
             'Add a handler so that we can access the data when it is loaded
             AddHandler MyShapefileDataAdapter.ItemsLoaded, AddressOf ShapefileDataAdapterItemsLoaded
             MyVectorItemsLayer_NPS.Data = MyShapefileDataAdapter
+            MyVectorItemsLayer_NPS.DataTable = GetDataTableFromVectorItemsLayer_NPS(MyVectorItemsLayer_NPS)
 
         Catch ex As Exception
             MsgBox(ex.Message & " (" & System.Reflection.MethodBase.GetCurrentMethod.Name & ").")
