@@ -17,32 +17,6 @@ Public Class Form1
         My.Settings.BackgroundLayers = "C:\Work\GIS Common Layers\AlaskaSimplified_1km.shp"
         LoadBackgroundLayers()
 
-        'Dim Filepath As String = "C:\temp\zspatialdata.csv"
-        'Filepath = "C:\temp\zSpatialData - invalid.csv"
-        'Filepath = "C:\temp\zLakesMonuments.csv"
-        'Dim CSVFileInfo As New FileInfo(Filepath)
-
-        'LoadCSVFile(CSVFileInfo)
-
-        'Dim x As VectorItemsLayer = Me.MapControl.Layers(0)
-        'Dim DT As DataTable = GetDataTableFromVectorItemsLayer(x, "test")
-        'Dim dtform As New Form
-        'Dim DGV As New DataGridView
-        'DGV.DataSource = DT
-        'DGV.Dock = DockStyle.Fill
-        'dtform.Controls.Add(DGV)
-        'dtform.Show()
-
-        'Dim GV As GridView = TryCast(Me.MapLayerGridControl.MainView, GridView)
-
-        'For Each Col As GridColumn In GV.Columns
-        '    Col.SummaryItem.SummaryType = DevExpress.Data.SummaryItemType.Sum
-
-        '    'Dim GGSI As New GridGroupSummaryItem
-        '    'GGSI.FieldName = Col.Name
-        '    'GGSI.SummaryType = DevExpress.Data.SummaryItemType.Count
-        '    'GV.GroupSummary.Add(GGSI)
-        'Next
     End Sub
 
     ''' <summary>
@@ -69,17 +43,17 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    ''' Converts a VectorItemsLayer.Data.Items name/value pair collection items into a DataTable.
+    ''' Converts a VectorItemsLayer_NPS.Data.Items name/value pair collection items into a DataTable.
     ''' </summary>
-    ''' <param name="VIL">VectorItemsLayer to convert to DataTable. VectorItemsLayer.</param>
-    ''' <param name="TableName">TableName. String. Optional. Defaults to the name of VectorItemsLayer.</param>
+    ''' <param name="VIL">VectorItemsLayer_NPS to convert to DataTable. VectorItemsLayer_NPS.</param>
+    ''' <param name="TableName">TableName. String. Optional. Defaults to the name of VectorItemsLayer_NPS.</param>
     ''' <returns></returns>
-    Private Function GetDataTableFromVectorItemsLayer(VIL As VectorItemsLayer, Optional TableName As String = "") As DataTable
+    Private Function GetDataTableFromVectorItemsLayer_NPS(VIL As VectorItemsLayer_NPS, Optional TableName As String = "") As DataTable
         'Make a DataTable
         Dim DT As New DataTable()
 
         Try
-            'Make sure we have a VectorItemsLayer
+            'Make sure we have a VectorItemsLayer_NPS
             If Not VIL Is Nothing Then
 
                 'Set the returned DataTable's name.
@@ -89,7 +63,7 @@ Public Class Form1
                     DT.TableName = VIL.Name
                 End If
 
-                'The data in a VectorItemsLayer are stored as Name/Value pairs, we need to convert them to a DataTable.
+                'The data in a VectorItemsLayer_NPS are stored as Name/Value pairs, we need to convert them to a DataTable.
                 If VIL.Data.Items.Count > 0 Then
 
                     'Get a handle on the first item in the list so we can use it as a model to create DataColumns for DT.
@@ -178,7 +152,7 @@ Public Class Form1
 
         'Now set the z order
         Dim ZIndex As Integer = 0
-        For Each Layer As VectorItemsLayer In Me.MapControl.Layers
+        For Each Layer As VectorItemsLayer_NPS In Me.MapControl.Layers
             Layer.ZIndex = ZIndex
             ZIndex = ZIndex + 1
         Next
@@ -188,7 +162,7 @@ Public Class Form1
 
         'Loop through the map layers and add them as listbox items
         Me.MapLayersCheckedListBoxControl.Items.Clear()
-        For Each Layer As VectorItemsLayer In Me.MapControl.Layers ' i As Integer = 0 To Me.MapControl.Layers.Count - 1
+        For Each Layer As VectorItemsLayer_NPS In Me.MapControl.Layers ' i As Integer = 0 To Me.MapControl.Layers.Count - 1
             Dim MapLayerCheckedListBoxItem As New DevExpress.XtraEditors.Controls.CheckedListBoxItem()
             With MapLayerCheckedListBoxItem
                 .CheckState = CheckState.Checked
@@ -366,9 +340,9 @@ Public Class Form1
     ''' <param name="Color">Line color. Color.</param>
     ''' <param name="Width">Line width. Integer.</param>
     ''' <returns></returns>
-    Private Function GetLineVectorItemsLayer(PointsDataTable As DataTable, LatitudeColumnName As String, LongitudeColumnName As String, TimeColumnName As String, Color As Color, Width As Integer) As VectorItemsLayer
-        'Create a VectorItemsLayer
-        Dim MyLineVectorItemsLayer As New VectorItemsLayer
+    Private Function GetLineVectorItemsLayerFromPoints(PointsDataTable As DataTable, LatitudeColumnName As String, LongitudeColumnName As String, TimeColumnName As String, Color As Color, Width As Integer) As VectorItemsLayer_NPS
+        'Create a VectorItemsLayer_NPS
+        Dim MyLineVectorItemsLayer_NPS As New VectorItemsLayer_NPS
 
         Try
             'Create a DataView so that we can sort the rows by TimeStamp
@@ -402,14 +376,14 @@ Public Class Form1
             'Add the line to the MapItemStorage
             MyMapItemStorage.Items.Add(MyMapPolyLine)
 
-            'Assign the items to the line VectorItemsLayer
-            MyLineVectorItemsLayer.Data = MyMapItemStorage
-            MyLineVectorItemsLayer.Name = PointsDataTable.TableName
+            'Assign the items to the line VectorItemsLayer_NPS
+            MyLineVectorItemsLayer_NPS.Data = MyMapItemStorage
+            MyLineVectorItemsLayer_NPS.Name = PointsDataTable.TableName
         Catch ex As Exception
             MsgBox(ex.Message & " (" & System.Reflection.MethodBase.GetCurrentMethod.Name & ").")
         End Try
 
-        Return MyLineVectorItemsLayer
+        Return MyLineVectorItemsLayer_NPS
     End Function
 
 
@@ -417,7 +391,7 @@ Public Class Form1
 
 
     ''' <summary>
-    ''' Returns a DevExpress VectorItemsLayer of MapBubble points derived a DataTable containing Lat/Lon pairs.
+    ''' Returns a DevExpress VectorItemsLayer_NPS of MapBubble points derived a DataTable containing Lat/Lon pairs.
     ''' </summary>
     ''' <param name="PointsDataTable">DataTable containing points spatial data. DataTable</param>
     ''' <param name="LatitudeColumnName">Name of the latitude column. String.</param>
@@ -425,8 +399,8 @@ Public Class Form1
     ''' <returns>VectorItemLayer of points.</returns>
     Public Function GetBubbleVectorItemsLayerFromPointsDataTable(PointsDataTable As DataTable, LatitudeColumnName As String, LongitudeColumnName As String, FeatureSize As Integer, MarkerType As MarkerType, FillColor As Color) As DevExpress.XtraMap.VectorItemsLayer
 
-        'Create a new VectorItemsLayer which is essentially a map layer
-        Dim MyPointsVectorItemsLayer As New VectorItemsLayer()
+        'Create a new VectorItemsLayer_NPS which is essentially a map layer
+        Dim MyPointsVectorItemsLayer_NPS As New VectorItemsLayer_NPS()
 
         Try
             'Create a MapItemStorage object (basically DevExpress's version of a spatial data table, stores MapItem objects which are like DataRows
@@ -493,7 +467,7 @@ Public Class Form1
                 Next
 
                 'Configure the map layer from above
-                With MyPointsVectorItemsLayer
+                With MyPointsVectorItemsLayer_NPS
                     .Data = MyMapItemStorage
                     .Name = PointsDataTable.TableName
                 End With
@@ -507,7 +481,7 @@ Public Class Form1
         Catch ex As Exception
             MsgBox(ex.Message & " (" & System.Reflection.MethodBase.GetCurrentMethod.Name & ").")
         End Try
-        Return MyPointsVectorItemsLayer
+        Return MyPointsVectorItemsLayer_NPS
     End Function
 
 
@@ -524,12 +498,12 @@ Public Class Form1
             If My.Computer.FileSystem.FileExists(Shapefile) = True Then
 
                 'Create a new shapefile VectorItemsLayer using Shapefile
-                Dim ShapefileVectorItemsLayer As VectorItemsLayer = GetShapefileVectorItemsLayer(Shapefile)
+                Dim ShapefileVectorItemsLayer_NPS As VectorItemsLayer_NPS = GetShapefileVectorItemsLayer_NPS(Shapefile)
                 Dim ShapefileFileInfo As New FileInfo(Shapefile)
-                ShapefileVectorItemsLayer.Name = ShapefileFileInfo.Name
+                ShapefileVectorItemsLayer_NPS.Name = ShapefileFileInfo.Name
 
                 'Add the shapefile to the map.
-                MapControl.Layers.Add(ShapefileVectorItemsLayer)
+                MapControl.Layers.Add(ShapefileVectorItemsLayer_NPS)
                 LoadMapLayersListBox()
 
             Else
@@ -543,12 +517,12 @@ Public Class Form1
 
 
     ''' <summary>
-    ''' Returns a DevExpress VectorItemsLayer for a shapefile.
+    ''' Returns a VectorItemsLayer_NPS for a shapefile.
     ''' </summary>
     ''' <param name="ShapefilePath">Path to the shapefile to load.</param>
     ''' <returns></returns>
-    Private Function GetShapefileVectorItemsLayer(ShapefilePath As String) As DevExpress.XtraMap.VectorItemsLayer
-        Dim MyVectorItemsLayer As New DevExpress.XtraMap.VectorItemsLayer
+    Private Function GetShapefileVectorItemsLayer_NPS(ShapefilePath As String) As DevExpress.XtraMap.VectorItemsLayer
+        Dim MyVectorItemsLayer_NPS As New VectorItemsLayer_NPS
         Try
             'Don't know what this does but it's needed
             Dim MyBaseUri As New Uri(System.Reflection.Assembly.GetEntryAssembly().Location)
@@ -558,13 +532,13 @@ Public Class Form1
 
             'Add a handler so that we can access the data when it is loaded
             AddHandler MyShapefileDataAdapter.ItemsLoaded, AddressOf ShapefileDataAdapterItemsLoaded
-            MyVectorItemsLayer.Data = MyShapefileDataAdapter
+            MyVectorItemsLayer_NPS.Data = MyShapefileDataAdapter
 
         Catch ex As Exception
             MsgBox(ex.Message & " (" & System.Reflection.MethodBase.GetCurrentMethod.Name & ").")
         End Try
 
-        Return MyVectorItemsLayer
+        Return MyVectorItemsLayer_NPS
     End Function
 
     ''' <summary>
@@ -628,8 +602,8 @@ Public Class Form1
     Private Sub MapLayersCheckedListBoxControl_ItemCheck(sender As Object, e As DevExpress.XtraEditors.Controls.ItemCheckEventArgs) Handles MapLayersCheckedListBoxControl.ItemCheck
         Try
             Dim LayerName As String = MapLayersCheckedListBoxControl.Items(e.Index).Value
-            Dim LabelLayer As VectorItemsLayer = Me.MapControl.Layers(LayerName & "Labels")
-            Dim BubblesLayer As VectorItemsLayer = Me.MapControl.Layers(LayerName)
+            Dim LabelLayer As VectorItemsLayer_NPS = Me.MapControl.Layers(LayerName & "Labels")
+            Dim BubblesLayer As VectorItemsLayer_NPS = Me.MapControl.Layers(LayerName)
             If Not LabelLayer Is Nothing Then
                 If LabelLayer.Visible = True Then LabelLayer.Visible = False Else LabelLayer.Visible = True
             End If
@@ -648,10 +622,10 @@ Public Class Form1
             Dim LayerName As String = MapLayersCheckedListBoxControl.Text
 
             'Get a handle on the map layer with the name from above
-            Dim MapLayer As VectorItemsLayer = MapControl.Layers(LayerName)
+            Dim MapLayer As VectorItemsLayer_NPS = MapControl.Layers(LayerName)
 
             'Show the data in the map layer grid control
-            Dim DT As DataTable = GetDataTableFromVectorItemsLayer(MapLayer, LayerName)
+            Dim DT As DataTable = GetDataTableFromVectorItemsLayer_NPS(MapLayer, LayerName)
             Dim GV As GridView = TryCast(MapLayerGridControl.MainView, GridView)
             GV.Columns.Clear()
             Me.MapLayerGridControl.DataSource = Nothing
@@ -942,10 +916,11 @@ Public Class Form1
 
 
 
-                            Dim CSVLayer As VectorItemsLayer = GetBubbleVectorItemsLayerFromPointsDataTable(CSVDataTable, LatColumnName, LonColumnName, 12, MarkerType.Circle, Color.GreenYellow)
-                                Me.MapControl.Layers.Add(CSVLayer)
-                                'POZDataSet.Tables.Add(CSVDataTable)
-                            Else
+                            Dim CSVLayer As VectorItemsLayer_NPS = GetBubbleVectorItemsLayerFromPointsDataTable(CSVDataTable, LatColumnName, LonColumnName, 12, MarkerType.Circle, Color.GreenYellow)
+
+                            Me.MapControl.Layers.Add(CSVLayer)
+                            'POZDataSet.Tables.Add(CSVDataTable)
+                        Else
                                 'User didn't supply column names, add as a non-spatial data table
                                 'POZDataSet.Tables.Add(CSVDataTable)
 
@@ -1003,7 +978,7 @@ Public Class Form1
         'Zoom to the extent of the currently selected layer.
         Try
             'Get the currently selected layer as a VectorItemsLayer
-            Dim CurrentLayer As VectorItemsLayer = Me.MapControl.Layers(LayerName)
+            Dim CurrentLayer As VectorItemsLayer_NPS = Me.MapControl.Layers(LayerName)
             If Not CurrentLayer Is Nothing Then
                 'Zoom the map to the selected layer
                 Me.MapControl.ZoomToFit(CurrentLayer.Data.Items)
@@ -1128,7 +1103,7 @@ Public Class Form1
     Private Sub RemoveCurrentLayerToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RemoveCurrentLayerToolStripMenuItem.Click
         Try
             Dim CurrentLayerName As String = Me.MapLayersCheckedListBoxControl.Text.Trim
-            Dim CurrentLayer As VectorItemsLayer = Me.MapControl.Layers(CurrentLayerName)
+            Dim CurrentLayer As VectorItemsLayer_NPS = Me.MapControl.Layers(CurrentLayerName)
             If Not CurrentLayer Is Nothing Then
                 Me.MapControl.Layers.Remove(CurrentLayer)
                 'POZDataSet.Tables.Remove(POZDataSet.Tables(CurrentLayerName))
@@ -1141,8 +1116,8 @@ Public Class Form1
 
     Private Sub CreatePivotTableToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CreatePivotTableToolStripMenuItem.Click
         Try
-            Dim CurrentLayer As VectorItemsLayer = Me.MapControl.Layers(Me.MapLayersCheckedListBoxControl.Text.Trim)
-            Dim DT As DataTable = GetDataTableFromVectorItemsLayer(CurrentLayer, Me.MapLayersCheckedListBoxControl.Text)
+            Dim CurrentLayer As VectorItemsLayer_NPS = Me.MapControl.Layers(Me.MapLayersCheckedListBoxControl.Text.Trim)
+            Dim DT As DataTable = GetDataTableFromVectorItemsLayer_NPS(CurrentLayer, Me.MapLayersCheckedListBoxControl.Text)
             Dim PivotGridForm As New PivotGridForm(DT)
             PivotGridForm.Show()
         Catch ex As Exception
