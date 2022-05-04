@@ -330,61 +330,7 @@ Public Class Form1
     End Sub
 
 
-    ''' <summary>
-    ''' Converts PointsDataTable into a line VectorItemsLayer.
-    ''' </summary>
-    ''' <param name="PointsDataTable">DataTable of Lat/Lon points. DataTable.</param>
-    ''' <param name="LatitudeColumnName">Name of the latitude column. String.</param>
-    ''' <param name="LongitudeColumnName">Name of the Longitude column. String.</param>
-    ''' <param name="TimeColumnName">Name of the time column. String.</param>
-    ''' <param name="Color">Line color. Color.</param>
-    ''' <param name="Width">Line width. Integer.</param>
-    ''' <returns></returns>
-    Private Function GetLineVectorItemsLayerFromPoints(PointsDataTable As DataTable, LatitudeColumnName As String, LongitudeColumnName As String, TimeColumnName As String, Color As Color, Width As Integer) As VectorItemsLayer_NPS
-        'Create a VectorItemsLayer_NPS
-        Dim MyLineVectorItemsLayer_NPS As New VectorItemsLayer_NPS
 
-        Try
-            'Create a DataView so that we can sort the rows by TimeStamp
-            Dim DV As DataView = PointsDataTable.DefaultView
-            DV.Sort = TimeColumnName
-
-            'Create a MapItemStorage to hold the points
-            Dim MyMapItemStorage As New MapItemStorage
-
-            'Create a MapPolyLine
-            Dim MyMapPolyLine As New MapPolyline
-            With MyMapPolyLine
-                .Stroke = Color
-                .StrokeWidth = Width
-                '.TitleOptions = MyShapeTitleOptions                
-            End With
-
-            'Loop through the points DataView and assemble a line from the time-sorted points, add them to the line's points collection
-            For Each Row As DataRowView In DV
-                If Not Row Is Nothing Then
-                    Dim MyPointDataRow As DataRow = Row.Row
-                    If Not IsDBNull(MyPointDataRow.Item(LatitudeColumnName)) And Not IsDBNull(MyPointDataRow.Item(LongitudeColumnName)) Then
-                        Dim Lat As Double = CDbl(MyPointDataRow.Item(LatitudeColumnName))
-                        Dim Lon As Double = CDbl(MyPointDataRow.Item(LongitudeColumnName))
-                        Dim MyGeoPoint As New GeoPoint(Lat, Lon)
-                        MyMapPolyLine.Points.Add(MyGeoPoint)
-                    End If
-                End If
-            Next
-
-            'Add the line to the MapItemStorage
-            MyMapItemStorage.Items.Add(MyMapPolyLine)
-
-            'Assign the items to the line VectorItemsLayer_NPS
-            MyLineVectorItemsLayer_NPS.Data = MyMapItemStorage
-            MyLineVectorItemsLayer_NPS.Name = PointsDataTable.TableName
-        Catch ex As Exception
-            MsgBox(ex.Message & " (" & System.Reflection.MethodBase.GetCurrentMethod.Name & ").")
-        End Try
-
-        Return MyLineVectorItemsLayer_NPS
-    End Function
 
 
 
