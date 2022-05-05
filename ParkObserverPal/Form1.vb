@@ -1180,7 +1180,7 @@ Public Class Form1
 
                 'Start by highlighting the clicked item's data in the MapLayerGridControl so the user can see it
                 'Clear all formatting rules in the main GridControl's GridView
-                Me.GridView1.FormatRules.Clear()
+                Me.MapLayerGridView.FormatRules.Clear()
 
                 'Get a handle on the clicked MapItem
                 Dim ClickedItem As MapItem = e.Item
@@ -1203,8 +1203,8 @@ Public Class Form1
                         End With
 
                         'Apply the formatting rule
-                        Me.GridView1.FormatRules.Add(Me.GridView1.Columns("NPS_GUID"), MyFormatConditionRuleExpression)
-                        Me.GridView1.FormatRules(0).ApplyToRow = True
+                        Me.MapLayerGridView.FormatRules.Add(Me.MapLayerGridView.Columns("NPS_GUID"), MyFormatConditionRuleExpression)
+                        Me.MapLayerGridView.FormatRules(0).ApplyToRow = True
 
                         'Now isolate the DataRow that belongs to the clicked MapItem and show its data in the VGridControl
                         Dim DT As DataTable = Me.MapLayerGridControl.DataSource

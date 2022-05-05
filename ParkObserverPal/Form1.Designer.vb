@@ -51,7 +51,7 @@ Partial Class Form1
         Me.ZoomToFitAllLayersToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.MapLayerGridControl = New DevExpress.XtraGrid.GridControl()
-        Me.GridView1 = New DevExpress.XtraGrid.Views.Grid.GridView()
+        Me.MapLayerGridView = New DevExpress.XtraGrid.Views.Grid.GridView()
         Me.VGridControl = New DevExpress.XtraVerticalGrid.VGridControl()
         Me.MainDockManager = New DevExpress.XtraBars.Docking.DockManager(Me.components)
         Me.MapLayersDockPanel = New DevExpress.XtraBars.Docking.DockPanel()
@@ -67,7 +67,7 @@ Partial Class Form1
         Me.MapContextMenuStrip.SuspendLayout()
         Me.MapToolStrip.SuspendLayout()
         CType(Me.MapLayerGridControl, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.GridView1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.MapLayerGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.VGridControl, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.MainDockManager, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MapLayersDockPanel.SuspendLayout()
@@ -264,17 +264,17 @@ Partial Class Form1
         '
         Me.MapLayerGridControl.Dock = System.Windows.Forms.DockStyle.Fill
         Me.MapLayerGridControl.Location = New System.Drawing.Point(0, 0)
-        Me.MapLayerGridControl.MainView = Me.GridView1
+        Me.MapLayerGridControl.MainView = Me.MapLayerGridView
         Me.MapLayerGridControl.Name = "MapLayerGridControl"
         Me.MapLayerGridControl.Size = New System.Drawing.Size(978, 170)
         Me.MapLayerGridControl.TabIndex = 0
-        Me.MapLayerGridControl.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.GridView1})
+        Me.MapLayerGridControl.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.MapLayerGridView})
         '
-        'GridView1
+        'MapLayerGridView
         '
-        Me.GridView1.GridControl = Me.MapLayerGridControl
-        Me.GridView1.Name = "GridView1"
-        Me.GridView1.OptionsView.ShowFooter = True
+        Me.MapLayerGridView.GridControl = Me.MapLayerGridControl
+        Me.MapLayerGridView.Name = "MapLayerGridView"
+        Me.MapLayerGridView.OptionsView.ShowFooter = True
         '
         'VGridControl
         '
@@ -372,7 +372,7 @@ Partial Class Form1
         Me.MapToolStrip.ResumeLayout(False)
         Me.MapToolStrip.PerformLayout()
         CType(Me.MapLayerGridControl, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.GridView1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.MapLayerGridView, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.VGridControl, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.MainDockManager, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MapLayersDockPanel.ResumeLayout(False)
@@ -389,7 +389,7 @@ Partial Class Form1
     Friend WithEvents MapControl As DevExpress.XtraMap.MapControl
     Friend WithEvents MapLayersCheckedListBoxControl As DevExpress.XtraEditors.CheckedListBoxControl
     Friend WithEvents MapLayerGridControl As DevExpress.XtraGrid.GridControl
-    Friend WithEvents GridView1 As DevExpress.XtraGrid.Views.Grid.GridView
+    Friend WithEvents MapLayerGridView As DevExpress.XtraGrid.Views.Grid.GridView
     Friend WithEvents MapToolStrip As ToolStrip
     Friend WithEvents ZoomToFitAllLayersToolStripButton As ToolStripButton
     Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
