@@ -1185,20 +1185,38 @@ Public Class Form1
                 'Get a handle on the clicked MapItem
                 Dim ClickedItem As MapItem = e.Item
 
-                'Build a filtering string based on the clicked MapItem.Tag which stores NPS_GUID, a unique identifier
-                Dim Filter As String = "NPS_GUID = '" & ClickedItem.Tag.ToString.Trim & "'"
+                'Some map layers may not have .Tag defined
+                If Not ClickedItem.Tag Is Nothing Then
 
-                'Now highlight the MapItem's DataRow in the main GridControl using a conditional formatting style
-                Dim MyFormatConditionRuleExpression As New FormatConditionRuleExpression
-                MyFormatConditionRuleExpression.Expression = Filter
-                MyFormatConditionRuleExpression.Appearance.BackColor = Color.AliceBlue
-                Me.GridView1.FormatRules.Add(Me.GridView1.Columns("NPS_GUID"), MyFormatConditionRuleExpression)
-                Me.GridView1.FormatRules(0).ApplyToRow = True
+                    'Make sure .Tag has data
+                    If ClickedItem.Tag.ToString.Trim <> "" Then
 
-                'Now isolate the DataRow that belongs to the clicked MapItem and show its data in the VGridControl
-                Dim DT As DataTable = Me.MapLayerGridControl.DataSource
-                Dim DV As New DataView(DT, Filter, "", DataViewRowState.CurrentRows)
-                Me.VGridControl.DataSource = DV
+                        'Build a filtering string based on the clicked MapItem.Tag which stores NPS_GUID, a unique identifier
+                        Dim Filter As String = "NPS_GUID = '" & ClickedItem.Tag.ToString.Trim & "'"
+
+                        'Now build a conditional formatting rule and filter
+                        'This will be used to highlight the MapItem's DataRow in the main GridControl using a conditional formatting style
+                        Dim MyFormatConditionRuleExpression As New FormatConditionRuleExpression
+                        With MyFormatConditionRuleExpression
+                            .Expression = Filter
+                            .Appearance.BackColor = Color.AliceBlue
+                        End With
+
+                        'Apply the formatting rule
+                        Me.GridView1.FormatRules.Add(Me.GridView1.Columns("NPS_GUID"), MyFormatConditionRuleExpression)
+                        Me.GridView1.FormatRules(0).ApplyToRow = True
+
+                        'Now isolate the DataRow that belongs to the clicked MapItem and show its data in the VGridControl
+                        Dim DT As DataTable = Me.MapLayerGridControl.DataSource
+                        Dim DV As New DataView(DT, Filter, "", DataViewRowState.CurrentRows)
+                        Me.VGridControl.DataSource = DV
+
+                    End If
+
+
+                End If
+
+
 
             End If
         Catch ex As Exception
