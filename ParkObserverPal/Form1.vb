@@ -1164,43 +1164,47 @@ Public Class Form1
     End Sub
 
     Private Sub MapControl_MapItemClick(sender As Object, e As MapItemClickEventArgs) Handles MapControl.MapItemClick
-        If Not e.Item Is Nothing Then
+        'Explanation of what goes on when a user clicks an item on the map:
+        'User clicked a MapItem on the map highlighting it. MapItem data is stored as name/value pairs natively. This is not super useful.
+        'I wanted each layer (VectorItemLayer) to have an accompanying DataTable the same way a shapefile has a dbf. I did this by
+        'extending VectorItemLayer as NPS_VectorItemLayer with .DataTable among other attributes. This DataTable is what is shown in the GridControl.
+        'So the trick here is relating each MapItem with its DataTable.DataRow object.
+        'This is done using a Globally Unique ID called NPS_GUID that is shared between each MapItem (stored in its .Tag attribute) and its
+        'equivalent DataRow (NPS_GUID DataColumn) in its DataTable.
+        'What the code below does is to match the clicked MapItem to its DataRow to populate the VGridControl with its DataRow and to highlight its
+        'DataRow in the GridControl.
 
-            'User clicked a MapItem on the map highlighting it. We now need to highlight the same row in the GridControl so they are synchronized.
-            'This is done using a Globally Unique ID called NPS_GUID that is shared between each MapItem and its equivalent DataRow in its DataTable.
-            'Each DataTable has a column called NPS_GUID and each MapItem.Tag attribute is loaded with the same NPS_GUID.
-            'This way MapItems can be matched to DataRows and vice versa
+        Try
+            'Make sure we have a clicked MapItem
+            If Not e.Item Is Nothing Then
 
-            'Clear all formatting rules in the main GridControl's GridView
-            Me.GridView1.FormatRules.Clear()
+                'Start by highlighting the clicked item's data in the MapLayerGridControl so the user can see it
+                'Clear all formatting rules in the main GridControl's GridView
+                Me.GridView1.FormatRules.Clear()
 
-            'Get a handle on the clicked MapItem
-            Dim ClickedItem As MapItem = e.Item
+                'Get a handle on the clicked MapItem
+                Dim ClickedItem As MapItem = e.Item
 
-            'Build a filtering string based on the clicked MapItem.Tag which stores NPS_GUID, a unique identifier
-            Dim Filter As String = "NPS_GUID = '" & ClickedItem.Tag.ToString.Trim & "'"
+                'Build a filtering string based on the clicked MapItem.Tag which stores NPS_GUID, a unique identifier
+                Dim Filter As String = "NPS_GUID = '" & ClickedItem.Tag.ToString.Trim & "'"
 
-            'Now highlight the MapItem's DataRow in the main GridControl using a conditional formatting style
-            Dim MyFormatConditionRuleExpression As New FormatConditionRuleExpression
-            MyFormatConditionRuleExpression.Expression = Filter
-            MyFormatConditionRuleExpression.Appearance.BackColor = Color.AliceBlue
-            Me.GridView1.FormatRules.Add(Me.GridView1.Columns("NPS_GUID"), MyFormatConditionRuleExpression)
-            Me.GridView1.FormatRules(0).ApplyToRow = True
+                'Now highlight the MapItem's DataRow in the main GridControl using a conditional formatting style
+                Dim MyFormatConditionRuleExpression As New FormatConditionRuleExpression
+                MyFormatConditionRuleExpression.Expression = Filter
+                MyFormatConditionRuleExpression.Appearance.BackColor = Color.AliceBlue
+                Me.GridView1.FormatRules.Add(Me.GridView1.Columns("NPS_GUID"), MyFormatConditionRuleExpression)
+                Me.GridView1.FormatRules(0).ApplyToRow = True
 
+                'Now isolate the DataRow that belongs to the clicked MapItem and show its data in the VGridControl
+                Dim DT As DataTable = Me.MapLayerGridControl.DataSource
+                Dim DV As New DataView(DT, Filter, "", DataViewRowState.CurrentRows)
+                Me.VGridControl.DataSource = DV
 
+            End If
+        Catch ex As Exception
+            MsgBox(ex.Message & " " & System.Reflection.MethodBase.GetCurrentMethod.Name)
+        End Try
 
-            Me.VGridControl.DataSource = ClickedItem.Attributes
-
-
-            'For Each Itm In ClickedItem.Attributes
-            '    Debug.Print(vbTab & Itm.Name & vbTab & Itm.Value)
-            'Next
-
-            'Show the selected item in a form
-            'Dim ItemForm As Form = GetObjectPropertiesForm(e.Item)
-            'ItemForm.ShowDialog()
-
-        End If
     End Sub
 
 End Class

@@ -24,7 +24,6 @@ Partial Class Form1
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
-        Me.MapSplitContainer = New System.Windows.Forms.SplitContainer()
         Me.MapLayersCheckedListBoxControl = New DevExpress.XtraEditors.CheckedListBoxControl()
         Me.MapLayerContextMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.AddSpatialDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -45,7 +44,6 @@ Partial Class Form1
         Me.PromoteLayerToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.DemoteLayerToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.AddDatasetToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.MapPanelSplitContainer = New System.Windows.Forms.SplitContainer()
         Me.MapControl = New DevExpress.XtraMap.MapControl()
         Me.MapContextMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.MapPropertiesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -55,42 +53,30 @@ Partial Class Form1
         Me.MapLayerGridControl = New DevExpress.XtraGrid.GridControl()
         Me.GridView1 = New DevExpress.XtraGrid.Views.Grid.GridView()
         Me.VGridControl = New DevExpress.XtraVerticalGrid.VGridControl()
-        CType(Me.MapSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.MapSplitContainer.Panel1.SuspendLayout()
-        Me.MapSplitContainer.Panel2.SuspendLayout()
-        Me.MapSplitContainer.SuspendLayout()
+        Me.MainDockManager = New DevExpress.XtraBars.Docking.DockManager(Me.components)
+        Me.MapLayersDockPanel = New DevExpress.XtraBars.Docking.DockPanel()
+        Me.MapLayersDockPanel_Container = New DevExpress.XtraBars.Docking.ControlContainer()
+        Me.MapLayerDataTableDockPanel = New DevExpress.XtraBars.Docking.DockPanel()
+        Me.MapLayerDataTableDockPanel_Container = New DevExpress.XtraBars.Docking.ControlContainer()
+        Me.MapItemDockPanel = New DevExpress.XtraBars.Docking.DockPanel()
+        Me.MapItemDockPanel_Container = New DevExpress.XtraBars.Docking.ControlContainer()
         CType(Me.MapLayersCheckedListBoxControl, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MapLayerContextMenuStrip.SuspendLayout()
         Me.MapLayersToolStrip.SuspendLayout()
-        CType(Me.MapPanelSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.MapPanelSplitContainer.Panel1.SuspendLayout()
-        Me.MapPanelSplitContainer.Panel2.SuspendLayout()
-        Me.MapPanelSplitContainer.SuspendLayout()
         CType(Me.MapControl, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MapContextMenuStrip.SuspendLayout()
         Me.MapToolStrip.SuspendLayout()
         CType(Me.MapLayerGridControl, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.GridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.VGridControl, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.MainDockManager, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.MapLayersDockPanel.SuspendLayout()
+        Me.MapLayersDockPanel_Container.SuspendLayout()
+        Me.MapLayerDataTableDockPanel.SuspendLayout()
+        Me.MapLayerDataTableDockPanel_Container.SuspendLayout()
+        Me.MapItemDockPanel.SuspendLayout()
+        Me.MapItemDockPanel_Container.SuspendLayout()
         Me.SuspendLayout()
-        '
-        'MapSplitContainer
-        '
-        Me.MapSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.MapSplitContainer.Location = New System.Drawing.Point(0, 0)
-        Me.MapSplitContainer.Name = "MapSplitContainer"
-        '
-        'MapSplitContainer.Panel1
-        '
-        Me.MapSplitContainer.Panel1.Controls.Add(Me.MapLayersCheckedListBoxControl)
-        Me.MapSplitContainer.Panel1.Controls.Add(Me.MapLayersToolStrip)
-        '
-        'MapSplitContainer.Panel2
-        '
-        Me.MapSplitContainer.Panel2.Controls.Add(Me.MapPanelSplitContainer)
-        Me.MapSplitContainer.Size = New System.Drawing.Size(1184, 761)
-        Me.MapSplitContainer.SplitterDistance = 245
-        Me.MapSplitContainer.TabIndex = 1
         '
         'MapLayersCheckedListBoxControl
         '
@@ -98,7 +84,7 @@ Partial Class Form1
         Me.MapLayersCheckedListBoxControl.Dock = System.Windows.Forms.DockStyle.Fill
         Me.MapLayersCheckedListBoxControl.Location = New System.Drawing.Point(0, 25)
         Me.MapLayersCheckedListBoxControl.Name = "MapLayersCheckedListBoxControl"
-        Me.MapLayersCheckedListBoxControl.Size = New System.Drawing.Size(245, 736)
+        Me.MapLayersCheckedListBoxControl.Size = New System.Drawing.Size(193, 707)
         Me.MapLayersCheckedListBoxControl.TabIndex = 3
         '
         'MapLayerContextMenuStrip
@@ -186,7 +172,7 @@ Partial Class Form1
         Me.MapLayersToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripLabel1, Me.ToolStripSeparator3, Me.PromoteLayerToolStripButton, Me.DemoteLayerToolStripButton, Me.AddDatasetToolStripButton})
         Me.MapLayersToolStrip.Location = New System.Drawing.Point(0, 0)
         Me.MapLayersToolStrip.Name = "MapLayersToolStrip"
-        Me.MapLayersToolStrip.Size = New System.Drawing.Size(245, 25)
+        Me.MapLayersToolStrip.Size = New System.Drawing.Size(193, 25)
         Me.MapLayersToolStrip.TabIndex = 4
         Me.MapLayersToolStrip.Text = "ToolStrip1"
         '
@@ -228,34 +214,14 @@ Partial Class Form1
         Me.AddDatasetToolStripButton.Size = New System.Drawing.Size(23, 22)
         Me.AddDatasetToolStripButton.Text = "Add spatial dataset"
         '
-        'MapPanelSplitContainer
-        '
-        Me.MapPanelSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.MapPanelSplitContainer.Location = New System.Drawing.Point(0, 0)
-        Me.MapPanelSplitContainer.Name = "MapPanelSplitContainer"
-        Me.MapPanelSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal
-        '
-        'MapPanelSplitContainer.Panel1
-        '
-        Me.MapPanelSplitContainer.Panel1.Controls.Add(Me.MapControl)
-        Me.MapPanelSplitContainer.Panel1.Controls.Add(Me.VGridControl)
-        Me.MapPanelSplitContainer.Panel1.Controls.Add(Me.MapToolStrip)
-        '
-        'MapPanelSplitContainer.Panel2
-        '
-        Me.MapPanelSplitContainer.Panel2.Controls.Add(Me.MapLayerGridControl)
-        Me.MapPanelSplitContainer.Size = New System.Drawing.Size(935, 761)
-        Me.MapPanelSplitContainer.SplitterDistance = 492
-        Me.MapPanelSplitContainer.TabIndex = 1
-        '
         'MapControl
         '
         Me.MapControl.BackColor = System.Drawing.Color.LightSteelBlue
         Me.MapControl.ContextMenuStrip = Me.MapContextMenuStrip
         Me.MapControl.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.MapControl.Location = New System.Drawing.Point(0, 25)
+        Me.MapControl.Location = New System.Drawing.Point(200, 25)
         Me.MapControl.Name = "MapControl"
-        Me.MapControl.Size = New System.Drawing.Size(685, 467)
+        Me.MapControl.Size = New System.Drawing.Size(784, 536)
         Me.MapControl.TabIndex = 0
         '
         'MapContextMenuStrip
@@ -273,9 +239,9 @@ Partial Class Form1
         'MapToolStrip
         '
         Me.MapToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ZoomToFitAllLayersToolStripButton, Me.ToolStripSeparator2})
-        Me.MapToolStrip.Location = New System.Drawing.Point(0, 0)
+        Me.MapToolStrip.Location = New System.Drawing.Point(200, 0)
         Me.MapToolStrip.Name = "MapToolStrip"
-        Me.MapToolStrip.Size = New System.Drawing.Size(935, 25)
+        Me.MapToolStrip.Size = New System.Drawing.Size(784, 25)
         Me.MapToolStrip.TabIndex = 1
         Me.MapToolStrip.Text = "ToolStrip1"
         '
@@ -300,7 +266,7 @@ Partial Class Form1
         Me.MapLayerGridControl.Location = New System.Drawing.Point(0, 0)
         Me.MapLayerGridControl.MainView = Me.GridView1
         Me.MapLayerGridControl.Name = "MapLayerGridControl"
-        Me.MapLayerGridControl.Size = New System.Drawing.Size(935, 265)
+        Me.MapLayerGridControl.Size = New System.Drawing.Size(978, 170)
         Me.MapLayerGridControl.TabIndex = 0
         Me.MapLayerGridControl.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.GridView1})
         '
@@ -313,36 +279,94 @@ Partial Class Form1
         'VGridControl
         '
         Me.VGridControl.Cursor = System.Windows.Forms.Cursors.Default
-        Me.VGridControl.Dock = System.Windows.Forms.DockStyle.Right
+        Me.VGridControl.Dock = System.Windows.Forms.DockStyle.Fill
         Me.VGridControl.LayoutStyle = DevExpress.XtraVerticalGrid.LayoutViewStyle.SingleRecordView
-        Me.VGridControl.Location = New System.Drawing.Point(685, 25)
+        Me.VGridControl.Location = New System.Drawing.Point(0, 0)
         Me.VGridControl.Name = "VGridControl"
-        Me.VGridControl.Size = New System.Drawing.Size(250, 467)
+        Me.VGridControl.Size = New System.Drawing.Size(193, 532)
         Me.VGridControl.TabIndex = 2
+        '
+        'MainDockManager
+        '
+        Me.MainDockManager.Form = Me
+        Me.MainDockManager.RootPanels.AddRange(New DevExpress.XtraBars.Docking.DockPanel() {Me.MapLayersDockPanel, Me.MapLayerDataTableDockPanel, Me.MapItemDockPanel})
+        Me.MainDockManager.TopZIndexControls.AddRange(New String() {"DevExpress.XtraBars.BarDockControl", "DevExpress.XtraBars.StandaloneBarDockControl", "System.Windows.Forms.MenuStrip", "System.Windows.Forms.StatusStrip", "System.Windows.Forms.StatusBar", "DevExpress.XtraBars.Ribbon.RibbonStatusBar", "DevExpress.XtraBars.Ribbon.RibbonControl", "DevExpress.XtraBars.Navigation.OfficeNavigationBar", "DevExpress.XtraBars.Navigation.TileNavPane", "DevExpress.XtraBars.TabFormControl", "DevExpress.XtraBars.FluentDesignSystem.FluentDesignFormControl", "DevExpress.XtraBars.ToolbarForm.ToolbarFormControl"})
+        '
+        'MapLayersDockPanel
+        '
+        Me.MapLayersDockPanel.Controls.Add(Me.MapLayersDockPanel_Container)
+        Me.MapLayersDockPanel.Dock = DevExpress.XtraBars.Docking.DockingStyle.Left
+        Me.MapLayersDockPanel.ID = New System.Guid("fed6ed6f-7c07-468b-b258-6a4343f1c5ff")
+        Me.MapLayersDockPanel.Location = New System.Drawing.Point(0, 0)
+        Me.MapLayersDockPanel.Name = "MapLayersDockPanel"
+        Me.MapLayersDockPanel.OriginalSize = New System.Drawing.Size(200, 200)
+        Me.MapLayersDockPanel.Size = New System.Drawing.Size(200, 761)
+        Me.MapLayersDockPanel.Text = "Map layers"
+        '
+        'MapLayersDockPanel_Container
+        '
+        Me.MapLayersDockPanel_Container.Controls.Add(Me.MapLayersCheckedListBoxControl)
+        Me.MapLayersDockPanel_Container.Controls.Add(Me.MapLayersToolStrip)
+        Me.MapLayersDockPanel_Container.Location = New System.Drawing.Point(3, 26)
+        Me.MapLayersDockPanel_Container.Name = "MapLayersDockPanel_Container"
+        Me.MapLayersDockPanel_Container.Size = New System.Drawing.Size(193, 732)
+        Me.MapLayersDockPanel_Container.TabIndex = 0
+        '
+        'MapLayerDataTableDockPanel
+        '
+        Me.MapLayerDataTableDockPanel.Controls.Add(Me.MapLayerDataTableDockPanel_Container)
+        Me.MapLayerDataTableDockPanel.Dock = DevExpress.XtraBars.Docking.DockingStyle.Bottom
+        Me.MapLayerDataTableDockPanel.ID = New System.Guid("294e824f-f1cd-4e8d-a2fc-4e4e5db7295a")
+        Me.MapLayerDataTableDockPanel.Location = New System.Drawing.Point(200, 561)
+        Me.MapLayerDataTableDockPanel.Name = "MapLayerDataTableDockPanel"
+        Me.MapLayerDataTableDockPanel.OriginalSize = New System.Drawing.Size(200, 200)
+        Me.MapLayerDataTableDockPanel.Size = New System.Drawing.Size(984, 200)
+        Me.MapLayerDataTableDockPanel.Text = "Dataset"
+        '
+        'MapLayerDataTableDockPanel_Container
+        '
+        Me.MapLayerDataTableDockPanel_Container.Controls.Add(Me.MapLayerGridControl)
+        Me.MapLayerDataTableDockPanel_Container.Location = New System.Drawing.Point(3, 27)
+        Me.MapLayerDataTableDockPanel_Container.Name = "MapLayerDataTableDockPanel_Container"
+        Me.MapLayerDataTableDockPanel_Container.Size = New System.Drawing.Size(978, 170)
+        Me.MapLayerDataTableDockPanel_Container.TabIndex = 0
+        '
+        'MapItemDockPanel
+        '
+        Me.MapItemDockPanel.Controls.Add(Me.MapItemDockPanel_Container)
+        Me.MapItemDockPanel.Dock = DevExpress.XtraBars.Docking.DockingStyle.Right
+        Me.MapItemDockPanel.ID = New System.Guid("3d6e2ddd-22a2-495f-b966-bb2fad16615c")
+        Me.MapItemDockPanel.Location = New System.Drawing.Point(984, 0)
+        Me.MapItemDockPanel.Name = "MapItemDockPanel"
+        Me.MapItemDockPanel.OriginalSize = New System.Drawing.Size(200, 200)
+        Me.MapItemDockPanel.Size = New System.Drawing.Size(200, 561)
+        Me.MapItemDockPanel.Text = "Feature"
+        '
+        'MapItemDockPanel_Container
+        '
+        Me.MapItemDockPanel_Container.Controls.Add(Me.VGridControl)
+        Me.MapItemDockPanel_Container.Location = New System.Drawing.Point(4, 26)
+        Me.MapItemDockPanel_Container.Name = "MapItemDockPanel_Container"
+        Me.MapItemDockPanel_Container.Size = New System.Drawing.Size(193, 532)
+        Me.MapItemDockPanel_Container.TabIndex = 0
         '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1184, 761)
-        Me.Controls.Add(Me.MapSplitContainer)
+        Me.Controls.Add(Me.MapControl)
+        Me.Controls.Add(Me.MapToolStrip)
+        Me.Controls.Add(Me.MapItemDockPanel)
+        Me.Controls.Add(Me.MapLayerDataTableDockPanel)
+        Me.Controls.Add(Me.MapLayersDockPanel)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "Form1"
         Me.Text = "NPS Data Ranger"
-        Me.MapSplitContainer.Panel1.ResumeLayout(False)
-        Me.MapSplitContainer.Panel1.PerformLayout()
-        Me.MapSplitContainer.Panel2.ResumeLayout(False)
-        CType(Me.MapSplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.MapSplitContainer.ResumeLayout(False)
         CType(Me.MapLayersCheckedListBoxControl, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MapLayerContextMenuStrip.ResumeLayout(False)
         Me.MapLayersToolStrip.ResumeLayout(False)
         Me.MapLayersToolStrip.PerformLayout()
-        Me.MapPanelSplitContainer.Panel1.ResumeLayout(False)
-        Me.MapPanelSplitContainer.Panel1.PerformLayout()
-        Me.MapPanelSplitContainer.Panel2.ResumeLayout(False)
-        CType(Me.MapPanelSplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.MapPanelSplitContainer.ResumeLayout(False)
         CType(Me.MapControl, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MapContextMenuStrip.ResumeLayout(False)
         Me.MapToolStrip.ResumeLayout(False)
@@ -350,13 +374,20 @@ Partial Class Form1
         CType(Me.MapLayerGridControl, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.GridView1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.VGridControl, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.MainDockManager, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.MapLayersDockPanel.ResumeLayout(False)
+        Me.MapLayersDockPanel_Container.ResumeLayout(False)
+        Me.MapLayersDockPanel_Container.PerformLayout()
+        Me.MapLayerDataTableDockPanel.ResumeLayout(False)
+        Me.MapLayerDataTableDockPanel_Container.ResumeLayout(False)
+        Me.MapItemDockPanel.ResumeLayout(False)
+        Me.MapItemDockPanel_Container.ResumeLayout(False)
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
     Friend WithEvents MapControl As DevExpress.XtraMap.MapControl
-    Friend WithEvents MapSplitContainer As SplitContainer
     Friend WithEvents MapLayersCheckedListBoxControl As DevExpress.XtraEditors.CheckedListBoxControl
-    Friend WithEvents MapPanelSplitContainer As SplitContainer
     Friend WithEvents MapLayerGridControl As DevExpress.XtraGrid.GridControl
     Friend WithEvents GridView1 As DevExpress.XtraGrid.Views.Grid.GridView
     Friend WithEvents MapToolStrip As ToolStrip
@@ -384,4 +415,11 @@ Partial Class Form1
     Friend WithEvents RemoveCurrentLayerToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents CreatePivotTableToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents VGridControl As DevExpress.XtraVerticalGrid.VGridControl
+    Friend WithEvents MainDockManager As DevExpress.XtraBars.Docking.DockManager
+    Friend WithEvents MapItemDockPanel As DevExpress.XtraBars.Docking.DockPanel
+    Friend WithEvents MapItemDockPanel_Container As DevExpress.XtraBars.Docking.ControlContainer
+    Friend WithEvents MapLayerDataTableDockPanel As DevExpress.XtraBars.Docking.DockPanel
+    Friend WithEvents MapLayerDataTableDockPanel_Container As DevExpress.XtraBars.Docking.ControlContainer
+    Friend WithEvents MapLayersDockPanel As DevExpress.XtraBars.Docking.DockPanel
+    Friend WithEvents MapLayersDockPanel_Container As DevExpress.XtraBars.Docking.ControlContainer
 End Class
