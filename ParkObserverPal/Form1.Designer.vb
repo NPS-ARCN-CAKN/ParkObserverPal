@@ -87,7 +87,7 @@ Partial Class Form1
         '
         Me.MapSplitContainer.Panel2.Controls.Add(Me.MapPanelSplitContainer)
         Me.MapSplitContainer.Size = New System.Drawing.Size(1184, 761)
-        Me.MapSplitContainer.SplitterDistance = 246
+        Me.MapSplitContainer.SplitterDistance = 245
         Me.MapSplitContainer.TabIndex = 1
         '
         'MapLayersCheckedListBoxControl
@@ -96,7 +96,7 @@ Partial Class Form1
         Me.MapLayersCheckedListBoxControl.Dock = System.Windows.Forms.DockStyle.Fill
         Me.MapLayersCheckedListBoxControl.Location = New System.Drawing.Point(0, 25)
         Me.MapLayersCheckedListBoxControl.Name = "MapLayersCheckedListBoxControl"
-        Me.MapLayersCheckedListBoxControl.Size = New System.Drawing.Size(246, 736)
+        Me.MapLayersCheckedListBoxControl.Size = New System.Drawing.Size(245, 736)
         Me.MapLayersCheckedListBoxControl.TabIndex = 3
         '
         'MapLayerContextMenuStrip
@@ -184,7 +184,7 @@ Partial Class Form1
         Me.MapLayersToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripLabel1, Me.ToolStripSeparator3, Me.PromoteLayerToolStripButton, Me.DemoteLayerToolStripButton, Me.AddDatasetToolStripButton})
         Me.MapLayersToolStrip.Location = New System.Drawing.Point(0, 0)
         Me.MapLayersToolStrip.Name = "MapLayersToolStrip"
-        Me.MapLayersToolStrip.Size = New System.Drawing.Size(246, 25)
+        Me.MapLayersToolStrip.Size = New System.Drawing.Size(245, 25)
         Me.MapLayersToolStrip.TabIndex = 4
         Me.MapLayersToolStrip.Text = "ToolStrip1"
         '
@@ -241,7 +241,7 @@ Partial Class Form1
         'MapPanelSplitContainer.Panel2
         '
         Me.MapPanelSplitContainer.Panel2.Controls.Add(Me.MapLayerGridControl)
-        Me.MapPanelSplitContainer.Size = New System.Drawing.Size(934, 761)
+        Me.MapPanelSplitContainer.Size = New System.Drawing.Size(935, 761)
         Me.MapPanelSplitContainer.SplitterDistance = 492
         Me.MapPanelSplitContainer.TabIndex = 1
         '
@@ -252,7 +252,7 @@ Partial Class Form1
         Me.MapControl.Dock = System.Windows.Forms.DockStyle.Fill
         Me.MapControl.Location = New System.Drawing.Point(0, 25)
         Me.MapControl.Name = "MapControl"
-        Me.MapControl.Size = New System.Drawing.Size(934, 467)
+        Me.MapControl.Size = New System.Drawing.Size(935, 467)
         Me.MapControl.TabIndex = 0
         '
         'MapContextMenuStrip
@@ -272,7 +272,7 @@ Partial Class Form1
         Me.MapToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ZoomToFitAllLayersToolStripButton, Me.ToolStripSeparator2})
         Me.MapToolStrip.Location = New System.Drawing.Point(0, 0)
         Me.MapToolStrip.Name = "MapToolStrip"
-        Me.MapToolStrip.Size = New System.Drawing.Size(934, 25)
+        Me.MapToolStrip.Size = New System.Drawing.Size(935, 25)
         Me.MapToolStrip.TabIndex = 1
         Me.MapToolStrip.Text = "ToolStrip1"
         '
@@ -297,7 +297,7 @@ Partial Class Form1
         Me.MapLayerGridControl.Location = New System.Drawing.Point(0, 0)
         Me.MapLayerGridControl.MainView = Me.GridView1
         Me.MapLayerGridControl.Name = "MapLayerGridControl"
-        Me.MapLayerGridControl.Size = New System.Drawing.Size(934, 265)
+        Me.MapLayerGridControl.Size = New System.Drawing.Size(935, 265)
         Me.MapLayerGridControl.TabIndex = 0
         Me.MapLayerGridControl.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.GridView1})
         '

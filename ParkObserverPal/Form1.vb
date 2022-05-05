@@ -391,9 +391,9 @@ Public Class Form1
                                 With MyMapPoint
                                     'Give the bubble a geo-location
                                     .Location = New GeoPoint(Lat, Lon)
-                                    .Argument = "NPSDR_ID"
+                                    .Argument = "NPS_GUID"
                                     .Value = i
-                                    .Tag = MyPointDataRow.Item("UID")
+                                    .Tag = MyPointDataRow.Item("NPS_GUID")
 
                                     'Make the MapBubble object the same as the source DataRow (transfer DataTable model)
                                     For Each Col As DataColumn In PointsDataTable.Columns
@@ -883,12 +883,12 @@ Public Class Form1
                             CSVDataTable.Columns.Add(DataExtractedByColumn)
 
                             'Add Unique ID column to the data table
-                            Dim UIDColumn As New DataColumn("UID", GetType(String))
-                            CSVDataTable.Columns.Add(UIDColumn)
+                            Dim NPS_GUIDColumn As New DataColumn("NPS_GUID", GetType(String))
+                            CSVDataTable.Columns.Add(NPS_GUIDColumn)
 
                             'Load the metadata columns from above
                             For Each Row As DataRow In CSVDataTable.Rows
-                                Row.Item("UID") = Guid.NewGuid.ToString
+                                Row.Item("NPS_GUID") = Guid.NewGuid.ToString
                                 Row.Item("DateRecordExtracted") = Now
                                 Row.Item("DataExtractedBy") = My.User.Name
                             Next
@@ -1070,35 +1070,7 @@ Public Class Form1
         OpenPOZArchive(POZFile)
     End Sub
 
-    Private Sub MapControl_MapItemClick(sender As Object, e As MapItemClickEventArgs) Handles MapControl.MapItemClick
-        If Not e.Item Is Nothing Then
 
-            Me.GridView1.FormatRules.Clear()
-            'Show the selected item in a form
-            'Dim ItemForm As Form = GetObjectPropertiesForm(e.Item)
-            'ItemForm.ShowDialog()
-
-
-            Dim ClickedItem As MapItem = e.Item
-            Dim Filter As String = "UID = '" & ClickedItem.Tag.ToString.Trim & "'"
-            Debug.Print(Filter)
-            'Me.GridView1.Columns("UID").FilterInfo = New Columns.ColumnFilterInfo(Filter)
-
-            ' GridView.FormatRules[0].Rule As FormatConditionRuleExpression).Expression = "StartsWith([State], \'M\')";
-            ' GridView.FormatRules[0].ApplyToRow = True;
-
-            Dim MyFormatConditionRuleExpression As New FormatConditionRuleExpression
-            MyFormatConditionRuleExpression.Expression = Filter
-            MyFormatConditionRuleExpression.Appearance.BackColor = Color.AliceBlue
-            Me.GridView1.FormatRules.Add(Me.GridView1.Columns("UID"), MyFormatConditionRuleExpression)
-            Me.GridView1.FormatRules(0).ApplyToRow = True
-
-            'For Each Itm In ClickedItem.Attributes
-            '    Debug.Print(vbTab & Itm.Name & vbTab & Itm.Value)
-            'Next
-
-        End If
-    End Sub
 
     ''' <summary>
     ''' Returns a Form with OjectToShow in a PropertyGrid.
@@ -1189,6 +1161,41 @@ Public Class Form1
         Catch ex As Exception
             MsgBox(ex.Message & " " & System.Reflection.MethodBase.GetCurrentMethod.Name)
         End Try
+    End Sub
+
+    Private Sub MapControl_MapItemClick(sender As Object, e As MapItemClickEventArgs) Handles MapControl.MapItemClick
+        If Not e.Item Is Nothing Then
+
+            'User clicked a MapItem on the map highlighting it. We now need to highlight the same row in the GridControl so they are synchronized.
+            'This is done using a Globally Unique ID called NPS_GUID that is shared between each MapItem and its equivalent DataRow in its DataTable.
+            'Each DataTable has a column called NPS_GUID and each MapItem.Tag attribute is loaded with the same NPS_GUID.
+            'This way MapItems can be matched to DataRows and vice versa
+
+            'Clear all formatting rules in the main GridControl's GridView
+            Me.GridView1.FormatRules.Clear()
+
+            'Get a handle on the clicked MapItem
+            Dim ClickedItem As MapItem = e.Item
+
+            'Build a filtering string based on the clicked MapItem.Tag which stores NPS_GUID, a unique identifier
+            Dim Filter As String = "NPS_GUID = '" & ClickedItem.Tag.ToString.Trim & "'"
+
+            'Now highlight the MapItem's DataRow in the main GridControl using a conditional formatting style
+            Dim MyFormatConditionRuleExpression As New FormatConditionRuleExpression
+            MyFormatConditionRuleExpression.Expression = Filter
+            MyFormatConditionRuleExpression.Appearance.BackColor = Color.AliceBlue
+            Me.GridView1.FormatRules.Add(Me.GridView1.Columns("NPS_GUID"), MyFormatConditionRuleExpression)
+            Me.GridView1.FormatRules(0).ApplyToRow = True
+
+            'For Each Itm In ClickedItem.Attributes
+            '    Debug.Print(vbTab & Itm.Name & vbTab & Itm.Value)
+            'Next
+
+            'Show the selected item in a form
+            'Dim ItemForm As Form = GetObjectPropertiesForm(e.Item)
+            'ItemForm.ShowDialog()
+
+        End If
     End Sub
 
 End Class
