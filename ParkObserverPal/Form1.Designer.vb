@@ -54,6 +54,7 @@ Partial Class Form1
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.MapLayerGridControl = New DevExpress.XtraGrid.GridControl()
         Me.GridView1 = New DevExpress.XtraGrid.Views.Grid.GridView()
+        Me.VGridControl = New DevExpress.XtraVerticalGrid.VGridControl()
         CType(Me.MapSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MapSplitContainer.Panel1.SuspendLayout()
         Me.MapSplitContainer.Panel2.SuspendLayout()
@@ -70,6 +71,7 @@ Partial Class Form1
         Me.MapToolStrip.SuspendLayout()
         CType(Me.MapLayerGridControl, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.GridView1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.VGridControl, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'MapSplitContainer
@@ -236,6 +238,7 @@ Partial Class Form1
         'MapPanelSplitContainer.Panel1
         '
         Me.MapPanelSplitContainer.Panel1.Controls.Add(Me.MapControl)
+        Me.MapPanelSplitContainer.Panel1.Controls.Add(Me.VGridControl)
         Me.MapPanelSplitContainer.Panel1.Controls.Add(Me.MapToolStrip)
         '
         'MapPanelSplitContainer.Panel2
@@ -252,7 +255,7 @@ Partial Class Form1
         Me.MapControl.Dock = System.Windows.Forms.DockStyle.Fill
         Me.MapControl.Location = New System.Drawing.Point(0, 25)
         Me.MapControl.Name = "MapControl"
-        Me.MapControl.Size = New System.Drawing.Size(935, 467)
+        Me.MapControl.Size = New System.Drawing.Size(685, 467)
         Me.MapControl.TabIndex = 0
         '
         'MapContextMenuStrip
@@ -307,6 +310,16 @@ Partial Class Form1
         Me.GridView1.Name = "GridView1"
         Me.GridView1.OptionsView.ShowFooter = True
         '
+        'VGridControl
+        '
+        Me.VGridControl.Cursor = System.Windows.Forms.Cursors.Default
+        Me.VGridControl.Dock = System.Windows.Forms.DockStyle.Right
+        Me.VGridControl.LayoutStyle = DevExpress.XtraVerticalGrid.LayoutViewStyle.SingleRecordView
+        Me.VGridControl.Location = New System.Drawing.Point(685, 25)
+        Me.VGridControl.Name = "VGridControl"
+        Me.VGridControl.Size = New System.Drawing.Size(250, 467)
+        Me.VGridControl.TabIndex = 2
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -336,6 +349,7 @@ Partial Class Form1
         Me.MapToolStrip.PerformLayout()
         CType(Me.MapLayerGridControl, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.GridView1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.VGridControl, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -369,4 +383,5 @@ Partial Class Form1
     Friend WithEvents RemoveAllLayersToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents RemoveCurrentLayerToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents CreatePivotTableToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents VGridControl As DevExpress.XtraVerticalGrid.VGridControl
 End Class

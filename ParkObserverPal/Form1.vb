@@ -1187,6 +1187,11 @@ Public Class Form1
             Me.GridView1.FormatRules.Add(Me.GridView1.Columns("NPS_GUID"), MyFormatConditionRuleExpression)
             Me.GridView1.FormatRules(0).ApplyToRow = True
 
+
+
+            Me.VGridControl.DataSource = ClickedItem.Attributes
+
+
             'For Each Itm In ClickedItem.Attributes
             '    Debug.Print(vbTab & Itm.Name & vbTab & Itm.Value)
             'Next
