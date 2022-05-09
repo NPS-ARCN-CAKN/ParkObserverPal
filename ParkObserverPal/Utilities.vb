@@ -166,4 +166,27 @@ Module Utilities
         Return MyLineVectorItemsLayer_NPS
     End Function
 
+    ''' <summary>
+    ''' Returns a Form with OjectToShow in a PropertyGrid.
+    ''' </summary>
+    ''' <param name="ObjectToShow">Object whose properties should be shown. Object.</param>
+    ''' <param name="Title">A title for the form. String. Optional</param>
+    ''' <returns></returns>
+    Public Function GetObjectPropertiesForm(ObjectToShow As Object, Optional Title As String = "") As Form
+        Dim ObjectForm As New Form
+        Try
+            Dim PG As New PropertyGrid
+            PG.Dock = DockStyle.Fill
+            PG.SelectedObject = ObjectToShow
+            With ObjectForm
+                .Controls.Add(PG)
+                .Text = Title
+                .FormBorderStyle = FormBorderStyle.SizableToolWindow
+            End With
+        Catch ex As Exception
+            MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
+        End Try
+        Return ObjectForm
+    End Function
+
 End Module

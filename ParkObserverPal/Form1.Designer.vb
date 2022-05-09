@@ -60,6 +60,10 @@ Partial Class Form1
         Me.MapLayerDataTableDockPanel_Container = New DevExpress.XtraBars.Docking.ControlContainer()
         Me.MapItemDockPanel = New DevExpress.XtraBars.Docking.DockPanel()
         Me.MapItemDockPanel_Container = New DevExpress.XtraBars.Docking.ControlContainer()
+        Me.FeatureTabControl = New System.Windows.Forms.TabControl()
+        Me.FeatureDateTabPage = New System.Windows.Forms.TabPage()
+        Me.FeaturePropertiesTabPage = New System.Windows.Forms.TabPage()
+        Me.FeaturePropertyGrid = New System.Windows.Forms.PropertyGrid()
         CType(Me.MapLayersCheckedListBoxControl, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MapLayerContextMenuStrip.SuspendLayout()
         Me.MapLayersToolStrip.SuspendLayout()
@@ -76,6 +80,9 @@ Partial Class Form1
         Me.MapLayerDataTableDockPanel_Container.SuspendLayout()
         Me.MapItemDockPanel.SuspendLayout()
         Me.MapItemDockPanel_Container.SuspendLayout()
+        Me.FeatureTabControl.SuspendLayout()
+        Me.FeatureDateTabPage.SuspendLayout()
+        Me.FeaturePropertiesTabPage.SuspendLayout()
         Me.SuspendLayout()
         '
         'MapLayersCheckedListBoxControl
@@ -281,9 +288,9 @@ Partial Class Form1
         Me.VGridControl.Cursor = System.Windows.Forms.Cursors.Default
         Me.VGridControl.Dock = System.Windows.Forms.DockStyle.Fill
         Me.VGridControl.LayoutStyle = DevExpress.XtraVerticalGrid.LayoutViewStyle.SingleRecordView
-        Me.VGridControl.Location = New System.Drawing.Point(0, 0)
+        Me.VGridControl.Location = New System.Drawing.Point(3, 3)
         Me.VGridControl.Name = "VGridControl"
-        Me.VGridControl.Size = New System.Drawing.Size(193, 532)
+        Me.VGridControl.Size = New System.Drawing.Size(179, 500)
         Me.VGridControl.TabIndex = 2
         '
         'MainDockManager
@@ -344,14 +351,56 @@ Partial Class Form1
         '
         'MapItemDockPanel_Container
         '
-        Me.MapItemDockPanel_Container.Controls.Add(Me.VGridControl)
+        Me.MapItemDockPanel_Container.Controls.Add(Me.FeatureTabControl)
         Me.MapItemDockPanel_Container.Location = New System.Drawing.Point(4, 26)
         Me.MapItemDockPanel_Container.Name = "MapItemDockPanel_Container"
         Me.MapItemDockPanel_Container.Size = New System.Drawing.Size(193, 532)
         Me.MapItemDockPanel_Container.TabIndex = 0
         '
+        'FeatureTabControl
+        '
+        Me.FeatureTabControl.Controls.Add(Me.FeatureDateTabPage)
+        Me.FeatureTabControl.Controls.Add(Me.FeaturePropertiesTabPage)
+        Me.FeatureTabControl.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.FeatureTabControl.Location = New System.Drawing.Point(0, 0)
+        Me.FeatureTabControl.Name = "FeatureTabControl"
+        Me.FeatureTabControl.SelectedIndex = 0
+        Me.FeatureTabControl.Size = New System.Drawing.Size(193, 532)
+        Me.FeatureTabControl.TabIndex = 3
+        '
+        'FeatureDateTabPage
+        '
+        Me.FeatureDateTabPage.Controls.Add(Me.VGridControl)
+        Me.FeatureDateTabPage.Location = New System.Drawing.Point(4, 22)
+        Me.FeatureDateTabPage.Name = "FeatureDateTabPage"
+        Me.FeatureDateTabPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.FeatureDateTabPage.Size = New System.Drawing.Size(185, 506)
+        Me.FeatureDateTabPage.TabIndex = 0
+        Me.FeatureDateTabPage.Text = "Data"
+        Me.FeatureDateTabPage.UseVisualStyleBackColor = True
+        '
+        'FeaturePropertiesTabPage
+        '
+        Me.FeaturePropertiesTabPage.Controls.Add(Me.FeaturePropertyGrid)
+        Me.FeaturePropertiesTabPage.Location = New System.Drawing.Point(4, 22)
+        Me.FeaturePropertiesTabPage.Name = "FeaturePropertiesTabPage"
+        Me.FeaturePropertiesTabPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.FeaturePropertiesTabPage.Size = New System.Drawing.Size(185, 506)
+        Me.FeaturePropertiesTabPage.TabIndex = 1
+        Me.FeaturePropertiesTabPage.Text = "Properties"
+        Me.FeaturePropertiesTabPage.UseVisualStyleBackColor = True
+        '
+        'FeaturePropertyGrid
+        '
+        Me.FeaturePropertyGrid.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.FeaturePropertyGrid.Location = New System.Drawing.Point(3, 3)
+        Me.FeaturePropertyGrid.Name = "FeaturePropertyGrid"
+        Me.FeaturePropertyGrid.Size = New System.Drawing.Size(179, 500)
+        Me.FeaturePropertyGrid.TabIndex = 0
+        '
         'Form1
         '
+        Me.AllowDrop = True
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1184, 761)
@@ -362,7 +411,7 @@ Partial Class Form1
         Me.Controls.Add(Me.MapLayersDockPanel)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "Form1"
-        Me.Text = "NPS Data Ranger"
+        Me.Text = "NPS Park Observer Pal"
         CType(Me.MapLayersCheckedListBoxControl, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MapLayerContextMenuStrip.ResumeLayout(False)
         Me.MapLayersToolStrip.ResumeLayout(False)
@@ -382,6 +431,9 @@ Partial Class Form1
         Me.MapLayerDataTableDockPanel_Container.ResumeLayout(False)
         Me.MapItemDockPanel.ResumeLayout(False)
         Me.MapItemDockPanel_Container.ResumeLayout(False)
+        Me.FeatureTabControl.ResumeLayout(False)
+        Me.FeatureDateTabPage.ResumeLayout(False)
+        Me.FeaturePropertiesTabPage.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -422,4 +474,8 @@ Partial Class Form1
     Friend WithEvents MapLayerDataTableDockPanel_Container As DevExpress.XtraBars.Docking.ControlContainer
     Friend WithEvents MapLayersDockPanel As DevExpress.XtraBars.Docking.DockPanel
     Friend WithEvents MapLayersDockPanel_Container As DevExpress.XtraBars.Docking.ControlContainer
+    Friend WithEvents FeatureTabControl As TabControl
+    Friend WithEvents FeatureDateTabPage As TabPage
+    Friend WithEvents FeaturePropertiesTabPage As TabPage
+    Friend WithEvents FeaturePropertyGrid As PropertyGrid
 End Class

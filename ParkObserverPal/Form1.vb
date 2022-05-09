@@ -16,7 +16,7 @@ Public Class Form1
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
 
-        LoadCSVFile(New FileInfo("C:\temp\zspatialdata.csv"))
+        'LoadCSVFile(New FileInfo("C:\temp\zspatialdata.csv"))
 
         'My.Settings.BackgroundLayers = "C:\Work\GIS Common Layers\AlaskaSimplified_1km.shp"
         'LoadBackgroundLayers()
@@ -160,6 +160,10 @@ Public Class Form1
     ''' Loads the main map control's layers into the MapLayersListBox
     ''' </summary>
     Private Sub LoadMapLayersListBox()
+
+        'Reset various controls
+        ResetInterface()
+
 
         'Now set the z order
         Dim ZIndex As Integer = 0
@@ -391,7 +395,7 @@ Public Class Form1
                                 With MyMapPoint
                                     'Give the bubble a geo-location
                                     .Location = New GeoPoint(Lat, Lon)
-                                    .Argument = "NPS_GUID"
+                                    .Argument = PointsDataTable.TableName.Trim
                                     .Value = i
                                     .Tag = MyPointDataRow.Item("NPS_GUID")
 
@@ -586,6 +590,10 @@ Public Class Form1
 
     Private Sub MapLayersCheckedListBoxControl_SelectedIndexChanged(sender As Object, e As EventArgs) Handles MapLayersCheckedListBoxControl.SelectedIndexChanged
         Try
+
+            'Start by clearing things
+            ResetInterface()
+
             'Get the name of the currently selected layer
             Dim LayerName As String = MapLayersCheckedListBoxControl.Text
 
@@ -606,6 +614,9 @@ Public Class Form1
                     SetUpGridControl(Me.MapLayerGridControl)
                 End If
             End If
+
+            'Change the context menu item title to reflect the layer name, make it more obvious which layer is to be removed.
+            Me.RemoveCurrentLayerToolStripMenuItem.Text = "Remove " & LayerName
         Catch ex As Exception
             MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
         End Try
@@ -1072,28 +1083,7 @@ Public Class Form1
 
 
 
-    ''' <summary>
-    ''' Returns a Form with OjectToShow in a PropertyGrid.
-    ''' </summary>
-    ''' <param name="ObjectToShow">Object whose properties should be shown. Object.</param>
-    ''' <param name="Title">A title for the form. String. Optional</param>
-    ''' <returns></returns>
-    Private Function GetObjectPropertiesForm(ObjectToShow As Object, Optional Title As String = "") As Form
-        Dim ObjectForm As New Form
-        Try
-            Dim PG As New PropertyGrid
-            PG.Dock = DockStyle.Fill
-            PG.SelectedObject = ObjectToShow
-            With ObjectForm
-                .Controls.Add(PG)
-                .Text = Title
-                .FormBorderStyle = FormBorderStyle.SizableToolWindow
-            End With
-        Catch ex As Exception
-            MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
-        End Try
-        Return ObjectForm
-    End Function
+
 
     Private Sub AddDatasetToolStripButton_Click(sender As Object, e As EventArgs) Handles AddDatasetToolStripButton.Click
         Try
@@ -1132,6 +1122,7 @@ Public Class Form1
             Me.MapControl.Layers.Clear()
             'POZDataSet.Tables.Clear()
             LoadMapLayersListBox()
+            ResetInterface()
         Catch ex As Exception
             MsgBox(ex.Message & " " & System.Reflection.MethodBase.GetCurrentMethod.Name)
         End Try
@@ -1141,12 +1132,14 @@ Public Class Form1
     Private Sub RemoveCurrentLayerToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RemoveCurrentLayerToolStripMenuItem.Click
         Try
             Dim CurrentLayerName As String = Me.MapLayersCheckedListBoxControl.Text.Trim
-            Dim CurrentLayer As VectorItemsLayer_NPS = Me.MapControl.Layers(CurrentLayerName)
-            If Not CurrentLayer Is Nothing Then
-                Me.MapControl.Layers.Remove(CurrentLayer)
-                'POZDataSet.Tables.Remove(POZDataSet.Tables(CurrentLayerName))
+            If MsgBox("Remove " & CurrentLayerName & " from the map?", MsgBoxStyle.YesNo, "Remove map layer") = MsgBoxResult.Yes Then
+                Dim CurrentLayer As VectorItemsLayer_NPS = Me.MapControl.Layers(CurrentLayerName)
+                If Not CurrentLayer Is Nothing Then
+                    Me.MapControl.Layers.Remove(CurrentLayer)
+                End If
+                LoadMapLayersListBox()
+                ResetInterface()
             End If
-            LoadMapLayersListBox()
         Catch ex As Exception
             MsgBox(ex.Message & " " & System.Reflection.MethodBase.GetCurrentMethod.Name)
         End Try
@@ -1174,16 +1167,24 @@ Public Class Form1
         'What the code below does is to match the clicked MapItem to its DataRow to populate the VGridControl with its DataRow and to highlight its
         'DataRow in the GridControl.
 
+        'Clear the interface and reset controls
+        ResetInterface()
+
         Try
             'Make sure we have a clicked MapItem
             If Not e.Item Is Nothing Then
+
+                'Get a handle on the clicked MapItem
+                Dim ClickedItem As MapItem = e.Item
+
+                'Load the clicked MapItem into the FeaturePropertyGrid so user can see its data and attributes
+                Me.FeaturePropertyGrid.SelectedObject = ClickedItem
 
                 'Start by highlighting the clicked item's data in the MapLayerGridControl so the user can see it
                 'Clear all formatting rules in the main GridControl's GridView
                 Me.MapLayerGridView.FormatRules.Clear()
 
-                'Get a handle on the clicked MapItem
-                Dim ClickedItem As MapItem = e.Item
+
 
                 'Some map layers may not have .Tag defined
                 If Not ClickedItem.Tag Is Nothing Then
@@ -1191,33 +1192,34 @@ Public Class Form1
                     'Make sure .Tag has data
                     If ClickedItem.Tag.ToString.Trim <> "" Then
 
-                        'Build a filtering string based on the clicked MapItem.Tag which stores NPS_GUID, a unique identifier
-                        Dim Filter As String = "NPS_GUID = '" & ClickedItem.Tag.ToString.Trim & "'"
+                        If Not Me.MapLayerGridView.Columns("NPS_GUID") Is Nothing Then
+                            'Build a filtering string based on the clicked MapItem.Tag which stores NPS_GUID, a unique identifier
+                            Dim Filter As String = "NPS_GUID = '" & ClickedItem.Tag.ToString.Trim & "'"
 
-                        'Now build a conditional formatting rule and filter
-                        'This will be used to highlight the MapItem's DataRow in the main GridControl using a conditional formatting style
-                        Dim MyFormatConditionRuleExpression As New FormatConditionRuleExpression
-                        With MyFormatConditionRuleExpression
-                            .Expression = Filter
-                            .Appearance.BackColor = Color.AliceBlue
-                        End With
+                            'Now build a conditional formatting rule and filter
+                            'This will be used to highlight the MapItem's DataRow in the main GridControl using a conditional formatting style
+                            Dim MyFormatConditionRuleExpression As New FormatConditionRuleExpression
+                            With MyFormatConditionRuleExpression
+                                .Expression = Filter
+                                .Appearance.BackColor = Color.AliceBlue
+                            End With
 
-                        'Apply the formatting rule
-                        Me.MapLayerGridView.FormatRules.Add(Me.MapLayerGridView.Columns("NPS_GUID"), MyFormatConditionRuleExpression)
-                        Me.MapLayerGridView.FormatRules(0).ApplyToRow = True
+                            'Apply the formatting rule
+                            Me.MapLayerGridView.FormatRules.Add(Me.MapLayerGridView.Columns("NPS_GUID"), MyFormatConditionRuleExpression)
+                            Me.MapLayerGridView.FormatRules(0).ApplyToRow = True
 
-                        'Now isolate the DataRow that belongs to the clicked MapItem and show its data in the VGridControl
-                        Dim DT As DataTable = Me.MapLayerGridControl.DataSource
-                        Dim DV As New DataView(DT, Filter, "", DataViewRowState.CurrentRows)
-                        Me.VGridControl.DataSource = DV
+                            'Now isolate the DataRow that belongs to the clicked MapItem and show its data in the VGridControl
+                            Dim DT As DataTable = Me.MapLayerGridControl.DataSource
+                            Dim DV As New DataView(DT, Filter, "", DataViewRowState.CurrentRows)
+                            With Me.VGridControl
+                                .DataSource = DV
+                                .RetrieveFields()
+                            End With
 
+
+                        End If
                     End If
-
-
                 End If
-
-
-
             End If
         Catch ex As Exception
             MsgBox(ex.Message & " " & System.Reflection.MethodBase.GetCurrentMethod.Name)
@@ -1225,4 +1227,50 @@ Public Class Form1
 
     End Sub
 
+    ''' <summary>
+    ''' Clears all the controls of data; property grids, VGridControls, etc. Used after layers are selected or map items clicked so residual data does not show up 
+    ''' confusing the user
+    ''' </summary>
+    Private Sub ResetInterface()
+        'Start by clearing things
+        Me.MapLayerGridControl.DataSource = Nothing
+
+        Me.MapLayerGridView.FormatRules.Clear()
+        Me.VGridControl.DataSource = Nothing
+        Me.VGridControl.RetrieveFields()
+        Me.FeaturePropertyGrid.SelectedObject = Nothing
+    End Sub
+
+    Private Sub MapControl_Click(sender As Object, e As EventArgs) Handles MapControl.Click
+        ResetInterface()
+    End Sub
+
+    Private Sub Form1_DragEnter(sender As Object, e As DragEventArgs) Handles MyBase.DragEnter
+        If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+            e.Effect = DragDropEffects.Copy
+        End If
+    End Sub
+
+    Private Sub Form1_DragDrop(sender As Object, e As DragEventArgs) Handles MyBase.DragDrop
+        'Figure out the kind of file(s) dropped on the main form and try to open it (them)
+        Try
+            Dim DraggedFiles() As String = e.Data.GetData(DataFormats.FileDrop)
+            For Each DraggedFile In DraggedFiles
+
+                Dim DraggedFileInfo As New FileInfo(DraggedFile)
+                Select Case DraggedFileInfo.Extension
+                    Case ".shp"
+                        LoadShapefile(DraggedFileInfo.FullName, Me.MapControl)
+                    Case ".csv"
+                        LoadCSVFile(DraggedFileInfo)
+                    Case ".poz"
+                        LoadPOZArchive(DraggedFileInfo.FullName)
+                    Case Else
+                        MsgBox("The file type *" & DraggedFileInfo.Extension & " is not supported.", MsgBoxStyle.Information, "File type not supported")
+                End Select
+            Next
+        Catch ex As Exception
+            MsgBox(ex.Message & " " & System.Reflection.MethodBase.GetCurrentMethod.Name)
+        End Try
+    End Sub
 End Class
