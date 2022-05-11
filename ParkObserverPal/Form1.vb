@@ -15,8 +15,10 @@ Public Class Form1
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-
-        'LoadCSVFile(New FileInfo("C:\temp\zspatialdata.csv"))
+        LoadCSVFile(New FileInfo("C:\temp\zSpatialData.csv"), Me.MapControl)
+        '        LoadCSVFile(New FileInfo("C:\temp\ARCN_LakeChemistry_2013-2018.csv"), Me.MapControl)
+        'Refresh the map layers list box
+        LoadMapLayersListBox()
 
         'My.Settings.BackgroundLayers = "C:\Work\GIS Common Layers\AlaskaSimplified_1km.shp"
         'LoadBackgroundLayers()
@@ -53,85 +55,7 @@ Public Class Form1
         End Try
     End Sub
 
-    ''' <summary>
-    ''' Converts a VectorItemsLayer_NPS.Data.Items name/value pair collection items into a DataTable.
-    ''' </summary>
-    ''' <param name="VIL">VectorItemsLayer_NPS to convert to DataTable. VectorItemsLayer_NPS.</param>
-    ''' <param name="TableName">TableName. String. Optional. Defaults to the name of VectorItemsLayer_NPS.</param>
-    ''' <returns></returns>
-    Private Function GetDataTableFromVectorItemsLayer_NPS(VIL As VectorItemsLayer_NPS, Optional TableName As String = "") As DataTable
-        'Make a DataTable
-        Dim DT As New DataTable()
 
-        Try
-            'Make sure we have a VectorItemsLayer_NPS
-            If Not VIL Is Nothing Then
-
-                'Set the returned DataTable's name.
-                If TableName.Trim <> "" Then
-                    DT.TableName = TableName
-                Else
-                    DT.TableName = VIL.Name
-                End If
-
-                'The data in a VectorItemsLayer_NPS are stored as Name/Value pairs, we need to convert them to a DataTable.
-                If VIL.Data.Items.Count > 0 Then
-
-                    'Get a handle on the first item in the list so we can use it as a model to create DataColumns for DT.
-                    Dim FirstMapItem As MapItem = VIL.Data.Items(0)
-
-                    'Make sure the first map item is something
-                    If Not FirstMapItem Is Nothing Then
-
-                        'Make sure the first map item has attributes
-                        If FirstMapItem.Attributes.Count > 0 Then
-
-                            'Create a DataColumn for each map item's Name attribute and add it to the data table.
-                            For Each FirstMapItemAttributes As MapItemAttribute In FirstMapItem.Attributes
-                                Dim ColumnName As String = FirstMapItemAttributes.Name
-
-                                'Create a new DataColumn based on the map item's name and value
-                                Dim NewColumn As New DataColumn(ColumnName)
-
-                                'MapItem attribute's data type is set to DBNull for NULL or empty rows. In such cases the equivalent DataColumn DataType cannot be determined.
-                                'This problem led to errors when the DataTable.NewRow function was called to create a new row.
-                                'Set such columns data type to String since it doesn't really matter anyway because there is no data for those cells
-                                If FirstMapItemAttributes.Value.GetType.Name = "DBNull" Then
-                                    NewColumn.DataType = GetType(String)
-                                Else
-                                    NewColumn.DataType = FirstMapItemAttributes.Value.GetType
-                                End If
-
-                                'Add the new column to DT DataTable
-                                DT.Columns.Add(NewColumn)
-                            Next
-
-                            'Now go through each item, create an equivalent DataRow and add it to DT.Rows.
-                            If VIL.Data.Items.Count > 0 Then
-                                For Each MapItem As MapItem In VIL.Data.Items
-
-                                    'Create a new DataRow and populate it with the map item's attributes
-                                    Dim NewRow As DataRow = DT.NewRow
-                                    For Each Mapitemattribute In MapItem.Attributes
-                                        'If the value is not null, add it to the new row
-                                        If Not IsDBNull(Mapitemattribute.Value) = True Then
-                                            Dim AttributeName As String = Mapitemattribute.Name
-                                            Dim AttributeValue As String = Mapitemattribute.Value
-                                            NewRow.Item(AttributeName) = AttributeValue
-                                        End If
-                                    Next
-                                    DT.Rows.Add(NewRow)
-                                Next
-                            End If
-                        End If
-                    End If
-                End If
-            End If
-        Catch ex As Exception
-            MsgBox(ex.Message & " (" & System.Reflection.MethodBase.GetCurrentMethod.Name & ").")
-        End Try
-        Return DT
-    End Function
 
     Private Sub OpenPOZArchive(POZArchive As FileInfo)
         'Temporary holder for poz file
@@ -331,7 +255,10 @@ Public Class Form1
                         If CSVFileInfo.Extension = ".csv" Then
 
                             'Load the CSV into the application
-                            LoadCSVFile(CSVFileInfo)
+                            LoadCSVFile(CSVFileInfo, Me.MapControl)
+
+                            'Refresh the map layers list box
+                            LoadMapLayersListBox()
 
                         End If
                     Next
@@ -351,109 +278,6 @@ Public Class Form1
 
 
 
-    ''' <summary>
-    ''' Returns a DevExpress VectorItemsLayer_NPS of MapBubble points derived a DataTable containing Lat/Lon pairs.
-    ''' </summary>
-    ''' <param name="PointsDataTable">DataTable containing points spatial data. DataTable</param>
-    ''' <param name="LatitudeColumnName">Name of the latitude column. String.</param>
-    ''' <param name="LongitudeColumnName">Name of the longitude column. String.</param>
-    ''' <returns>VectorItemLayer of points.</returns>
-    Public Function GetBubbleVectorItemsLayerFromPointsDataTable(PointsDataTable As DataTable, LatitudeColumnName As String, LongitudeColumnName As String, FeatureSize As Integer, MarkerType As MarkerType, FillColor As Color) As DevExpress.XtraMap.VectorItemsLayer
-
-        'Create a new VectorItemsLayer_NPS which is essentially a map layer
-        Dim MyPointsVectorItemsLayer_NPS As New VectorItemsLayer_NPS()
-
-        Try
-            'Create a MapItemStorage object (basically DevExpress's version of a spatial data table, stores MapItem objects which are like DataRows
-            Dim MyMapItemStorage As New MapItemStorage
-
-            'Count up NULL or empty or non-numeric rows
-            Dim NullSpatialRowsCount As Integer = 0
-            Dim NonNumericSpatialRowsCount As Integer = 0
-
-            'Make sure we have spatial column names
-            If LatitudeColumnName.Trim <> "" And LongitudeColumnName.Trim <> "" Then
-
-                'Convert .NET DataRows to MapBubbles
-                Dim i As Double = 1 'i will be used as an identifier
-                For Each MyPointDataRow As DataRow In PointsDataTable.Rows
-                    'Make sure we have a valid row
-                    If Not MyPointDataRow Is Nothing Then
-                        'Make sure the LatLon columns are not NULL
-                        If Not IsDBNull(MyPointDataRow.Item(LatitudeColumnName)) And Not IsDBNull(MyPointDataRow.Item(LongitudeColumnName)) Then
-                            'Make sure the column is numeric
-                            If IsNumeric(MyPointDataRow.Item(LatitudeColumnName)) And IsNumeric(MyPointDataRow.Item(LongitudeColumnName)) Then
-
-                                'Get the Lat/Lon
-                                Dim Lat As Double = CDbl(MyPointDataRow.Item(LatitudeColumnName))
-                                Dim Lon As Double = CDbl(MyPointDataRow.Item(LongitudeColumnName))
-
-                                'Make a new point for the map
-                                Dim MyMapPoint As New MapBubble()
-                                'Dim MyMapPoint As New MapDot
-
-                                With MyMapPoint
-                                    'Give the bubble a geo-location
-                                    .Location = New GeoPoint(Lat, Lon)
-                                    .Argument = PointsDataTable.TableName.Trim
-                                    .Value = i
-                                    .Tag = MyPointDataRow.Item("NPS_GUID")
-
-                                    'Make the MapBubble object the same as the source DataRow (transfer DataTable model)
-                                    For Each Col As DataColumn In PointsDataTable.Columns
-                                        Dim MIA As New MapItemAttribute
-                                        With MIA
-                                            .Name = Col.ColumnName 'The name of the column
-                                            .Value = MyPointDataRow.Item(Col.ColumnName) 'The value at the Row/Column intersection
-                                        End With
-
-                                        'Add the attribute to the MapBubble
-                                        .Attributes.Add(MIA)
-
-                                    Next
-
-                                    'Give it styling
-                                    .Size = 20
-                                    .MarkerType = MarkerType
-                                    .Fill = FillColor
-                                    '.SelectedFill = Color.AliceBlue
-                                    .SelectedStroke = Color.AliceBlue
-                                    .SelectedStrokeWidth = 4
-                                End With
-
-                                'Add the MapBubble to the MapItemStorage 
-                                MyMapItemStorage.Items.Add(MyMapPoint)
-
-                            Else
-                                'Increment the non numeric row counter
-                                NonNumericSpatialRowsCount = NonNumericSpatialRowsCount + 1
-                            End If
-                        Else
-                            'Increment the null rows counter
-                            NullSpatialRowsCount = NullSpatialRowsCount + 1
-                        End If
-                    End If
-                    i = i + 1
-                Next
-
-                'Configure the map layer from above
-                With MyPointsVectorItemsLayer_NPS
-                    .Data = MyMapItemStorage
-                    .Name = PointsDataTable.TableName
-                    .DataTable = PointsDataTable
-                End With
-
-                'Alert user if they don't have a full dataset
-                If NullSpatialRowsCount > 0 Or NonNumericSpatialRowsCount > 0 Then
-                    MsgBox("Warning: " & NullSpatialRowsCount & " rows were omitted because the spatial columns contained null values and " & NonNumericSpatialRowsCount & " rows were omitted because the spatial data was non-numeric.", MsgBoxStyle.Information, "Warning")
-                End If
-
-            End If
-        Catch ex As Exception
-            MsgBox(ex.Message & " (" & System.Reflection.MethodBase.GetCurrentMethod.Name & ").")
-        End Try
-        Return MyPointsVectorItemsLayer_NPS
-    End Function
 
 
 
@@ -850,145 +674,35 @@ Public Class Form1
         ShowLayerPropertiesForm(LayerName)
     End Sub
 
+
+
+
+
     ''' <summary>
     ''' Opens a file open dialog allowing the user to select a comma separated values text file to load into the main interface. Opens a selector dialog to let the user
     ''' select any lat/lon fields, if desired.
     ''' </summary>
-    Private Sub LoadCSVFile(CSVFileInfo As FileInfo)
+    Private Sub LoadExcelFile(ExcelFileInfo As FileInfo)
         Try
             'Convert the CSV to a DataTable
-            Dim CSVDataTable As DataTable = SkeeterUtilities.DataFileToDataTableConverters.DataFileToDataTableConverters.GetDataTableFromCSV(CSVFileInfo, True, Format.Delimited)
-            CSVDataTable.TableName = CSVFileInfo.Name
+            Dim ExcelConnectionString As String = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" & ExcelFileInfo.FullName & ";Extended Properties=""Excel 12.0 Xml;HDR=YES"";"
+            Dim ExcelDataset As DataSet = SkeeterUtilities.DataFileToDataTableConverters.DataFileToDataTableConverters.GetDatasetFromExcelWorkbook(ExcelConnectionString)
+            ExcelDataset.DataSetName = ExcelFileInfo.Name
+            Dim ExcelForm As New ImportExcelForm(ExcelDataset, Me.MapControl)
+            ExcelForm.ShowDialog()
 
-            If Not CSVDataTable Is Nothing Then
-                If CSVDataTable.Rows.Count > 0 Then
+            'If Not ExcelDataset Is Nothing Then
+            '    If ExcelDataset.Tables.Count > 0 Then
+            '        For Each ExcelDataTable As DataTable In ExcelDataset.Tables
 
-                    'Ask the user to supply the lat/lon column names
-                    Dim ImportForm As New ImportCSVForm(CSVDataTable)
-                    ImportForm.ShowDialog()
-
-                    'Make sure we get lat lon column names
-                    If Not ImportForm.LatitudeColumnName Is Nothing And Not ImportForm.LongitudeColumnName Is Nothing Then
-                        If ImportForm.LatitudeColumnName.Trim <> "" And ImportForm.LongitudeColumnName.Trim <> "" Then
-                            Dim LatColumnName As String = ImportForm.LatitudeColumnName.Trim
-                            Dim LonColumnName As String = ImportForm.LongitudeColumnName.Trim
-
-                            'Add WKT and Geography columns to the CSVDataTable and generate the values
-                            AddWKTAndGeographyColumnsToDataTable(CSVDataTable, LatColumnName, LonColumnName)
-
-                            'Add SourceFile column to the data table
-                            Dim SourceFileColumn As New DataColumn("SourceFile", GetType(String))
-                            CSVDataTable.Columns.Add(SourceFileColumn)
-                            For Each Row As DataRow In CSVDataTable.Rows
-                                Row.Item("SourceFile") = CSVFileInfo.Name
-                            Next
+            '        Next
 
 
+            '        'Refresh the map layers list box
+            '        LoadMapLayersListBox()
+            '        End If
 
-                            'Add DataExtractedDate column to the data table
-                            Dim DataExtractedDateColumn As New DataColumn("DateRecordExtracted", GetType(DateTime))
-                            CSVDataTable.Columns.Add(DataExtractedDateColumn)
-
-                            'Add DataExtractedBy column to the data table
-                            Dim DataExtractedByColumn As New DataColumn("DataExtractedBy", GetType(String))
-                            CSVDataTable.Columns.Add(DataExtractedByColumn)
-
-                            'Add Unique ID column to the data table
-                            Dim NPS_GUIDColumn As New DataColumn("NPS_GUID", GetType(String))
-                            CSVDataTable.Columns.Add(NPS_GUIDColumn)
-
-                            'Load the metadata columns from above
-                            For Each Row As DataRow In CSVDataTable.Rows
-                                Row.Item("NPS_GUID") = Guid.NewGuid.ToString
-                                Row.Item("DateRecordExtracted") = Now
-                                Row.Item("DataExtractedBy") = My.User.Name
-                            Next
-
-                            'Add Park Observer - specific columns to the dataset
-                            Dim ProtocolFile As String = CSVFileInfo.DirectoryName & "\protocol.obsprot"
-
-                            'If an obsprot exists
-                            If My.Computer.FileSystem.FileExists(ProtocolFile) Then
-                                Try
-                                    'Variables to hold obsprot attributes
-                                    Dim ProtocolName As String = ""
-                                    Dim ProtocolVersion As String = ""
-                                    Dim ProtocolDate As String = ""
-                                    Dim ProtocolDescription As String = ""
-
-                                    'Get the protocol attributes out of the obsprot's json
-                                    Dim ProtocolText As String = My.Computer.FileSystem.ReadAllText(ProtocolFile)
-                                    ProtocolName = GetJSONValue(ProtocolText, "name")
-                                    ProtocolVersion = GetJSONValue(ProtocolText, "version")
-                                    ProtocolDate = GetJSONValue(ProtocolText, "date")
-                                    ProtocolDescription = GetJSONValue(ProtocolText, "description")
-
-                                    'Get the obsprot into a fileinfo
-                                    Dim ProtocolFileInfo As New FileInfo(ProtocolFile)
-
-                                    'Add ProtocolFile column to the data table
-                                    Dim ProtocolFileColumn As New DataColumn("ProtocolFile", GetType(String))
-                                    CSVDataTable.Columns.Add(ProtocolFileColumn)
-
-                                    'Add ProtocolName column to the data table
-                                    Dim ProtocolNameColumn As New DataColumn("ProtocolName", GetType(String))
-                                    CSVDataTable.Columns.Add(ProtocolNameColumn)
-
-                                    'Add ProtocolVersion column to the data table
-                                    Dim ProtocolVersionColumn As New DataColumn("ProtocolVersion", GetType(Double))
-                                    CSVDataTable.Columns.Add(ProtocolVersionColumn)
-
-                                    'Add ProtocolDate column to the data table
-                                    Dim ProtocolDateColumn As New DataColumn("ProtocolDate", GetType(Date))
-                                    CSVDataTable.Columns.Add(ProtocolDateColumn)
-
-                                    'Add ProtocolDescription column to the data table
-                                    Dim ProtocolDescriptionColumn As New DataColumn("ProtocolDescription", GetType(String))
-                                    CSVDataTable.Columns.Add(ProtocolDescriptionColumn)
-
-
-
-                                    'Add the protocol attributes to the data table
-                                    For Each Row As DataRow In CSVDataTable.Rows
-                                        Try
-                                            Row.Item("ProtocolFile") = ProtocolFileInfo.FullName
-                                            Row.Item("ProtocolName") = ProtocolName
-                                            If IsNumeric(ProtocolVersion) = True Then Row.Item("ProtocolVersion") = CDbl(ProtocolVersion)
-                                            If IsDate(ProtocolDate) Then Row.Item("ProtocolDate") = CDate(ProtocolDate)
-                                            Row.Item("ProtocolDescription") = ProtocolDescription
-                                        Catch RowUpdateException As Exception
-                                            Debug.Print(RowUpdateException.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
-                                        End Try
-
-                                    Next
-                                Catch ProtocolProcessingException As Exception
-                                    MsgBox(ProtocolProcessingException.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
-                                End Try
-                            End If
-
-
-                            'Create a VectorItemsLayer_NPS for the CSVDataTable
-                            Dim CSVLayer As VectorItemsLayer_NPS = GetBubbleVectorItemsLayerFromPointsDataTable(CSVDataTable, LatColumnName, LonColumnName, 12, MarkerType.Circle, Color.GreenYellow)
-                            CSVLayer.ProtocolFile = New FileInfo(ProtocolFile)
-                            CSVLayer.DataTable = CSVDataTable
-
-                            'Load the Protocol file into the VectorItemsLayer_NPS.ProtocolFile
-
-                            If My.Computer.FileSystem.FileExists(ProtocolFile) Then
-                                CSVLayer.ProtocolFile = New FileInfo(ProtocolFile)
-                            End If
-
-
-                            Me.MapControl.Layers.Add(CSVLayer)
-
-                        End If
-
-                        'Refresh the map layers list box
-                        LoadMapLayersListBox()
-                    End If
-
-                End If
-            End If
+            '    End If
 
         Catch ex As Exception
             MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
@@ -997,28 +711,6 @@ Public Class Form1
 
 
 
-    ''' <summary>
-    ''' Adds a WKT and a Geography DataColumn to the submitted DataTable, then populates these new columns with the Well-Known Text and Geography representations of the submitted
-    ''' Lat/Lon columns.
-    ''' </summary>
-    ''' <param name="DT"></param>
-    ''' <param name="LatColumnName"></param>
-    ''' <param name="LonColumnName"></param>
-    Private Sub AddWKTAndGeographyColumnsToDataTable(DT As DataTable, LatColumnName As String, LonColumnName As String)
-        'Add a WKT and Geography column to the data table
-        Dim WKTColumn As New DataColumn("WKT", GetType(String))
-        DT.Columns.Add(WKTColumn)
-        Dim GeogColumn As New DataColumn("Geography", GetType(String))
-        DT.Columns.Add(GeogColumn)
-        For Each Row As DataRow In DT.Rows
-            Dim Lat As String = Row.Item(LatColumnName)
-            Dim Lon As String = Row.Item(LonColumnName)
-            Dim WKT As String = "POINT(" & Lon.Trim & " " & Lat.Trim & ",4326)"
-            Dim Geog As String = "geography::Point (" & WKT & ")"
-            Row.Item("WKT") = WKT
-            Row.Item("Geography") = Geog
-        Next
-    End Sub
 
 
     Private Sub CSVToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CSVToolStripMenuItem.Click
@@ -1026,7 +718,10 @@ Public Class Form1
         'Get the CSV file to import
         Dim CSVFileInfo As FileInfo = SkeeterUtilities.DirectoryAndFile.DirectoryAndFileUtilities.GetFile("Comma separated values text files|*.csv", "Select a CSV file to import.", "")
         'Load a CSV file into the tool.
-        LoadCSVFile(CSVFileInfo)
+        LoadCSVFile(CSVFileInfo, Me.MapControl)
+
+        'Refresh the map layers list box
+        LoadMapLayersListBox()
     End Sub
 
     ''' <summary>
@@ -1107,7 +802,10 @@ Public Class Form1
                     ElseIf SelectedFileInfo.Extension = ".poz" Then
                         OpenPOZArchive(SelectedFileInfo)
                     ElseIf SelectedFileInfo.Extension = ".csv" Then
-                        LoadCSVFile(SelectedFileInfo)
+                        LoadCSVFile(SelectedFileInfo, Me.MapControl)
+
+                        'Refresh the map layers list box
+                        LoadMapLayersListBox()
                     End If
                 Next
             End If
@@ -1168,7 +866,7 @@ Public Class Form1
         'DataRow in the GridControl.
 
         'Clear the interface and reset controls
-        ResetInterface()
+        'ResetInterface()
 
         Try
             'Make sure we have a clicked MapItem
@@ -1184,9 +882,7 @@ Public Class Form1
                 'Clear all formatting rules in the main GridControl's GridView
                 Me.MapLayerGridView.FormatRules.Clear()
 
-
-
-                'Some map layers may not have .Tag defined
+                'Some map layers have .Tag defined with a GUID, if they do then treat separately
                 If Not ClickedItem.Tag Is Nothing Then
 
                     'Make sure .Tag has data
@@ -1209,13 +905,9 @@ Public Class Form1
                             Me.MapLayerGridView.FormatRules(0).ApplyToRow = True
 
                             'Now isolate the DataRow that belongs to the clicked MapItem and show its data in the VGridControl
-                            Dim DT As DataTable = Me.MapLayerGridControl.DataSource
-                            Dim DV As New DataView(DT, Filter, "", DataViewRowState.CurrentRows)
-                            With Me.VGridControl
-                                .DataSource = DV
-                                .RetrieveFields()
-                            End With
 
+                            Dim ClickedItemDataTable As DataTable = GetDataTableFromMapItemAttributes(ClickedItem)
+                            Me.VGridControl.DataSource = ClickedItemDataTable
 
                         End If
                     End If
@@ -1233,7 +925,7 @@ Public Class Form1
     ''' </summary>
     Private Sub ResetInterface()
         'Start by clearing things
-        Me.MapLayerGridControl.DataSource = Nothing
+        'Me.MapLayerGridControl.DataSource = Nothing
 
         Me.MapLayerGridView.FormatRules.Clear()
         Me.VGridControl.DataSource = Nothing
@@ -1262,12 +954,15 @@ Public Class Form1
                     Case ".shp"
                         LoadShapefile(DraggedFileInfo.FullName, Me.MapControl)
                     Case ".csv"
-                        LoadCSVFile(DraggedFileInfo)
+                        LoadCSVFile(DraggedFileInfo, Me.MapControl)
                     Case ".poz"
                         LoadPOZArchive(DraggedFileInfo.FullName)
                     Case Else
                         MsgBox("The file type *" & DraggedFileInfo.Extension & " is not supported.", MsgBoxStyle.Information, "File type not supported")
                 End Select
+
+                'Refresh the map layers list box
+                LoadMapLayersListBox()
             Next
         Catch ex As Exception
             MsgBox(ex.Message & " " & System.Reflection.MethodBase.GetCurrentMethod.Name)
