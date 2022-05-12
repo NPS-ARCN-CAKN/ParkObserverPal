@@ -446,6 +446,7 @@ Public Class Form1
 
             'Change the context menu item title to reflect the layer name, make it more obvious which layer is to be removed.
             Me.RemoveCurrentLayerToolStripMenuItem.Text = "Remove " & LayerName
+
         Catch ex As Exception
             MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
         End Try
@@ -992,6 +993,39 @@ Public Class Form1
                     End If
                 Next
             Next
+        Catch ex As Exception
+            MsgBox(ex.Message & " " & System.Reflection.MethodBase.GetCurrentMethod.Name)
+        End Try
+    End Sub
+
+    Private Sub ViewMetadataToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ViewMetadataToolStripMenuItem.Click
+        Try
+            Dim LayerName As String = Me.MapLayersCheckedListBoxControl.Text
+            If LayerName.Length > 0 Then
+                Dim VIL As VectorItemsLayer_NPS = Me.MapControl.Layers(LayerName)
+                If Not VIL Is Nothing Then
+                    Dim MapLayerDataTable As DataTable = VIL.DataTable
+                    Dim MetadataForm As New MetadataForm(MapLayerDataTable)
+                    MetadataForm.Show()
+                    'Dim MapLayerDataTableMetadataDataset As DataSet = SkeeterUtilities.DataFileToDataTableConverters.DataFileToDataTableConverters.GetMetadataDatasetFromDataTable(MapLayerDataTable, LayerName, LayerName, ",")
+                    'Dim MetadataForm As New Form
+                    'MetadataForm.Text = LayerName & " metadata"
+                    'Dim MDTabControl As New TabControl
+                    'MDTabControl.Dock = DockStyle.Fill
+                    'MetadataForm.Controls.Add(MDTabControl)
+                    'For Each DT As DataTable In MapLayerDataTableMetadataDataset.Tables
+                    '    Dim MDTabPage As New TabPage(DT.TableName)
+                    '    MDTabControl.TabPages.Add(MDTabPage)
+                    '    Dim MDGrid As New DataGridView
+                    '    MDTabPage.Controls.Add(MDGrid)
+                    '    MDGrid.Dock = DockStyle.Fill
+                    '    MDGrid.DataSource = DT
+                    'Next
+                    'MetadataForm.Show()
+                End If
+
+            End If
+
         Catch ex As Exception
             MsgBox(ex.Message & " " & System.Reflection.MethodBase.GetCurrentMethod.Name)
         End Try

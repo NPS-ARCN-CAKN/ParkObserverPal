@@ -96,9 +96,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.vb">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Form1.vb" />
     <Compile Include="Form1.Designer.vb">
       <DependentUpon>Form1.vb</DependentUpon>
       <SubType>Form</SubType>
@@ -106,21 +104,19 @@
     <Compile Include="ImportCSVForm.Designer.vb">
       <DependentUpon>ImportCSVForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="ImportCSVForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="ImportCSVForm.vb" />
     <Compile Include="ImportExcelForm.Designer.vb">
       <DependentUpon>ImportExcelForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="ImportExcelForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="ImportExcelForm.vb" />
     <Compile Include="MapLayerPropertiesForm.Designer.vb">
       <DependentUpon>MapLayerPropertiesForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="MapLayerPropertiesForm.vb">
-      <SubType>Form</SubType>
+    <Compile Include="MapLayerPropertiesForm.vb" />
+    <Compile Include="MetadataForm.Designer.vb">
+      <DependentUpon>MetadataForm.vb</DependentUpon>
     </Compile>
+    <Compile Include="MetadataForm.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -140,9 +136,7 @@
     <Compile Include="PivotGridForm.Designer.vb">
       <DependentUpon>PivotGridForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="PivotGridForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="PivotGridForm.vb" />
     <Compile Include="Utilities.vb" />
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +151,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MapLayerPropertiesForm.resx">
       <DependentUpon>MapLayerPropertiesForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MetadataForm.resx">
+      <DependentUpon>MetadataForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\licenses.licx" />
     <EmbeddedResource Include="My Project\Resources.resx">

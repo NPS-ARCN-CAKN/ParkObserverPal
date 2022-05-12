@@ -64,6 +64,7 @@ Partial Class Form1
         Me.FeatureDateTabPage = New System.Windows.Forms.TabPage()
         Me.FeaturePropertiesTabPage = New System.Windows.Forms.TabPage()
         Me.FeaturePropertyGrid = New System.Windows.Forms.PropertyGrid()
+        Me.ViewMetadataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         CType(Me.MapLayersCheckedListBoxControl, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MapLayerContextMenuStrip.SuspendLayout()
         Me.MapLayersToolStrip.SuspendLayout()
@@ -96,9 +97,9 @@ Partial Class Form1
         '
         'MapLayerContextMenuStrip
         '
-        Me.MapLayerContextMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AddSpatialDataToolStripMenuItem, Me.ZoomToLayerToolStripMenuItem, Me.LayerPropertiesToolStripMenuItem, Me.ToolStripMenuItem1, Me.RemoveAllLayersToolStripMenuItem, Me.RemoveCurrentLayerToolStripMenuItem, Me.CreatePivotTableToolStripMenuItem})
+        Me.MapLayerContextMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AddSpatialDataToolStripMenuItem, Me.ZoomToLayerToolStripMenuItem, Me.LayerPropertiesToolStripMenuItem, Me.ToolStripMenuItem1, Me.RemoveAllLayersToolStripMenuItem, Me.RemoveCurrentLayerToolStripMenuItem, Me.CreatePivotTableToolStripMenuItem, Me.ViewMetadataToolStripMenuItem})
         Me.MapLayerContextMenuStrip.Name = "MapLayerContextMenuStrip"
-        Me.MapLayerContextMenuStrip.Size = New System.Drawing.Size(187, 158)
+        Me.MapLayerContextMenuStrip.Size = New System.Drawing.Size(187, 202)
         '
         'AddSpatialDataToolStripMenuItem
         '
@@ -399,6 +400,12 @@ Partial Class Form1
         Me.FeaturePropertyGrid.Size = New System.Drawing.Size(179, 500)
         Me.FeaturePropertyGrid.TabIndex = 0
         '
+        'ViewMetadataToolStripMenuItem
+        '
+        Me.ViewMetadataToolStripMenuItem.Name = "ViewMetadataToolStripMenuItem"
+        Me.ViewMetadataToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
+        Me.ViewMetadataToolStripMenuItem.Text = "View metadata..."
+        '
         'Form1
         '
         Me.AllowDrop = True
@@ -479,4 +486,5 @@ Partial Class Form1
     Friend WithEvents FeatureDateTabPage As TabPage
     Friend WithEvents FeaturePropertiesTabPage As TabPage
     Friend WithEvents FeaturePropertyGrid As PropertyGrid
+    Friend WithEvents ViewMetadataToolStripMenuItem As ToolStripMenuItem
 End Class
