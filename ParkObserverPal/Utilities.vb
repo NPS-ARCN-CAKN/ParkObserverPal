@@ -454,8 +454,7 @@ Module Utilities
                             End If
 
                             'Create a VectorItemsLayer_NPS for the SpatialDataTable
-                            Dim CSVLayer As VectorItemsLayer_NPS = GetBubbleVectorItemsLayerFromPointsDataTable(SpatialDataTable, LatColumnName, LonColumnName, 12, MarkerType.Circle, Color.GreenYellow)
-
+                            Dim CSVLayer As VectorItemsLayer_NPS = GetBubbleVectorItemsLayerFromPointsDataTable(SpatialDataTable, LatColumnName, LonColumnName, 10, MarkerType.Circle, Color.FromArgb(CInt(Math.Ceiling(Rnd() * 255)) + 1, CInt(Math.Ceiling(Rnd() * 255)) + 1, CInt(Math.Ceiling(Rnd() * 255)) + 1))
                             CSVLayer.DataTable = SpatialDataTable
 
                             'Load the Protocol file into the VectorItemsLayer_NPS.ProtocolFile
@@ -634,6 +633,12 @@ Module Utilities
 
         'Create a new VectorItemsLayer_NPS which is essentially a map layer
         Dim MyPointsVectorItemsLayer_NPS As New VectorItemsLayer_NPS()
+
+        'Configure the map layer
+        With MyPointsVectorItemsLayer_NPS
+            .EnableHighlighting = True
+            .EnableSelection = True
+        End With
 
         Try
             'Create a MapItemStorage object (basically DevExpress's version of a spatial data table, stores MapItem objects which are like DataRows

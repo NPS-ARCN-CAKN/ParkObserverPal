@@ -7,6 +7,8 @@ Imports DevExpress.XtraPivotGrid
 Imports System.Web.Script.Serialization
 Imports Newtonsoft.Json
 Imports DevExpress.XtraEditors
+Imports DevExpress.DataAccess.Sql
+Imports DevExpress.DataAccess.Sql.DataApi
 
 Public Class Form1
 
@@ -26,7 +28,10 @@ Public Class Form1
 
         For Each GV As GridView In Me.MapLayerGridControl.Views
             GV.OptionsBehavior.ReadOnly = True
+            GV.OptionsSelection.MultiSelect = True
+            GV.OptionsSelection.MultiSelectMode = GridMultiSelectMode.RowSelect
         Next
+
 
     End Sub
 
@@ -772,8 +777,12 @@ Public Class Form1
 
     Private Sub ParkObserverArchivepozToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ParkObserverArchivepozToolStripMenuItem.Click
         'Allow the user to select a Park Observer file archive to load into the layers list.
-        Dim POZFile As FileInfo = SkeeterUtilities.DirectoryAndFile.DirectoryAndFileUtilities.GetFile("Park Observer File (*.poz)|*.poz", "Select a Park Observer File (.poz)", "")
-        OpenPOZArchive(POZFile)
+        Try
+            Dim POZFile As FileInfo = SkeeterUtilities.DirectoryAndFile.DirectoryAndFileUtilities.GetFile("Park Observer File (*.poz)|*.poz", "Select a Park Observer File (.poz)", "")
+            OpenPOZArchive(POZFile)
+        Catch ex As Exception
+            MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
+        End Try
     End Sub
 
 
@@ -925,8 +934,6 @@ Public Class Form1
     ''' </summary>
     Private Sub ResetInterface()
         'Start by clearing things
-        'Me.MapLayerGridControl.DataSource = Nothing
-
         Me.MapLayerGridView.FormatRules.Clear()
         Me.VGridControl.DataSource = Nothing
         Me.VGridControl.RetrieveFields()
@@ -963,6 +970,27 @@ Public Class Form1
 
                 'Refresh the map layers list box
                 LoadMapLayersListBox()
+            Next
+        Catch ex As Exception
+            MsgBox(ex.Message & " " & System.Reflection.MethodBase.GetCurrentMethod.Name)
+        End Try
+    End Sub
+
+    Private Sub MapLayerGridView_SelectionChanged(sender As Object, e As DevExpress.Data.SelectionChangedEventArgs) Handles MapLayerGridView.SelectionChanged
+        Try
+
+            Dim VIL As VectorItemsLayer = Me.MapControl.Layers(Me.MapLayersCheckedListBoxControl.Text.Trim)
+            VIL.SelectedItems.Clear()
+
+
+            Dim GV As GridView = sender
+            For Each RowIndex As Integer In GV.GetSelectedRows
+                Dim NPS_GUID As String = GV.GetRowCellValue(RowIndex, "NPS_GUID")
+                For Each MI As MapItem In VIL.Data.Items
+                    If MI.Tag = NPS_GUID Then
+                        VIL.SelectedItems.Add(MI)
+                    End If
+                Next
             Next
         Catch ex As Exception
             MsgBox(ex.Message & " " & System.Reflection.MethodBase.GetCurrentMethod.Name)

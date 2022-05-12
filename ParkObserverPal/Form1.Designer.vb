@@ -281,6 +281,7 @@ Partial Class Form1
         '
         Me.MapLayerGridView.GridControl = Me.MapLayerGridControl
         Me.MapLayerGridView.Name = "MapLayerGridView"
+        Me.MapLayerGridView.OptionsSelection.MultiSelect = True
         Me.MapLayerGridView.OptionsView.ShowFooter = True
         '
         'VGridControl
