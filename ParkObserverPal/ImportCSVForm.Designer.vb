@@ -37,6 +37,7 @@ Partial Class ImportCSVForm
         Me.ValidationTextBox = New System.Windows.Forms.TextBox()
         Me.ValidationTextBoxLabel = New System.Windows.Forms.Label()
         Me.MainPanel = New System.Windows.Forms.Panel()
+        Me.CancelButton = New System.Windows.Forms.Button()
         CType(Me.CSVDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.FooterPanel.SuspendLayout()
         Me.HeaderPanel.SuspendLayout()
@@ -59,6 +60,7 @@ Partial Class ImportCSVForm
         '
         'FooterPanel
         '
+        Me.FooterPanel.Controls.Add(Me.CancelButton)
         Me.FooterPanel.Controls.Add(Me.ValidationLabel)
         Me.FooterPanel.Controls.Add(Me.OKButton)
         Me.FooterPanel.Dock = System.Windows.Forms.DockStyle.Bottom
@@ -205,6 +207,16 @@ Partial Class ImportCSVForm
         Me.MainPanel.Size = New System.Drawing.Size(1184, 657)
         Me.MainPanel.TabIndex = 10
         '
+        'CancelButton
+        '
+        Me.CancelButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CancelButton.Location = New System.Drawing.Point(1016, 11)
+        Me.CancelButton.Name = "CancelButton"
+        Me.CancelButton.Size = New System.Drawing.Size(75, 23)
+        Me.CancelButton.TabIndex = 2
+        Me.CancelButton.Text = "Cancel"
+        Me.CancelButton.UseVisualStyleBackColor = True
+        '
         'ImportCSVForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -239,4 +251,5 @@ Partial Class ImportCSVForm
     Friend WithEvents ValidationTextBoxLabel As Label
     Friend WithEvents InstructionsLabel As Label
     Friend WithEvents MainPanel As Panel
+    Friend WithEvents CancelButton As Button
 End Class

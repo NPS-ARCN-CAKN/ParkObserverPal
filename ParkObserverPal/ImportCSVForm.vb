@@ -282,5 +282,12 @@
         ValidateForm()
     End Sub
 
-
+    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
+        'Clear all form settings and close the form
+        Me.LatitudeColumnName = ""
+        Me.LongitudeColumnName = ""
+        Me.CoordinateColumnsAreValid = False
+        Me.DataTable = Nothing
+        Me.Close()
+    End Sub
 End Class
