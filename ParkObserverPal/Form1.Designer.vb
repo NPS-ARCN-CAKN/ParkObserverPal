@@ -38,6 +38,7 @@ Partial Class Form1
         Me.RemoveAllLayersToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RemoveCurrentLayerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CreatePivotTableToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ViewMetadataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MapLayersToolStrip = New System.Windows.Forms.ToolStrip()
         Me.ToolStripLabel1 = New System.Windows.Forms.ToolStripLabel()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
@@ -64,7 +65,7 @@ Partial Class Form1
         Me.FeatureDateTabPage = New System.Windows.Forms.TabPage()
         Me.FeaturePropertiesTabPage = New System.Windows.Forms.TabPage()
         Me.FeaturePropertyGrid = New System.Windows.Forms.PropertyGrid()
-        Me.ViewMetadataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExcelToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         CType(Me.MapLayersCheckedListBoxControl, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MapLayerContextMenuStrip.SuspendLayout()
         Me.MapLayersToolStrip.SuspendLayout()
@@ -103,7 +104,7 @@ Partial Class Form1
         '
         'AddSpatialDataToolStripMenuItem
         '
-        Me.AddSpatialDataToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CSVToolStripMenuItem, Me.ShapefileToolStripMenuItem1, Me.ParkObserverArchivepozToolStripMenuItem})
+        Me.AddSpatialDataToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CSVToolStripMenuItem, Me.ShapefileToolStripMenuItem1, Me.ParkObserverArchivepozToolStripMenuItem, Me.ExcelToolStripMenuItem})
         Me.AddSpatialDataToolStripMenuItem.Name = "AddSpatialDataToolStripMenuItem"
         Me.AddSpatialDataToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
         Me.AddSpatialDataToolStripMenuItem.Text = "Add data"
@@ -174,6 +175,12 @@ Partial Class Form1
         Me.CreatePivotTableToolStripMenuItem.Name = "CreatePivotTableToolStripMenuItem"
         Me.CreatePivotTableToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
         Me.CreatePivotTableToolStripMenuItem.Text = "Create pivot table..."
+        '
+        'ViewMetadataToolStripMenuItem
+        '
+        Me.ViewMetadataToolStripMenuItem.Name = "ViewMetadataToolStripMenuItem"
+        Me.ViewMetadataToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
+        Me.ViewMetadataToolStripMenuItem.Text = "View metadata..."
         '
         'MapLayersToolStrip
         '
@@ -400,11 +407,11 @@ Partial Class Form1
         Me.FeaturePropertyGrid.Size = New System.Drawing.Size(179, 500)
         Me.FeaturePropertyGrid.TabIndex = 0
         '
-        'ViewMetadataToolStripMenuItem
+        'ExcelToolStripMenuItem
         '
-        Me.ViewMetadataToolStripMenuItem.Name = "ViewMetadataToolStripMenuItem"
-        Me.ViewMetadataToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
-        Me.ViewMetadataToolStripMenuItem.Text = "View metadata..."
+        Me.ExcelToolStripMenuItem.Name = "ExcelToolStripMenuItem"
+        Me.ExcelToolStripMenuItem.Size = New System.Drawing.Size(230, 22)
+        Me.ExcelToolStripMenuItem.Text = "Excel..."
         '
         'Form1
         '
@@ -487,4 +494,5 @@ Partial Class Form1
     Friend WithEvents FeaturePropertiesTabPage As TabPage
     Friend WithEvents FeaturePropertyGrid As PropertyGrid
     Friend WithEvents ViewMetadataToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ExcelToolStripMenuItem As ToolStripMenuItem
 End Class

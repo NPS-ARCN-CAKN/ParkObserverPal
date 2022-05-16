@@ -344,6 +344,13 @@ Module Utilities
         Next
     End Sub
 
+    ''' <summary>
+    ''' Loads a DataTable with lat/lon coordinate pairs into MC (MapControl).
+    ''' </summary>
+    ''' <param name="SpatialDataTable"></param>
+    ''' <param name="MC"></param>
+    ''' <param name="SourceFile"></param>
+    ''' <param name="ProtocolFile"></param>
     Public Sub LoadSpatialDataTable(SpatialDataTable As DataTable, MC As MapControl, Optional SourceFile As String = "", Optional ProtocolFile As String = "")
         Try
 
@@ -483,139 +490,14 @@ Module Utilities
     ''' </summary>
     Public Sub LoadCSVFile(CSVFileInfo As FileInfo, MC As MapControl)
         Try
-            'Convert the CSV to a DataTable
-            Dim CSVDataTable As DataTable = SkeeterUtilities.DataFileToDataTableConverters.DataFileToDataTableConverters.GetDataTableFromCSV(CSVFileInfo, True, SkeeterUtilities.DataFileToDataTableConverters.DataFileToDataTableConverters.Format.Delimited)
-            CSVDataTable.TableName = CSVFileInfo.Name
+            If Not CSVFileInfo Is Nothing Then
+                'Convert the CSV to a DataTable
+                Dim CSVDataTable As DataTable = SkeeterUtilities.DataFileToDataTableConverters.DataFileToDataTableConverters.GetDataTableFromCSV(CSVFileInfo, True, SkeeterUtilities.DataFileToDataTableConverters.DataFileToDataTableConverters.Format.Delimited)
+                CSVDataTable.TableName = CSVFileInfo.Name
 
-            LoadSpatialDataTable(CSVDataTable, MC)
+                LoadSpatialDataTable(CSVDataTable, MC)
 
-            'If Not CSVDataTable Is Nothing Then
-            '    If CSVDataTable.Rows.Count > 0 Then
-
-            '        'Ask the user to supply the lat/lon column names
-            '        Dim ImportForm As New ImportCSVForm(CSVDataTable)
-            '        ImportForm.ShowDialog()
-
-            '        'Make sure we get lat lon column names
-            '        If Not ImportForm.LatitudeColumnName Is Nothing And Not ImportForm.LongitudeColumnName Is Nothing Then
-            '            If ImportForm.LatitudeColumnName.Trim <> "" And ImportForm.LongitudeColumnName.Trim <> "" Then
-            '                Dim LatColumnName As String = ImportForm.LatitudeColumnName.Trim
-            '                Dim LonColumnName As String = ImportForm.LongitudeColumnName.Trim
-
-            '                'Add WKT and Geography columns to the CSVDataTable and generate the values
-            '                AddWKTAndGeographyColumnsToDataTable(CSVDataTable, LatColumnName, LonColumnName)
-
-            '                'Add SourceFile column to the data table
-            '                Dim SourceFileColumn As New DataColumn("SourceFile", GetType(String))
-            '                CSVDataTable.Columns.Add(SourceFileColumn)
-            '                For Each Row As DataRow In CSVDataTable.Rows
-            '                    Row.Item("SourceFile") = CSVFileInfo.Name
-            '                Next
-
-
-
-            '                'Add DataExtractedDate column to the data table
-            '                Dim DataExtractedDateColumn As New DataColumn("DateRecordExtracted", GetType(DateTime))
-            '                CSVDataTable.Columns.Add(DataExtractedDateColumn)
-
-            '                'Add DataExtractedBy column to the data table
-            '                Dim DataExtractedByColumn As New DataColumn("DataExtractedBy", GetType(String))
-            '                CSVDataTable.Columns.Add(DataExtractedByColumn)
-
-            '                'Add Unique ID column to the data table
-            '                Dim NPS_GUIDColumn As New DataColumn("NPS_GUID", GetType(String))
-            '                CSVDataTable.Columns.Add(NPS_GUIDColumn)
-
-            '                'Load the metadata columns from above
-            '                For Each Row As DataRow In CSVDataTable.Rows
-            '                    Row.Item("NPS_GUID") = Guid.NewGuid.ToString
-            '                    Row.Item("DateRecordExtracted") = Now
-            '                    Row.Item("DataExtractedBy") = My.User.Name
-            '                Next
-
-            '                'Add Park Observer - specific columns to the dataset
-            '                Dim ProtocolFile As String = CSVFileInfo.DirectoryName & "\protocol.obsprot"
-
-            '                'If an obsprot exists
-            '                If My.Computer.FileSystem.FileExists(ProtocolFile) Then
-            '                    Try
-            '                        'Variables to hold obsprot attributes
-            '                        Dim ProtocolName As String = ""
-            '                        Dim ProtocolVersion As String = ""
-            '                        Dim ProtocolDate As String = ""
-            '                        Dim ProtocolDescription As String = ""
-
-            '                        'Get the protocol attributes out of the obsprot's json
-            '                        Dim ProtocolText As String = My.Computer.FileSystem.ReadAllText(ProtocolFile)
-            '                        ProtocolName = GetJSONValue(ProtocolText, "name")
-            '                        ProtocolVersion = GetJSONValue(ProtocolText, "version")
-            '                        ProtocolDate = GetJSONValue(ProtocolText, "date")
-            '                        ProtocolDescription = GetJSONValue(ProtocolText, "description")
-
-            '                        'Get the obsprot into a fileinfo
-            '                        Dim ProtocolFileInfo As New FileInfo(ProtocolFile)
-
-            '                        'Add ProtocolFile column to the data table
-            '                        Dim ProtocolFileColumn As New DataColumn("ProtocolFile", GetType(String))
-            '                        CSVDataTable.Columns.Add(ProtocolFileColumn)
-
-            '                        'Add ProtocolName column to the data table
-            '                        Dim ProtocolNameColumn As New DataColumn("ProtocolName", GetType(String))
-            '                        CSVDataTable.Columns.Add(ProtocolNameColumn)
-
-            '                        'Add ProtocolVersion column to the data table
-            '                        Dim ProtocolVersionColumn As New DataColumn("ProtocolVersion", GetType(Double))
-            '                        CSVDataTable.Columns.Add(ProtocolVersionColumn)
-
-            '                        'Add ProtocolDate column to the data table
-            '                        Dim ProtocolDateColumn As New DataColumn("ProtocolDate", GetType(Date))
-            '                        CSVDataTable.Columns.Add(ProtocolDateColumn)
-
-            '                        'Add ProtocolDescription column to the data table
-            '                        Dim ProtocolDescriptionColumn As New DataColumn("ProtocolDescription", GetType(String))
-            '                        CSVDataTable.Columns.Add(ProtocolDescriptionColumn)
-
-
-
-            '                        'Add the protocol attributes to the data table
-            '                        For Each Row As DataRow In CSVDataTable.Rows
-            '                            Try
-            '                                Row.Item("ProtocolFile") = ProtocolFileInfo.FullName
-            '                                Row.Item("ProtocolName") = ProtocolName
-            '                                If IsNumeric(ProtocolVersion) = True Then Row.Item("ProtocolVersion") = CDbl(ProtocolVersion)
-            '                                If IsDate(ProtocolDate) Then Row.Item("ProtocolDate") = CDate(ProtocolDate)
-            '                                Row.Item("ProtocolDescription") = ProtocolDescription
-            '                            Catch RowUpdateException As Exception
-            '                                Debug.Print(RowUpdateException.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
-            '                            End Try
-
-            '                        Next
-            '                    Catch ProtocolProcessingException As Exception
-            '                        MsgBox(ProtocolProcessingException.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
-            '                    End Try
-            '                End If
-
-
-            '                'Create a VectorItemsLayer_NPS for the CSVDataTable
-            '                Dim CSVLayer As VectorItemsLayer_NPS = GetBubbleVectorItemsLayerFromPointsDataTable(CSVDataTable, LatColumnName, LonColumnName, 12, MarkerType.Circle, Color.GreenYellow)
-            '                CSVLayer.ProtocolFile = New FileInfo(ProtocolFile)
-            '                CSVLayer.DataTable = CSVDataTable
-
-            '                'Load the Protocol file into the VectorItemsLayer_NPS.ProtocolFile
-
-            '                If My.Computer.FileSystem.FileExists(ProtocolFile) Then
-            '                    CSVLayer.ProtocolFile = New FileInfo(ProtocolFile)
-            '                End If
-
-
-            '                MC.Layers.Add(CSVLayer)
-
-            '            End If
-            '        End If
-
-            '    End If
-            'End If
-
+            End If
         Catch ex As Exception
             MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
         End Try

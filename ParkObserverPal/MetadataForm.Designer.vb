@@ -24,30 +24,36 @@ Partial Class MetadataForm
     Private Sub InitializeComponent()
         Me.MetadataTabControl = New System.Windows.Forms.TabControl()
         Me.MetadataTabPage = New System.Windows.Forms.TabPage()
+        Me.MetadataDataGridView = New System.Windows.Forms.DataGridView()
         Me.UniqueValuesTabPage = New System.Windows.Forms.TabPage()
-        Me.MetadataGridControl = New DevExpress.XtraGrid.GridControl()
-        Me.GridView1 = New DevExpress.XtraGrid.Views.Grid.GridView()
+        Me.UniqueValuesDataGridView = New System.Windows.Forms.DataGridView()
+        Me.SourceDataTableTabPage = New System.Windows.Forms.TabPage()
+        Me.SourceDatasetDataGridView = New System.Windows.Forms.DataGridView()
         Me.MetadataToolStrip = New System.Windows.Forms.ToolStrip()
         Me.MetadataTabControl.SuspendLayout()
         Me.MetadataTabPage.SuspendLayout()
-        CType(Me.MetadataGridControl, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.GridView1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.MetadataDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.UniqueValuesTabPage.SuspendLayout()
+        CType(Me.UniqueValuesDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.SourceDataTableTabPage.SuspendLayout()
+        CType(Me.SourceDatasetDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'MetadataTabControl
         '
         Me.MetadataTabControl.Controls.Add(Me.MetadataTabPage)
         Me.MetadataTabControl.Controls.Add(Me.UniqueValuesTabPage)
+        Me.MetadataTabControl.Controls.Add(Me.SourceDataTableTabPage)
         Me.MetadataTabControl.Dock = System.Windows.Forms.DockStyle.Fill
         Me.MetadataTabControl.Location = New System.Drawing.Point(0, 25)
         Me.MetadataTabControl.Name = "MetadataTabControl"
         Me.MetadataTabControl.SelectedIndex = 0
-        Me.MetadataTabControl.Size = New System.Drawing.Size(800, 425)
+        Me.MetadataTabControl.Size = New System.Drawing.Size(1184, 736)
         Me.MetadataTabControl.TabIndex = 0
         '
         'MetadataTabPage
         '
-        Me.MetadataTabPage.Controls.Add(Me.MetadataGridControl)
+        Me.MetadataTabPage.Controls.Add(Me.MetadataDataGridView)
         Me.MetadataTabPage.Location = New System.Drawing.Point(4, 22)
         Me.MetadataTabPage.Name = "MetadataTabPage"
         Me.MetadataTabPage.Padding = New System.Windows.Forms.Padding(3)
@@ -56,37 +62,72 @@ Partial Class MetadataForm
         Me.MetadataTabPage.Text = "Metadata"
         Me.MetadataTabPage.UseVisualStyleBackColor = True
         '
+        'MetadataDataGridView
+        '
+        Me.MetadataDataGridView.AllowUserToAddRows = False
+        Me.MetadataDataGridView.AllowUserToDeleteRows = False
+        Me.MetadataDataGridView.AllowUserToOrderColumns = True
+        Me.MetadataDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.MetadataDataGridView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.MetadataDataGridView.Location = New System.Drawing.Point(3, 3)
+        Me.MetadataDataGridView.Name = "MetadataDataGridView"
+        Me.MetadataDataGridView.ReadOnly = True
+        Me.MetadataDataGridView.Size = New System.Drawing.Size(786, 393)
+        Me.MetadataDataGridView.TabIndex = 0
+        '
         'UniqueValuesTabPage
         '
+        Me.UniqueValuesTabPage.Controls.Add(Me.UniqueValuesDataGridView)
         Me.UniqueValuesTabPage.Location = New System.Drawing.Point(4, 22)
         Me.UniqueValuesTabPage.Name = "UniqueValuesTabPage"
         Me.UniqueValuesTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.UniqueValuesTabPage.Size = New System.Drawing.Size(792, 424)
+        Me.UniqueValuesTabPage.Size = New System.Drawing.Size(792, 399)
         Me.UniqueValuesTabPage.TabIndex = 1
         Me.UniqueValuesTabPage.Text = "Column unique values"
         Me.UniqueValuesTabPage.UseVisualStyleBackColor = True
         '
-        'MetadataGridControl
+        'UniqueValuesDataGridView
         '
-        Me.MetadataGridControl.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.MetadataGridControl.Location = New System.Drawing.Point(3, 3)
-        Me.MetadataGridControl.MainView = Me.GridView1
-        Me.MetadataGridControl.Name = "MetadataGridControl"
-        Me.MetadataGridControl.Size = New System.Drawing.Size(786, 393)
-        Me.MetadataGridControl.TabIndex = 0
-        Me.MetadataGridControl.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.GridView1})
+        Me.UniqueValuesDataGridView.AllowUserToAddRows = False
+        Me.UniqueValuesDataGridView.AllowUserToDeleteRows = False
+        Me.UniqueValuesDataGridView.AllowUserToOrderColumns = True
+        Me.UniqueValuesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.UniqueValuesDataGridView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.UniqueValuesDataGridView.Location = New System.Drawing.Point(3, 3)
+        Me.UniqueValuesDataGridView.Name = "UniqueValuesDataGridView"
+        Me.UniqueValuesDataGridView.ReadOnly = True
+        Me.UniqueValuesDataGridView.Size = New System.Drawing.Size(786, 393)
+        Me.UniqueValuesDataGridView.TabIndex = 0
         '
-        'GridView1
+        'SourceDataTableTabPage
         '
-        Me.GridView1.GridControl = Me.MetadataGridControl
-        Me.GridView1.Name = "GridView1"
-        Me.GridView1.OptionsView.ColumnAutoWidth = False
+        Me.SourceDataTableTabPage.Controls.Add(Me.SourceDatasetDataGridView)
+        Me.SourceDataTableTabPage.Location = New System.Drawing.Point(4, 22)
+        Me.SourceDataTableTabPage.Name = "SourceDataTableTabPage"
+        Me.SourceDataTableTabPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.SourceDataTableTabPage.Size = New System.Drawing.Size(1176, 710)
+        Me.SourceDataTableTabPage.TabIndex = 2
+        Me.SourceDataTableTabPage.Text = "Source dataset"
+        Me.SourceDataTableTabPage.UseVisualStyleBackColor = True
+        '
+        'SourceDatasetDataGridView
+        '
+        Me.SourceDatasetDataGridView.AllowUserToAddRows = False
+        Me.SourceDatasetDataGridView.AllowUserToDeleteRows = False
+        Me.SourceDatasetDataGridView.AllowUserToOrderColumns = True
+        Me.SourceDatasetDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.SourceDatasetDataGridView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SourceDatasetDataGridView.Location = New System.Drawing.Point(3, 3)
+        Me.SourceDatasetDataGridView.Name = "SourceDatasetDataGridView"
+        Me.SourceDatasetDataGridView.ReadOnly = True
+        Me.SourceDatasetDataGridView.Size = New System.Drawing.Size(1170, 704)
+        Me.SourceDatasetDataGridView.TabIndex = 0
         '
         'MetadataToolStrip
         '
         Me.MetadataToolStrip.Location = New System.Drawing.Point(0, 0)
         Me.MetadataToolStrip.Name = "MetadataToolStrip"
-        Me.MetadataToolStrip.Size = New System.Drawing.Size(800, 25)
+        Me.MetadataToolStrip.Size = New System.Drawing.Size(1184, 25)
         Me.MetadataToolStrip.TabIndex = 1
         Me.MetadataToolStrip.Text = "ToolStrip1"
         '
@@ -94,7 +135,7 @@ Partial Class MetadataForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(800, 450)
+        Me.ClientSize = New System.Drawing.Size(1184, 761)
         Me.Controls.Add(Me.MetadataTabControl)
         Me.Controls.Add(Me.MetadataToolStrip)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow
@@ -102,8 +143,11 @@ Partial Class MetadataForm
         Me.Text = "Metadata"
         Me.MetadataTabControl.ResumeLayout(False)
         Me.MetadataTabPage.ResumeLayout(False)
-        CType(Me.MetadataGridControl, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.GridView1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.MetadataDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.UniqueValuesTabPage.ResumeLayout(False)
+        CType(Me.UniqueValuesDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.SourceDataTableTabPage.ResumeLayout(False)
+        CType(Me.SourceDatasetDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -112,7 +156,9 @@ Partial Class MetadataForm
     Friend WithEvents MetadataTabControl As TabControl
     Friend WithEvents MetadataTabPage As TabPage
     Friend WithEvents UniqueValuesTabPage As TabPage
-    Friend WithEvents MetadataGridControl As DevExpress.XtraGrid.GridControl
-    Friend WithEvents GridView1 As DevExpress.XtraGrid.Views.Grid.GridView
     Friend WithEvents MetadataToolStrip As ToolStrip
+    Friend WithEvents MetadataDataGridView As DataGridView
+    Friend WithEvents UniqueValuesDataGridView As DataGridView
+    Friend WithEvents SourceDataTableTabPage As TabPage
+    Friend WithEvents SourceDatasetDataGridView As DataGridView
 End Class

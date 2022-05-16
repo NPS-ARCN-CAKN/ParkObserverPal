@@ -17,9 +17,16 @@ Public Class Form1
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        LoadCSVFile(New FileInfo("C:\temp\zSpatialData.csv"), Me.MapControl)
+        'Dim Filter As String = "Excel workbooks (*.xlsx)|*.xlsx"
+        Dim ExcelFileInfo As New FileInfo("c:\temp\zSpatialData.xlsx")
+        LoadExcelFile(ExcelFileInfo)
+
+
+        ' LoadCSVFile(New FileInfo("C:\temp\zSpatialData.csv"), Me.MapControl)
         '        LoadCSVFile(New FileInfo("C:\temp\ARCN_LakeChemistry_2013-2018.csv"), Me.MapControl)
         'Refresh the map layers list box
+
+
         LoadMapLayersListBox()
 
         'My.Settings.BackgroundLayers = "C:\Work\GIS Common Layers\AlaskaSimplified_1km.shp"
@@ -685,31 +692,30 @@ Public Class Form1
 
 
     ''' <summary>
-    ''' Opens a file open dialog allowing the user to select a comma separated values text file to load into the main interface. Opens a selector dialog to let the user
-    ''' select any lat/lon fields, if desired.
+    ''' Opens a file open dialog allowing the user to select an Excel workbook. Converts each worksheet to a DataTable and attempts
+    ''' to load it into the main interface's MapControl.
     ''' </summary>
+    ''' <param name="ExcelFileInfo">Excel workbook to load into the main MapControl</param>
     Private Sub LoadExcelFile(ExcelFileInfo As FileInfo)
         Try
             'Convert the CSV to a DataTable
             Dim ExcelConnectionString As String = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" & ExcelFileInfo.FullName & ";Extended Properties=""Excel 12.0 Xml;HDR=YES"";"
             Dim ExcelDataset As DataSet = SkeeterUtilities.DataFileToDataTableConverters.DataFileToDataTableConverters.GetDatasetFromExcelWorkbook(ExcelConnectionString)
             ExcelDataset.DataSetName = ExcelFileInfo.Name
-            Dim ExcelForm As New ImportExcelForm(ExcelDataset, Me.MapControl)
-            ExcelForm.ShowDialog()
 
-            'If Not ExcelDataset Is Nothing Then
-            '    If ExcelDataset.Tables.Count > 0 Then
-            '        For Each ExcelDataTable As DataTable In ExcelDataset.Tables
+            Dim ExcelWorksheetsDataTable As DataTable = SkeeterUtilities.DataFileToDataTableConverters.DataFileToDataTableConverters.GetExcelWorksheets(ExcelConnectionString)
 
-            '        Next
+            If Not ExcelDataset Is Nothing Then
+                If ExcelDataset.Tables.Count > 0 Then
+                    For Each ExcelDataTable As DataTable In ExcelDataset.Tables
+                        LoadSpatialDataTable(ExcelDataTable, Me.MapControl)
+                    Next
 
 
-            '        'Refresh the map layers list box
-            '        LoadMapLayersListBox()
-            '        End If
-
-            '    End If
-
+                    'Refresh the map layers list box
+                    LoadMapLayersListBox()
+                End If
+            End If
         Catch ex As Exception
             MsgBox(ex.Message & "  " & System.Reflection.MethodBase.GetCurrentMethod.Name)
         End Try
@@ -1029,5 +1035,11 @@ Public Class Form1
         Catch ex As Exception
             MsgBox(ex.Message & " " & System.Reflection.MethodBase.GetCurrentMethod.Name)
         End Try
+    End Sub
+
+    Private Sub ExcelToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExcelToolStripMenuItem.Click
+        Dim Filter As String = "Excel workbooks (*.xlsx)|*.xlsx"
+        Dim ExcelFileInfo As FileInfo = SkeeterUtilities.DirectoryAndFile.DirectoryAndFileUtilities.GetFile(Filter, "Select an Excel workbook", "")
+        LoadExcelFile(ExcelFileInfo)
     End Sub
 End Class
